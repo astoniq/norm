@@ -1,0 +1,49 @@
+{
+  "name": "@astoniq/norm-app",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "rm -rf lib && tsc",
+    "dev": "rm -rf lib && nodemon"
+  },
+  "engines": {
+    "node": "^20.0.0"
+  },
+  "dependencies": {
+    "@astoniq/essentials": "^0.2.1",
+    "@astoniq/norm-phrase": "workspace:^0.1.0",
+    "@astoniq/norm-schema": "workspace:^0.1.0",
+    "pino": "^8.20.0",
+    "nanoid": "^5.0.1",
+    "bullmq": "^5.7.8",
+    "decamelize": "^6.0.0",
+    "dotenv": "^16.0.0",
+    "date-fns": "^2.29.3",
+    "got": "^14.0.0",
+    "yargs": "^17.6.0",
+    "slonik": "^37.3.1",
+    "koa-body": "^5.0.0",
+    "i18next": "^22.4.15",
+    "koa": "^2.15.2",
+    "koa-router": "^12.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "typescript": "^5.3.3",
+    "@types/inquirer": "^9.0.0",
+    "@types/koa": "^2.15.0",
+    "@types/koa-router": "^7.4.8",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^20.0.0",
+    "@types/semver": "^7.3.12",
+    "@types/sinon": "^17.0.0",
+    "@types/tar": "^6.1.2",
+    "@types/yargs": "^17.0.13"
+  }
+}
