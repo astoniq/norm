@@ -1,6 +1,6 @@
 import {assert} from "@astoniq/essentials";
-import {RequestError} from "@/errors/index.js";
 import {NormErrorCode} from "@astoniq/norm-phrase";
+import {RequestError} from "../errors/index.js";
 
 type AssertThatFunction = {
     <E extends Error>(value: unknown, error: E): asserts value;
