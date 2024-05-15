@@ -63,9 +63,7 @@ export const buildInsertIntoWithPool =
 
             return async (data: OmitAutoSetFields<CreateEntity>): Promise<T | void> => {
                 const insertingKeys = keys.filter((key) => key in data)
-                const {
-                    rows: [entry]
-                } = await pool.query((returning ? sql.type(guard) : sql.unsafe)`
+                const query = `
                     insert into ${table} (${sql.join(insertingKeys.map((key) => fields[key]), sql.fragment`, `)})
                     values (${sql.join(insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)), sql.fragment`, `)})
                         ${conditionalSql(onConflict, (config) =>
@@ -73,7 +71,12 @@ export const buildInsertIntoWithPool =
                                         sql.fragment`on conflict (${sql.join(config.fields, sql.fragment`, `)}) do update
                                 set ${setExcluded(...config.setExcludedFields)}`
                         )} ${conditionalSql(returning, () => sql.fragment`returning *`)}
-                `);
+                `
+                const {
+                    rows: [entry]
+                } = returning
+                    ? await pool.query(sql.type(guard)`${query}`)
+                    : await pool.query(sql.unsafe`${query}`);
 
                 assertThat(!returning || entry, new InsertionError(entity, data));
 

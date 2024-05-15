@@ -1,19 +1,20 @@
 import {createMockPool, createMockQueryResult, createPool, parseDsn} from "slonik";
 import {assert} from "@astoniq/essentials";
+import {createInterceptorsPreset} from "./interceptor-preset.js";
 
-const createDbPool = async (
+export const createDbPool = async (
     databaseDsn: string,
     mockDatabaseConnection: boolean,
     poolSize?: number
 ) => {
     if (mockDatabaseConnection) {
-        createMockPool({query: async () => createMockQueryResult([])})
+        return createMockPool({query: async () => createMockQueryResult([])})
     }
 
     assert(parseDsn(databaseDsn).databaseName, new Error("Database name is required"))
 
     return createPool(databaseDsn, {
-        interceptors: [],
+        interceptors: createInterceptorsPreset(),
         maximumPoolSize: poolSize
     })
 

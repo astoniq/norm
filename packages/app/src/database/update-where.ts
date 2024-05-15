@@ -51,14 +51,18 @@ export const buildUpdateWhereWithPool =
                     .filter((value): value is Truthy<typeof value> => notFalsy(value));
 
             return async ({set, where, jsonbMode}: UpdateWhereData<T, T>): Promise<T | void> => {
+                const query = `
+                    update ${table}
+                    set ${sql.join(connectKeyValueWithEqualSign(set, jsonbMode), sql.fragment`, `)}
+                    where ${sql.join(connectKeyValueWithEqualSign(where, jsonbMode), sql.fragment` and `)} ${conditionalSql(returning, () => sql.fragment`returning *`)}
+                `;
+
                 const {
                     rows: [data]
-                } = await pool.query((returning ? sql.type(guard) : sql.unsafe)`
-                            update ${table}
-                            set ${sql.join(connectKeyValueWithEqualSign(set, jsonbMode), sql.fragment`, `)}
-                            where ${sql.join(connectKeyValueWithEqualSign(where, jsonbMode), sql.fragment` and `)} ${conditionalSql(returning, () => sql.fragment`returning *`)}
-                    `
-                );
+                } = returning
+                    ? await pool.query(sql.type(guard)`${query}`)
+                    : await pool.query(sql.unsafe`${query}`);
+
                 assertThat(!returning || data, new UpdateError(entity, {set, where}));
 
                 return data;
