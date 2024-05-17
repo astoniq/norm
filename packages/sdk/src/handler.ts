@@ -91,8 +91,6 @@ export class EchoRequestHandler<Input extends any[] = any[], Output = any> {
         const method = await request.method()
         const url = await request.url()
         const action = url.searchParams.get(HttpQueryKeysType.ACTION) || '';
-        const workflowId = url.searchParams.get(HttpQueryKeysType.WORKFLOW_ID) || '';
-        const stepId = url.searchParams.get(HttpQueryKeysType.STEP_ID) || '';
 
         let body: Record<string, unknown> = {};
 
@@ -105,7 +103,7 @@ export class EchoRequestHandler<Input extends any[] = any[], Output = any> {
         }
 
         try {
-            const postActionMap = this.getPostActionMap(body, workflowId, stepId, action);
+            const postActionMap = this.getPostActionMap(body, action);
             const getActionMap = this.getGetActionMap();
 
             if (method === HttpMethodType.POST) {
@@ -159,16 +157,12 @@ export class EchoRequestHandler<Input extends any[] = any[], Output = any> {
 
     private getPostActionMap(
         body: any,
-        workflowId: string,
-        stepId: string,
         action: string
     ): Record<PostActionType, () => Promise<ActionResponse>> {
         return {
             [PostActionType.EXECUTE]: async () => {
                 const result = await this.client.executeWorkflow({
                     ...body,
-                    workflowId,
-                    stepId,
                     action,
                 });
 
@@ -179,8 +173,6 @@ export class EchoRequestHandler<Input extends any[] = any[], Output = any> {
             [PostActionType.PREVIEW]: async () => {
                 const result = await this.client.executeWorkflow({
                     ...body,
-                    workflowId,
-                    stepId,
                     action,
                 });
 
