@@ -16,6 +16,7 @@
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc",
     "build:test": "pnpm build",
+    "test": "vitest",
     "dev": "tsc --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "prepack": "pnpm build"
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "vitest": "^1.6.0",
     "tslib": "^2.4.1",
     "typescript": "^5.3.3"
   }

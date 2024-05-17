@@ -37,7 +37,7 @@ export type ActionStepOptions = {
 type StepOutput<StepResult> = Promise<StepResult & { ctx: StepContext }>;
 
 export type ActionStep<Inputs, Outputs, Result> = (
-    name: string,
+    stepId: string,
     resolve: (inputs: Inputs) => MaybePromise<Outputs>,
     options?: ActionStepOptions
 ) => StepOutput<Result>
@@ -45,7 +45,7 @@ export type ActionStep<Inputs, Outputs, Result> = (
 export type ChannelStep<
     Outputs,
     Result> = <InputSchema extends Schema, Inputs = FromSchema<InputSchema>>(
-    name: string,
+    stepId: string,
     resolve: (inputs: Inputs) => MaybePromise<Outputs>,
     options?: {
         inputSchema?: InputSchema

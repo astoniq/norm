@@ -1,4 +1,4 @@
-export enum HttpHeaderKeysEnum {
+export enum HttpHeaderKeysType {
     SIGNATURE = 'x-norm-signature',
     ANONYMOUS = 'x-norm-anonymous',
     EXECUTION_DURATION = 'x-echo-execution-duration',
