@@ -18,11 +18,11 @@ const sendMessage = async (getConfig: GetConnectorConfig): Promise<SendEmailFunc
 
     validateConfig(config, smtpConfigGuard);
 
-    const transporter = createTransport(config)
+    const transport = createTransport(config)
 
     return async (data) => {
         try {
-            return await transporter.sendMail({
+            return await transport.sendMail({
                 to: data.to,
                 html: data.html,
                 subject: data.subject
