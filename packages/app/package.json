@@ -30,7 +30,9 @@
     "koa-body": "^5.0.0",
     "i18next": "^22.4.15",
     "koa": "^2.15.2",
+    "ioredis": "^5.4.1",
     "koa-router": "^12.0.1",
+    "koa-mount": "^4.0.0",
     "camelcase": "^8.0.0",
     "zod": "^3.22.4"
   },
@@ -40,6 +42,7 @@
     "@types/inquirer": "^9.0.0",
     "@types/koa": "^2.15.0",
     "@types/koa-router": "^7.4.8",
+    "@types/koa-mount": "^4.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^20.0.0",
     "@types/semver": "^7.3.12",

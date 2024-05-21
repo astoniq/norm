@@ -1,8 +1,6 @@
 import {getEnv} from "@astoniq/essentials";
 
-enum WorkerEnum {
-    SUBSCRIBER_PROCESS = 'SubscriberProcessWorker',
-    STANDARD = 'StandardWorker',
+enum Worker {
     WORKFLOW = 'WorkflowWorker',
 }
 
@@ -21,17 +19,9 @@ const getDefaultLockDuration = () =>
         ? Number(getEnv('WORKER_DEFAULT_LOCK_DURATION'))
         : undefined;
 
-const getWorkerConfig = (worker: WorkerEnum): WorkerConfig => {
+const getWorkerConfig = (worker: Worker): WorkerConfig => {
     const workersConfig = {
-        [WorkerEnum.SUBSCRIBER_PROCESS]: {
-            concurrency: getDefaultConcurrency() ?? 200,
-            lockDuration: getDefaultLockDuration() ?? 90000,
-        },
-        [WorkerEnum.STANDARD]: {
-            concurrency: getDefaultConcurrency() ?? 200,
-            lockDuration: getDefaultLockDuration() ?? 90000,
-        },
-        [WorkerEnum.WORKFLOW]: {
+        [Worker.WORKFLOW]: {
             concurrency: getDefaultConcurrency() ?? 200,
             lockDuration: getDefaultLockDuration() ?? 90000,
         },
@@ -40,11 +30,5 @@ const getWorkerConfig = (worker: WorkerEnum): WorkerConfig => {
     return workersConfig[worker];
 };
 
-export const getSubscriberProcessWorkerOptions = () =>
-    getWorkerConfig(WorkerEnum.SUBSCRIBER_PROCESS);
-
-export const getStandardWorkerOptions = () =>
-    getWorkerConfig(WorkerEnum.STANDARD);
-
 export const getWorkflowWorkerOptions = () =>
-    getWorkerConfig(WorkerEnum.WORKFLOW);
+    getWorkerConfig(Worker.WORKFLOW);

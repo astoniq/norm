@@ -11,7 +11,7 @@ export const createDbPool = async (
         return createMockPool({query: async () => createMockQueryResult([])})
     }
 
-    assert(parseDsn(databaseDsn).databaseName, new Error("Database name is required"))
+    assert(parseDsn(databaseDsn).databaseName, new Error("Database name is required in url"))
 
     return createPool(databaseDsn, {
         interceptors: createInterceptorsPreset(),

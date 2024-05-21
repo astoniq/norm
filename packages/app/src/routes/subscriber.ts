@@ -1,6 +1,6 @@
-import {AuthedRouter, RouterInitArgs} from "./types.js";
+import {AnonymousRouter, RouterInitArgs} from "./types.js";
 
-export default function subscriberRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function subscriberRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
 
     router.get(
         '/subscribers',

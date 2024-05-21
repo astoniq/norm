@@ -1,7 +1,7 @@
 import {CommonQueryMethods} from "slonik";
 
 
-export const createWorkflowQueries = (pool: CommonQueryMethods) => {
+export const createNotificationQueries = (pool: CommonQueryMethods) => {
 
     return {
         pool

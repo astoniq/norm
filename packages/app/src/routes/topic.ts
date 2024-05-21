@@ -1,9 +1,9 @@
-import {AuthedRouter, RouterInitArgs} from "./types.js";
+import {AnonymousRouter, RouterInitArgs} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
 import {createTopicGuard, topicGuard} from "@astoniq/norm-schema";
 import {object, string} from "zod";
 
-export default function topicRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function topicRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
 
     router.post(
         '/topics',

@@ -1,6 +1,6 @@
 import {DatabasePool} from "slonik";
 import {MigrationFile, MigrationScript} from "../types/index.js";
-import {getCurrentDatabaseMigrationTimestamp, updateMigrationTimestamp} from "../queues/migration.js";
+import {getCurrentDatabaseMigrationTimestamp, updateMigrationTimestamp} from "../queries/migration.js";
 import {logger} from "../utils/logger.js";
 import path from "path";
 import {fileURLToPath, pathToFileURL} from "url";
