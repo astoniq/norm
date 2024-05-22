@@ -36,7 +36,7 @@ const sendMessage = async (getConfig: GetConnectorConfig): Promise<SendEmailFunc
     }
 }
 
-const smtpConnector: CreateConnector<EmailConnector> = async ({getConfig}) => {
+export const smtpConnector: CreateConnector<EmailConnector> = async ({getConfig}) => {
     return {
         metadata: defaultMetadata,
         type: ConnectorType.Email,
@@ -44,5 +44,3 @@ const smtpConnector: CreateConnector<EmailConnector> = async ({getConfig}) => {
         sendMessage: sendMessage(getConfig)
     }
 }
-
-export default smtpConnector

@@ -112,11 +112,14 @@ importers:
         specifier: ^5.3.3
         version: 5.4.5
 
-  packages/connector:
+  packages/connectors:
     dependencies:
       '@astoniq/essentials':
         specifier: ^0.2.1
         version: 0.2.1
+      '@astoniq/norm-schema':
+        specifier: workspace:^0.1.0
+        version: link:../schema
       nodemailer:
         specifier: ^6.9.9
         version: 6.9.13

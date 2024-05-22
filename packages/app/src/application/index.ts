@@ -7,6 +7,7 @@ import koaErrorHandler from "../middlewares/koa-error-handler.js";
 import {createQueues} from "../queues/index.js";
 import {initApis} from "../routes/index.js";
 import {createRedis} from "./redis.js";
+import {createWorkers} from "../workers/index.js";
 
 const serverTimeout = 120_000;
 
@@ -25,6 +26,12 @@ export async function initApp() {
     const queries = createQueries(pool);
 
     const queues = createQueues(redis)
+
+    createWorkers({
+        queries,
+        queues,
+        redis
+    })
 
     const app = new Koa()
 

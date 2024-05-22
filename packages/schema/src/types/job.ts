@@ -1,5 +1,6 @@
 import {z} from "zod";
-import {jsonObjectGuard} from "../foundations/index.js";
+import {triggerEventBaseGuard, triggerEventGuard} from "./event.js";
+import {subscribersDefineGuard, SubscriberSource} from "./subscriber.js";
 
 export enum JobTopic {
     Workflow = 'workflow',
@@ -8,10 +9,14 @@ export enum JobTopic {
     Echo = 'echo'
 }
 
-export const workflowJob = z.object({
-    name: z.string().min(1),
-    to: z.array(z.string()),
-    payload: jsonObjectGuard
-})
+export const workflowJob = triggerEventGuard
 
 export type WorkflowJob = z.infer<typeof workflowJob>
+
+export const subscriberJob = z.object({
+    ...triggerEventBaseGuard,
+    subscriber: subscribersDefineGuard,
+    subscriberSource: z.nativeEnum(SubscriberSource)
+})
+
+export type SubscriberJob = z.infer<typeof subscriberJob>

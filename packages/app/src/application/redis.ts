@@ -3,7 +3,9 @@ import {Redis} from "ioredis";
 
 export const createRedis = (url: string): Redis => {
 
-    const client = new Redis(url)
+    const client = new Redis(url, {
+        maxRetriesPerRequest: null
+    })
 
     client.on("connect", () => {
         logger.info("Redis connected")

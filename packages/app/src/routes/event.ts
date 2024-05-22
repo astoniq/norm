@@ -1,6 +1,6 @@
 import {AnonymousRouter, RouterInitArgs} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
-import {triggerEventRequestGuard,} from "@astoniq/norm-schema";
+import {triggerEventGuard} from "@astoniq/norm-schema";
 import {generateStandardId} from "../utils/id.js";
 
 export default function eventRoutes<T extends AnonymousRouter>(...args: RouterInitArgs<T>) {
@@ -15,7 +15,7 @@ export default function eventRoutes<T extends AnonymousRouter>(...args: RouterIn
     router.post(
         '/events',
         koaGuard({
-            body: triggerEventRequestGuard,
+            body: triggerEventGuard,
             status: [201, 400]
         }),
         async (ctx, next) => {
