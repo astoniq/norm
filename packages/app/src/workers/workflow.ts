@@ -3,7 +3,7 @@ import {
     AddressingType,
     JobTopic,
     SubscriberJob,
-    SubscribersDefine,
+    SubscriberDefine,
     SubscriberSource,
     Topic,
     TriggerEvent, TriggerEventBroadcast,
@@ -41,7 +41,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
     }
 
     const splitByRecipientType = (mappedRecipients: TriggerRecipient[]): {
-        singleSubscribers: Map<string, SubscribersDefine>,
+        singleSubscribers: Map<string, SubscriberDefine>,
         topicsNames: Set<string>
     } => {
         return mappedRecipients.reduce(
@@ -57,42 +57,40 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
                     const subscriberDefine = buildSubscriberDefine(mappedRecipient)
 
                     acc.singleSubscribers.set(
-                        subscriberDefine.subscriberId,
+                        subscriberDefine.externalId,
                         subscriberDefine
                     )
                 }
                 return acc
             },
             {
-                singleSubscribers: new Map<string, SubscribersDefine>(),
+                singleSubscribers: new Map<string, SubscriberDefine>(),
                 topicsNames: new Set<string>()
             }
         )
     }
 
     const buildSubscriberDefine = (
-        subscriber: TriggerRecipientSubscriber): SubscribersDefine => {
+        subscriber: TriggerRecipientSubscriber): SubscriberDefine => {
 
         if (typeof subscriber.recipient === 'string') {
-            return {subscriberId: subscriber.recipient}
+            return {externalId: subscriber.recipient}
         } else {
             return validateSubscriberDefine(subscriber.recipient)
         }
     }
 
-    const validateSubscriberDefine = (recipient: SubscribersDefine) => {
+    const validateSubscriberDefine = (recipient: SubscriberDefine) => {
         if (!recipient) {
-            throw new Error('subscriberId under property to is not configured')
+            throw new Error('externalId under property to is not configured')
         }
 
         if (Array.isArray(recipient)) {
-            throw new Error('subscriberId under property to is type array')
+            throw new Error('externalId under property to is type array')
         }
 
-        if (!recipient.subscriberId) {
-            throw new Error(
-                'subscriberId under property to is not configured'
-            )
+        if (!recipient.externalId) {
+            throw new Error('externalId under property to is not configured')
         }
         return recipient
     }
@@ -109,7 +107,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
     const sendToProcessSubscriber = async (
         event: TriggerEvent,
-        subscribers: SubscribersDefine[],
+        subscribers: SubscriberDefine[],
         subscriberSource: SubscriberSource) => {
 
         if (subscribers.length === 0) {
@@ -127,7 +125,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
     const mapSubscribersToSubscriberJobs = (
         subscriberSource: SubscriberSource,
-        subscribers: SubscribersDefine[],
+        subscribers: SubscriberDefine[],
         event: TriggerEvent
     ): JobParams<SubscriberJob>[] => {
         return subscribers.map((subscriber) => {
@@ -192,7 +190,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
         const singleSubscriberIds = Array.from(singleSubscribers.keys());
         const topicsIds = availableTopics.map(topic => topic.id);
 
-        let subscribersList: SubscribersDefine[] = [];
+        let subscribersList: SubscriberDefine[] = [];
 
         const topicSubscribersGenerator = await topicSubscribers
             .findTopicSubscribersByIds(topicsIds, singleSubscriberIds)
@@ -200,7 +198,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
         for (const topicSubscriber of topicSubscribersGenerator) {
 
-            subscribersList.push({subscriberId: topicSubscriber.externalId});
+            subscribersList.push({externalId: topicSubscriber.externalId});
 
             if (subscribersList.length === subscriberTopicBatchSize) {
                 await sendToProcessSubscriber(event, subscribersList, SubscriberSource.Topic)
@@ -215,12 +213,12 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
     const triggerBroadcastEvent = async (event: TriggerEventBroadcast) => {
 
-        let subscribersList: SubscribersDefine[] = [];
+        let subscribersList: SubscriberDefine[] = [];
         const availableSubscribers = await subscribers.findAllSubscribers()
 
         for (const subscriber of availableSubscribers) {
 
-            subscribersList.push({subscriberId: subscriber.externalId});
+            subscribersList.push({externalId: subscriber.externalId});
 
             if (subscribersList.length === subscriberBatchSize) {
                 await sendToProcessSubscriber(event, subscribersList, SubscriberSource.Broadcast)

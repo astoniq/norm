@@ -5,7 +5,6 @@ export const createNotificationGuard = z.object({
     id: z.string().min(1).max(21),
     resourceId: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(21),
-    workflowId: z.string().min(1),
     payload: jsonObjectGuard
 });
 
@@ -15,7 +14,6 @@ export const notificationGuard = z.object({
     id: z.string().min(1).max(21),
     resourceId: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(21),
-    workflowId: z.string().min(1),
     payload: jsonObjectGuard
 });
 

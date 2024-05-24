@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {jsonObjectGuard} from "../foundations/index.js";
-import {subscribersDefineGuard} from "./subscriber.js";
+import {subscriberDefineGuard} from "./subscriber.js";
 
 export enum TriggerEventStatus {
     Error = 'error',
@@ -31,7 +31,7 @@ export type TriggerRecipientTopic = z.infer<typeof triggerRecipientTopic>
 
 export const triggerRecipientSubscriber = z.object({
     type: z.literal(TriggerRecipientsType.Subscriber),
-    recipient: z.union([z.string(), subscribersDefineGuard])
+    recipient: z.union([z.string(), subscriberDefineGuard])
 })
 
 export type TriggerRecipientSubscriber = z.infer<typeof triggerRecipientSubscriber>
