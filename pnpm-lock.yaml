@@ -59,6 +59,9 @@ importers:
       koa-router:
         specifier: ^12.0.1
         version: 12.0.1
+      ky:
+        specifier: ^1.2.3
+        version: 1.2.4
       nanoid:
         specifier: ^5.0.1
         version: 5.0.7
@@ -2009,6 +2012,11 @@ packages:
       vary: 1.1.2
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /ky@1.2.4:
+    resolution: {integrity: sha512-CfSrf4a0yj1n6WgPT6kQNQOopIGLkQzqSAXo05oKByaH7G3SiqW4a8jGox0p9whMXqO49H7ljgigivrMyycAVA==}
+    engines: {node: '>=18'}
     dev: false
 
   /leven@3.1.0:

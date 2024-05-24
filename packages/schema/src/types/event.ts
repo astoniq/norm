@@ -18,6 +18,7 @@ export enum AddressingType {
 }
 
 export const triggerEventBaseGuard = {
+    resourceId: z.string().min(1),
     name: z.string().min(1),
     payload: jsonObjectGuard
 }

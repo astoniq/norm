@@ -2,7 +2,7 @@ import {Worker} from "bullmq";
 import {
     JobTopic,
     Subscriber,
-    SubscriberJob, SubscriberDefine,
+    SubscriberJob, SubscriberDefine, NotificationStatus,
 } from "@astoniq/norm-schema";
 import {WorkerOptions} from "./types.js";
 import {generateStandardId} from "../utils/id.js";
@@ -72,7 +72,9 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
             id: notificationId,
             subscriberId: subscriberProcessed.id,
             payload: data.payload,
-            resourceId: data.name
+            resourceId: data.resourceId,
+            name: data.name,
+            status: NotificationStatus.Pending
         })
 
         if (!notification) {
