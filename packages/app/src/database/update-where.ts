@@ -51,7 +51,7 @@ export const buildUpdateWhereWithPool =
                     .filter((value): value is Truthy<typeof value> => notFalsy(value));
 
             return async ({set, where, jsonbMode}: UpdateWhereData<T, T>): Promise<T | void> => {
-                const query = `
+                const query = sql.fragment`
                     update ${table}
                     set ${sql.join(connectKeyValueWithEqualSign(set, jsonbMode), sql.fragment`, `)}
                     where ${sql.join(connectKeyValueWithEqualSign(where, jsonbMode), sql.fragment` and `)} ${conditionalSql(returning, () => sql.fragment`returning *`)}

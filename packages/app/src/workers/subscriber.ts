@@ -24,17 +24,17 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
     }
 
     const updateSubscriber = async (subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
-        return await subscribers.updateSubscriber({
+        return subscribers.updateSubscriber({
             set: subscriberDefine,
-            where: {externalId: subscriberDefine.externalId},
+            where: {subscriberId: subscriberDefine.subscriberId},
             jsonbMode: "merge"
         })
     }
 
     const getSubscriber = async (subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
 
-        const subscriber = await subscribers.hasSubscriberByExternalId(
-            subscriberDefine.externalId)
+        const subscriber = await subscribers.hasSubscriberBySubscriberId(
+            subscriberDefine.subscriberId)
 
         if (subscriber) {
             return updateSubscriber(subscriberDefine)
@@ -47,7 +47,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
         const subscriber = await getSubscriber(subscriberDefine)
 
-        if (subscriberDefine === null) {
+        if (subscriber === null) {
             return undefined
         }
 
@@ -73,7 +73,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
             subscriberId: subscriberProcessed.id,
             payload: data.payload,
             resourceId: data.resourceId,
-            name: data.name,
+            workflowId: data.workflowId,
             status: NotificationStatus.Pending
         })
 

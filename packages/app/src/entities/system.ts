@@ -4,13 +4,9 @@ import {System} from "@astoniq/norm-schema";
 export const systemEntity: Entity<System> =
     Object.freeze({
         table: 'systems',
+        tableSingular: 'system',
         fields: {
             key: 'key',
             value: 'value'
         },
-        tableSingular: 'system',
-        fieldKeys: [
-            'key',
-            'value'
-        ] as const,
     })

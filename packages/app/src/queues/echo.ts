@@ -5,7 +5,7 @@ import {Redis} from "ioredis";
 
 export const createEchoQueue = (redis: Redis) => {
 
-    const queue = new Queue<EchoJob>(JobTopic.Workflow, {
+    const queue = new Queue<EchoJob>(JobTopic.Echo, {
         connection: redis,
         defaultJobOptions: {
             removeOnComplete: true

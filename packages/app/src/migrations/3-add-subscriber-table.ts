@@ -6,9 +6,9 @@ const addSubscriberTableMigrationScript: MigrationScript = {
         await pool.query(sql.unsafe`
             create table subscribers
             (
-                id          varchar(21)  not null,
-                external_id varchar(128) not null,
-                email       varchar(128) not null,
+                id            varchar(21)  not null,
+                subscriber_id varchar(128) not null,
+                email         varchar(128) null,
                 primary key (id)
             );
             create index subscribers_id on subscribers (id);

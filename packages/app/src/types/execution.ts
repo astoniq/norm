@@ -10,15 +10,8 @@ export interface ExecutionEvent {
 
 export type ExecutionAction = 'execute' | 'preview'
 
-export type ExecutionMetadata = {
-    status: string;
-    error?: string;
-    duration: number;
-}
-
 export interface ExecutionState {
     stepId: string;
     type: string;
     result: unknown;
-    metadata: ExecutionMetadata
 }

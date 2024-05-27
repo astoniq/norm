@@ -1,10 +1,10 @@
 import {CommonQueryMethods, sql} from "slonik";
-import {notificationEntity, resourceEntity} from "../entities/index.js";
+import {notificationEntity} from "../entities/index.js";
 import {buildInsertIntoWithPool, buildUpdateWhereWithPool} from "../database/index.js";
 import {notificationGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
 
-const {table, fields} = convertToIdentifiers(resourceEntity);
+const {table, fields} = convertToIdentifiers(notificationEntity);
 
 export const createNotificationQueries = (pool: CommonQueryMethods) => {
 
@@ -13,9 +13,9 @@ export const createNotificationQueries = (pool: CommonQueryMethods) => {
 
     const findNotificationById = async (id: string) =>
         pool.maybeOne(sql.type(notificationGuard)`
-         select ${sql.join(Object.values(fields), sql.fragment`,`)}
-         from ${table}
-         where ${fields.id}=${id}
+            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            from ${table}
+            where ${fields.id} = ${id}
         `)
 
     const updateNotification = buildUpdateWhereWithPool(pool)(

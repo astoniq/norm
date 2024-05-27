@@ -137,6 +137,61 @@ importers:
         specifier: ^6.4.7
         version: 6.4.15
 
+  packages/demo:
+    dependencies:
+      '@astoniq/essentials':
+        specifier: ^0.2.1
+        version: 0.2.1
+      '@astoniq/norm-sdk':
+        specifier: workspace:^0.1.0
+        version: link:../sdk
+      koa:
+        specifier: ^2.15.2
+        version: 2.15.3
+      koa-body:
+        specifier: ^5.0.0
+        version: 5.0.0
+      koa-mount:
+        specifier: ^4.0.0
+        version: 4.0.0
+      koa-router:
+        specifier: ^12.0.1
+        version: 12.0.1
+    devDependencies:
+      '@types/inquirer':
+        specifier: ^9.0.0
+        version: 9.0.7
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.5.12
+      '@types/koa':
+        specifier: ^2.15.0
+        version: 2.15.0
+      '@types/koa-mount':
+        specifier: ^4.0.0
+        version: 4.0.5
+      '@types/koa-router':
+        specifier: ^7.4.8
+        version: 7.4.8
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.12.11
+      '@types/semver':
+        specifier: ^7.3.12
+        version: 7.5.8
+      '@types/sinon':
+        specifier: ^17.0.0
+        version: 17.0.3
+      '@types/tar':
+        specifier: ^6.1.2
+        version: 6.1.13
+      nodemon:
+        specifier: ^3.1.0
+        version: 3.1.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.4.5
+
   packages/language:
     optionalDependencies:
       zod:

@@ -20,16 +20,16 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         subscriberEntity, subscriberGuard, true
     )
 
-    const hasSubscriberByExternalId = async (externalId: string) => {
+    const hasSubscriberBySubscriberId = async (subscriberId: string) => {
         return pool.exists(sql.type(subscriberGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
-            where ${fields.externalId} = ${externalId}
+            where ${fields.subscriberId} = ${subscriberId}
         `)
     }
 
     return {
-        hasSubscriberByExternalId,
+        hasSubscriberBySubscriberId,
         updateSubscriber,
         insertSubscriber,
         findAllSubscribers

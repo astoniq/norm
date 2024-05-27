@@ -63,7 +63,7 @@ export const buildInsertIntoWithPool =
 
             return async (data: OmitAutoSetFields<CreateEntity>): Promise<T | void> => {
                 const insertingKeys = keys.filter((key) => key in data)
-                const query = `
+                const query = sql.fragment`
                     insert into ${table} (${sql.join(insertingKeys.map((key) => fields[key]), sql.fragment`, `)})
                     values (${sql.join(insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)), sql.fragment`, `)})
                         ${conditionalSql(onConflict, (config) =>

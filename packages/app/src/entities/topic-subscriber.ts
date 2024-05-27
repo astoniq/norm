@@ -11,10 +11,4 @@ export const topicSubscriberEntity: Entity<TopicSubscriber> =
             subscriberId: 'subscriber_id',
             externalId: 'external_id',
         },
-        fieldKeys: [
-            'id',
-            'topicId',
-            'subscriberId',
-            'externalId'
-        ] as const,
     });

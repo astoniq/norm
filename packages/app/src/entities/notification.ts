@@ -4,17 +4,13 @@ import {Notification} from "@astoniq/norm-schema";
 export const notificationEntity: Entity<Notification> =
     Object.freeze({
         table: 'notifications',
+        tableSingular: 'notification',
         fields: {
             id: 'id',
+            workflowId: 'workflow_id',
             resourceId: 'resource_id',
             subscriberId: 'subscriber_id',
-            payload: 'payload'
+            payload: 'payload',
+            status: 'status'
         },
-        tableSingular: 'notification',
-        fieldKeys: [
-            'id',
-            'resourceId',
-            'subscriberId',
-            'payload'
-        ] as const,
     })

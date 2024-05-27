@@ -4,13 +4,11 @@ import {Resource} from "@astoniq/norm-schema";
 export const resourceEntity: Entity<Resource> =
     Object.freeze({
         table: 'resources',
+        tableSingular: 'resource',
         fields: {
             id: 'id',
-            url: 'url'
+            resourceId: 'resource_id',
+            config: 'config',
+            signingKey: 'signing_key'
         },
-        tableSingular: 'resource',
-        fieldKeys: [
-            'id',
-            'url'
-        ] as const,
     })

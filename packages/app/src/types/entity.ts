@@ -26,7 +26,6 @@ export type UpdateWhereData<
 
 export type Entity<T extends EntityLike<T>> = Readonly<{
     tableSingular: string;
-    fieldKeys: ReadonlyArray<EntityKeys<T>>;
 } & Table<T>>
 
 export type EntityKeys<T extends EntityLike<T>> = Extract<keyof T, string>

@@ -10,9 +10,4 @@ export const topicEntity: Entity<Topic> =
             name: 'name',
             description: 'description',
         },
-        fieldKeys: [
-            'id',
-            'name',
-            'description',
-        ] as const,
     });

@@ -12,9 +12,9 @@ type ExcludeAutoSetFields<T> = Exclude<T, (typeof autoSetFields)[number]>
 export const excludeAutoSetFields =
     <T extends EntityLike<T>,
         Keys extends EntityKeys<T>
-    >({fieldKeys}: Entity<T>) =>
+    >({fields}: Entity<T>) =>
         Object.freeze(
-            fieldKeys.filter(
+            Object.keys(fields).filter(
                 (field: PropertyKey): field is ExcludeAutoSetFields<Keys> => !(field in autoSetFields)))
 
 export const convertToPrimitiveOrSql = (

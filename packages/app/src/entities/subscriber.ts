@@ -4,15 +4,10 @@ import {Subscriber} from "@astoniq/norm-schema";
 export const subscriberEntity: Entity<Subscriber> =
     Object.freeze({
         table: 'subscribers',
+        tableSingular: 'system',
         fields: {
             id: 'id',
-            externalId: 'external_id',
+            subscriberId: 'subscriber_id',
             email: 'email'
         },
-        tableSingular: 'system',
-        fieldKeys: [
-            'id',
-            'externalId',
-            'email'
-        ] as const,
     })

@@ -13,7 +13,7 @@ export const subscriberPayloadGuard = z.object({
 export type SubscriberPayload = z.infer<typeof subscriberPayloadGuard>;
 
 export const subscriberDefineGuard = z.object({
-    externalId: z.string()
+    subscriberId: z.string()
 }).merge(subscriberPayloadGuard)
 
 export type SubscriberDefine = z.infer<typeof subscriberDefineGuard>
