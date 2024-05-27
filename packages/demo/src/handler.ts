@@ -1,11 +1,10 @@
 import {EchoRequestHandler} from "@astoniq/norm-sdk";
 import {client} from "./client.js";
 import Koa from "koa";
-import Router from "koa-router";
 
 export const serve = new EchoRequestHandler({
     client,
-    handler: (ctx: Koa.ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>) => ({
+    handler: (ctx: Koa.ParameterizedContext) => ({
         body: () => ctx.request.body,
         headers: (key) => ctx.get(key),
         method: () => ctx.method,
