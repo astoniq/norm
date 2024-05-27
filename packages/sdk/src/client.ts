@@ -16,7 +16,7 @@ import {
     emptySchema,
     pushOutputSchema, pushResultSchema, smsOutputSchema, smsResultSchema
 } from "./schemas/index.js";
-import {Ajv, ValidateFunction} from "ajv"
+import {Ajv, str, ValidateFunction} from "ajv"
 import addFormats from "ajv-formats"
 import {
     ExecutionEventDataInvalidError,
@@ -273,8 +273,12 @@ export class Echo {
 
         let result: {
             outputs: Record<string, unknown>
+            stepId: string,
+            type: string
         } = {
-            outputs: {}
+            outputs: {},
+            stepId: '',
+            type: ''
         }
 
         let resolveEarlyExit: (value?: unknown) => void;
@@ -302,8 +306,8 @@ export class Echo {
                     step: {
                         email: this.executeStepFactory(event, setResult),
                         sms: this.executeStepFactory(event, setResult),
-                        chat:  this.executeStepFactory(event, setResult),
-                        push:  this.executeStepFactory(event, setResult)
+                        chat: this.executeStepFactory(event, setResult),
+                        push: this.executeStepFactory(event, setResult)
                     }
                 })
             ])
@@ -321,8 +325,10 @@ export class Echo {
             throw executionError;
         }
 
-        return  {
+        return {
             outputs: result.outputs,
+            stepId: result.stepId,
+            type: result.type,
             metadata: {
                 status: 'success',
                 error: false,
@@ -368,14 +374,18 @@ export class Echo {
     private async executeStep(
         event: ExecutionEvent,
         step: DiscoverStepOutput
-    ): Promise<Pick<ExecuteOutput, 'outputs'>> {
+    ): Promise<Omit<ExecuteOutput, 'metadata'>> {
+
+        const {stepId, type} = step
+
         if (event.stepId === step.stepId) {
+
             const input = this.createStepInputs(event, step)
-            const result = await step.resolve(input);
+            const outputs = await step.resolve(input);
 
             this.validate(
-                result,
-                step.outputs.validate,
+                outputs,
+                step.output.validate,
                 'step',
                 'output',
                 event.workflowId,
@@ -383,15 +393,17 @@ export class Echo {
             )
 
             return {
-                outputs: result
+                outputs,
+                stepId,
+                type
             }
         } else {
-            const result = event.state.find(state => state.stepId === step.stepId)
+            const result = event.result.find(state => state.stepId === step.stepId)
 
             if (result) {
                 this.validate(
                     result.outputs,
-                    step.results.validate,
+                    step.result.validate,
                     'step',
                     'result',
                     event.workflowId,

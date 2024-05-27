@@ -1,16 +1,14 @@
 import {Step} from "./step.js";
 import {Subscriber} from "./subscriber.js";
 
-export type WorkflowExecuteInput<Payload, Input> = {
+export type WorkflowExecuteInput<Payload> = {
     step: Step;
     payload: Payload;
     subscriber: Subscriber
-    input: Input
 }
 
-export type WorkflowExecute<Payload, Input> = (event: WorkflowExecuteInput<Payload, Input>) => Promise<void>;
+export type WorkflowExecute<Payload> = (event: WorkflowExecuteInput<Payload>) => Promise<void>;
 
-export type WorkflowOptions<PayloadSchema, InputSchema> = {
+export type WorkflowOptions<PayloadSchema> = {
     payloadSchema?: PayloadSchema;
-    inputSchema?: InputSchema
 }

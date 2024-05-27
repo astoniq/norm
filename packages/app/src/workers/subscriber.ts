@@ -70,7 +70,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
         // Создание записи notification
         const notification = await notifications.insertNotification({
             id: notificationId,
-            subscriberId: subscriberProcessed.id,
+            subscriberId: subscriberProcessed.subscriberId,
             payload: data.payload,
             resourceId: data.resourceId,
             workflowId: data.workflowId,

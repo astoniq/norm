@@ -11,15 +11,11 @@ export type Validate = ValidateFunction;
 export type DiscoverStepOutput = {
     stepId: string;
     type: StepType;
-    inputs: {
-        schema: Schema;
-        validate: Validate;
-    },
-    outputs: {
+    output: {
         schema: Schema
         validate: Validate;
     }
-    results: {
+    result: {
         schema: Schema;
         validate: Validate;
     },
@@ -32,12 +28,8 @@ export type DiscoverWorkflowOutput = {
     execute: WorkflowExecute<any, any>;
     options: WorkflowOptions<any, any>;
     steps: Array<DiscoverStepOutput>;
-    data: {
+    payload: {
         schema: Schema,
-        validate: Validate;
-    },
-    inputs: {
-        schema: Schema;
         validate: Validate;
     }
 }
