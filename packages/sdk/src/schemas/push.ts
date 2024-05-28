@@ -1,18 +1,8 @@
-import {Schema} from "../types/index.js";
+import {z} from "zod";
 
-export const pushOutputSchema = {
-    type: 'object',
-    properties: {
-        subject: { type: 'string' },
-        body: { type: 'string' },
-    },
-    required: ['subject', 'body'],
-    additionalProperties: false,
-} as const satisfies Schema;
+export const pushOutputSchema = z.object({
+    subject: z.string(),
+    body: z.string()
+})
 
-export const pushResultSchema = {
-    type: 'object',
-    properties: {},
-    required: [],
-    additionalProperties: false,
-} as const satisfies Schema;
+export const pushResultSchema = z.object({})

@@ -1,5 +1,4 @@
 export * from './config.js'
-export * from './schema.js'
 export * from './base.js'
 export * from './step.js'
 export * from './subscriber.js'

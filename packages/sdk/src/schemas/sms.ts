@@ -1,17 +1,7 @@
-import {Schema} from "../types/index.js";
+import {z} from "zod";
 
-export const smsOutputSchema = {
-    type: 'object',
-    properties: {
-        body: { type: 'string' },
-    },
-    required: ['body'],
-    additionalProperties: false,
-} as const satisfies Schema;
+export const smsOutputSchema = z.object({
+    body: z.string()
+})
 
-export const smsResultSchema = {
-    type: 'object',
-    properties: {},
-    required: [],
-    additionalProperties: false,
-} as const satisfies Schema;
+export const smsResultSchema = z.object({})

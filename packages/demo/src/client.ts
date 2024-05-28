@@ -1,4 +1,5 @@
 import {Echo} from "@astoniq/norm-sdk";
+import {z} from "zod";
 
 
 export const client = new Echo({
@@ -6,12 +7,16 @@ export const client = new Echo({
     apiKey: ''
 })
 
-await client.workflow('hello', async ({step}) => {
+await client.workflow('hello', async ({step, payload}) => {
 
     await step.email('send-email', async () => {
         return {
             subject: 'This is an email subject',
-            body: 'hello message'
+            body: `hello message ${payload.username}`
         }
     })
-}, {payloadSchema: {type: 'object', properties: {}}})
+}, {
+    payloadSchema: z.object({
+        username: z.string()
+    })
+})

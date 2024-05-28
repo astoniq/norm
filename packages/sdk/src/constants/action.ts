@@ -1,6 +1,5 @@
 export enum PostActionType {
-    EXECUTE = 'execute',
-    PREVIEW = 'preview'
+    EXECUTE = 'execute'
 }
 
 export enum GetActionType {

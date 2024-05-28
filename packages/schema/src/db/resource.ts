@@ -5,7 +5,7 @@ export const createResourceGuard = z.object({
     id: z.string().min(1).max(21),
     resourceId: z.string().min(1).max(256),
     config: resourceConfigGuard,
-    signingKey: z.string().min(1).max(64).optional()
+    signingKey: z.string().min(1).max(64)
 });
 
 export type CreateResource = z.infer<typeof createResourceGuard>;

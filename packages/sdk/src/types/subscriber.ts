@@ -1,5 +1,4 @@
 
 export type Subscriber = {
-    firstName?: string;
-    lastName?: string
+    subscriberId: string;
 }

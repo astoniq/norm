@@ -166,19 +166,7 @@ export class EchoRequestHandler<Input extends any[] = any[], Output = any> {
                     action,
                 });
 
-                return this.createResponse(HttpStatusType.OK, result, {
-                    [HttpHeaderKeysType.EXECUTION_DURATION]: result.metadata.duration.toString(),
-                });
-            },
-            [PostActionType.PREVIEW]: async () => {
-                const result = await this.client.executeWorkflow({
-                    ...body,
-                    action,
-                });
-
-                return this.createResponse(HttpStatusType.OK, result, {
-                    [HttpHeaderKeysType.EXECUTION_DURATION]: result.metadata.duration.toString(),
-                });
+                return this.createResponse(HttpStatusType.OK, result);
             },
 
         };

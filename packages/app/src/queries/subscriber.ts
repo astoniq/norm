@@ -28,8 +28,17 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         `)
     }
 
+    const findSubscriberBySubscriberId = async (subscriberId: string) => {
+        return pool.maybeOne(sql.type(subscriberGuard)`
+            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            from ${table}
+            where ${fields.subscriberId} = ${subscriberId}
+        `)
+    }
+
     return {
         hasSubscriberBySubscriberId,
+        findSubscriberBySubscriberId,
         updateSubscriber,
         insertSubscriber,
         findAllSubscribers

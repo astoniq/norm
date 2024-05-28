@@ -1,8 +1,3 @@
-import {Schema} from "../types/index.js";
+import {z} from "zod";
 
-export const emptySchema = {
-    type: 'object',
-    properties: {},
-    required: [],
-    additionalProperties: false
-} as const satisfies Schema
+export const emptySchema = z.object({})

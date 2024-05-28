@@ -3,10 +3,10 @@ export enum ChannelStepType {
     Sms = 'sms',
     Push = 'push',
     Chat = 'chat',
+    App = 'app'
 }
 
 export enum ActionStepType {
     Digest = 'digest',
-    Delay = 'delay',
-    Custom = 'custom'
+    Delay = 'delay'
 }

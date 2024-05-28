@@ -1,56 +1,52 @@
 import {
-    ClientConfig,
-    WorkflowExecute,
-    Schema,
-    WorkflowOptions,
     ActionStep,
+    AppStep,
+    ClientConfig,
+    ExecuteOutput,
     ExecutionEvent,
-    ExecuteOutput
+    Subscriber,
+    WorkflowExecute,
+    WorkflowOptions
 } from "./types/index.js";
-import {FromSchema} from "json-schema-to-ts";
-import {DiscoverStepOutput, DiscoverWorkflowOutput, StepType, Validate} from "./types/discover.js";
+import { DiscoverWorkflowOutput, StepOutput, StepType, WorkflowOutput} from "./types/discover.js";
 import {
-    chatOutputSchema, chatResultSchema,
+    chatOutputSchema,
+    chatResultSchema,
     emailOutputSchema,
     emailResultSchema,
     emptySchema,
-    pushOutputSchema, pushResultSchema, smsOutputSchema, smsResultSchema
+    pushOutputSchema,
+    pushResultSchema,
+    smsOutputSchema,
+    smsResultSchema
 } from "./schemas/index.js";
-import {Ajv, str, ValidateFunction} from "ajv"
-import addFormats from "ajv-formats"
 import {
     ExecutionEventDataInvalidError,
-    ExecutionEventInputInvalidError, ExecutionStateCorruptError,
-    ExecutionStateInputInvalidError,
+    ExecutionEventInputInvalidError,
     ExecutionStateOutputInvalidError,
     ExecutionStateResultInvalidError,
-    StepAlreadyExistsError, StepNotFoundError,
+    StepAlreadyExistsError,
+    StepNotFoundError,
     WorkflowAlreadyExistsError,
     WorkflowNotFoundError
 } from "./errors/index.js";
-import * as process from "process";
 import {HealthCheck} from "./constants/index.js";
+import {ZodError, ZodSchema} from "zod";
+import {zodToJsonSchema} from "zod-to-json-schema";
 
 
 export class Echo {
 
     readonly config: ClientConfig;
-    readonly discoveredWorkflows: Array<DiscoverWorkflowOutput> = [];
-    readonly ajv: Ajv;
+    readonly workflows: Array<WorkflowOutput> = [];
 
     constructor(config: ClientConfig) {
         this.config = config
-
-        const ajv = new Ajv({useDefaults: true})
-
-        addFormats.default(ajv)
-
-        this.ajv = ajv;
     }
 
     public healthCheck(): HealthCheck {
-        const workflowCount = this.discoveredWorkflows.length;
-        const stepCount = this.discoveredWorkflows.reduce((acc, workflow) => acc + workflow.steps.length, 0);
+        const workflowCount = this.workflows.length;
+        const stepCount = this.workflows.reduce((acc, workflow) => acc + workflow.steps.length, 0);
 
         return {
             status: 'ok',
@@ -61,20 +57,15 @@ export class Echo {
         };
     }
 
-    public async workflow<
-        PayloadSchema extends Schema,
-        InputSchema extends Schema,
-        Payload = FromSchema<PayloadSchema>,
-        Input = FromSchema<InputSchema>>(
+    public async workflow<Payload>(
         workflowId: string,
-        execute: WorkflowExecute<Payload, Input>,
-        options?: WorkflowOptions<PayloadSchema, InputSchema>
+        execute: WorkflowExecute<Payload>,
+        options?: WorkflowOptions<Payload>
     ): Promise<void> {
         this.discoverWorkflow(workflowId, execute, options);
 
         await execute({
-            subscriber: {},
-            input: {} as Input,
+            subscriber: {} as Subscriber,
             payload: {} as Payload,
             step: {
                 email: this.discoverStepFactory(
@@ -101,35 +92,46 @@ export class Echo {
                     smsOutputSchema,
                     smsResultSchema
                 ),
+                app: this.discoveryAppStepFactory(
+                    workflowId,
+                    'app'
+                )
             }
         })
     }
 
-    private discoverStepFactory<I, T, U>(
-        workflowId: string,
-        type: StepType,
-        outputSchema: Schema,
-        resultSchema: Schema
-    ): ActionStep<I, T, U> {
+    private discoveryAppStepFactory(workflowId: string, type: StepType): AppStep {
         return async (stepId, resolve, options = {}) => {
 
-            const inputSchema = options?.inputSchema || emptySchema
+            const resultSchema = options?.resultSchema || emptySchema;
+            const outputSchema = options?.outputSchema || emptySchema;
 
             this.discoverStep(workflowId, stepId, {
                 stepId,
                 type,
-                inputs: {
-                    schema: inputSchema,
-                    validate: this.ajv.compile(inputSchema)
-                },
-                outputs: {
-                    schema: outputSchema,
-                    validate: this.ajv.compile(outputSchema)
-                },
-                results: {
-                    schema: resultSchema,
-                    validate: this.ajv.compile(resultSchema)
-                },
+                output: outputSchema,
+                result: resultSchema,
+                resolve,
+                options,
+            });
+
+            return undefined as any;
+        };
+    }
+
+    private discoverStepFactory<O, R>(
+        workflowId: string,
+        type: StepType,
+        outputSchema: ZodSchema,
+        resultSchema: ZodSchema
+    ): ActionStep<O, R> {
+        return async (stepId, resolve, options = {}) => {
+
+            this.discoverStep(workflowId, stepId, {
+                stepId,
+                type,
+                output: outputSchema,
+                result: resultSchema,
                 resolve,
                 options
             })
@@ -139,11 +141,32 @@ export class Echo {
     }
 
     public getRegisteredWorkflows(): Array<DiscoverWorkflowOutput> {
-        return this.discoveredWorkflows;
+        return this.workflows.map(workflow => {
+
+            const {
+                workflowId,
+                steps: workflowSteps
+            } =workflow
+
+            const steps = workflowSteps.map(step => {
+                return {
+                    stepId: step.stepId,
+                    type: step.type,
+                    output: zodToJsonSchema(step.output),
+                    result: zodToJsonSchema(step.result)
+                }
+            })
+
+            return {
+                workflowId,
+                steps,
+                payload: zodToJsonSchema(workflow.payload)
+            }
+        });
     }
 
 
-    private discoverStep(workflowId: string, stepId: string, step: DiscoverStepOutput): void {
+    private discoverStep(workflowId: string, stepId: string, step: StepOutput): void {
         if (this.getWorkflow(workflowId).steps.some(workflowStep => workflowStep.stepId === stepId)) {
             throw new StepAlreadyExistsError(stepId);
         } else {
@@ -152,8 +175,8 @@ export class Echo {
         }
     }
 
-    private getWorkflow(workflowId: string): DiscoverWorkflowOutput {
-        const foundWorkflow = this.discoveredWorkflows.find(workflow => workflow.workflowId === workflowId);
+    private getWorkflow(workflowId: string): WorkflowOutput {
+        const foundWorkflow = this.workflows.find(workflow => workflow.workflowId === workflowId);
 
         if (foundWorkflow) {
             return foundWorkflow
@@ -162,32 +185,20 @@ export class Echo {
         }
     }
 
-    private discoverWorkflow<
-        PayloadSchema extends Schema,
-        InputSchema extends Schema,
-        Payload = FromSchema<PayloadSchema>,
-        Input = FromSchema<InputSchema>
-    >
+    private discoverWorkflow<Payload>
     (
         workflowId: string,
-        execute: WorkflowExecute<Payload, Input>,
-        options: WorkflowOptions<PayloadSchema, InputSchema> = {}
+        execute: WorkflowExecute<Payload>,
+        options: WorkflowOptions<Payload> = {}
     ): void {
-        if (this.discoveredWorkflows.some(workflow => workflow.workflowId === workflowId)) {
+        if (this.workflows.some(workflow => workflow.workflowId === workflowId)) {
             throw new WorkflowAlreadyExistsError(workflowId)
         } else {
-            this.discoveredWorkflows.push({
+            this.workflows.push({
                 workflowId,
                 options,
                 steps: [],
-                data: {
-                    schema: options.payloadSchema || emptySchema,
-                    validate: this.ajv.compile(options.payloadSchema || emptySchema)
-                },
-                inputs: {
-                    schema: options.inputSchema || emptySchema,
-                    validate: this.ajv.compile(options.inputSchema || emptySchema)
-                },
+                payload: options.payloadSchema || emptySchema,
                 execute
             })
         }
@@ -195,21 +206,21 @@ export class Echo {
 
     private validate(
         data: unknown,
-        validate: Validate,
+        schema: ZodSchema,
         component: 'event' | 'step',
-        payloadType: 'input' | 'output' | 'result' | 'data',
+        payloadType: 'output' | 'result' | 'payload',
         workflowId: string,
         stepId?: string): void {
 
-        const valid = validate(data)
+        const valid = schema.safeParse(data)
 
-        if (!valid) {
+        if (!valid.success) {
             switch (component) {
                 case "event":
-                    this.validateEvent(payloadType, workflowId, validate)
+                    this.validateEvent(payloadType, workflowId, valid.error)
                     break;
                 case "step":
-                    this.validateStep(stepId, payloadType, workflowId, validate)
+                    this.validateStep(stepId, payloadType, workflowId, valid.error)
                     break;
                 default:
                     throw new Error(`Invalid component type ${component}`)
@@ -217,16 +228,28 @@ export class Echo {
         }
     }
 
+    private formatZodError({issues}: ZodError): string {
+        const errors = issues.map((issue) => {
+            const base = `Error in key path "${issue.path.map(String).join('.')}": (${issue.code}) `;
+
+            if (issue.code === 'invalid_type') {
+                return base + `Expected ${issue.expected} but received ${issue.received}.`;
+            }
+
+            return base + issue.message;
+        });
+
+        return errors.join('\n')
+    }
+
     private validateEvent(
-        payloadType: 'input' | 'output' | 'result' | 'data',
+        payloadType: 'output' | 'result' | 'payload',
         workflowId: string,
-        validate: ValidateFunction
+        error: ZodError
     ) {
         switch (payloadType) {
-            case "input":
-                throw new ExecutionEventInputInvalidError(workflowId, validate.errors)
-            case "data":
-                throw new ExecutionEventDataInvalidError(workflowId, validate.errors);
+            case "payload":
+                throw new ExecutionEventDataInvalidError(workflowId, this.formatZodError(error));
             default:
                 throw new Error(`Invalid payload type '${payloadType}'`)
         }
@@ -234,9 +257,9 @@ export class Echo {
 
     private validateStep(
         stepId: string | undefined,
-        payloadType: 'input' | 'output' | 'result' | 'data',
+        payloadType: 'output' | 'result' | 'payload',
         workflowId: string,
-        validate: ValidateFunction
+        error: ZodError
     ) {
         if (!stepId) {
             throw new Error('stepId is required');
@@ -244,21 +267,17 @@ export class Echo {
 
         switch (payloadType) {
             case 'output':
-                throw new ExecutionStateOutputInvalidError(workflowId, stepId, validate.errors);
+                throw new ExecutionStateOutputInvalidError(workflowId, stepId, this.formatZodError(error));
 
             case 'result':
-                throw new ExecutionStateResultInvalidError(workflowId, stepId, validate.errors);
-
-            case 'input':
-                throw new ExecutionStateInputInvalidError(workflowId, stepId, validate.errors);
-
+                throw new ExecutionStateResultInvalidError(workflowId, stepId, this.formatZodError(error));
             default:
                 throw new Error(`Invalid payload type: '${payloadType}'`);
         }
     }
 
-    private checkEventData(event: ExecutionEvent) {
-        if (event.action === 'execute' && !event.data) {
+    private checkEvenPayload(event: ExecutionEvent) {
+        if (!event.payload) {
             throw new ExecutionEventInputInvalidError(event.workflowId, {
                 message: 'Event `data` is required'
             })
@@ -269,16 +288,8 @@ export class Echo {
 
         const workflow = this.getWorkflow(event.workflowId);
 
-        const startTime = process.hrtime();
-
-        let result: {
-            outputs: Record<string, unknown>
-            stepId: string,
-            type: string
-        } = {
-            outputs: {},
-            stepId: '',
-            type: ''
+        let result: ExecuteOutput = {
+            status: true
         }
 
         let resolveEarlyExit: (value?: unknown) => void;
@@ -286,58 +297,33 @@ export class Echo {
             resolveEarlyExit = resolve
         })
 
-        const setResult = (stepResult: any): void => {
+        const setResult = (stepResult: ExecuteOutput): void => {
             resolveEarlyExit()
             result = stepResult
         }
 
-        let executionError: Error | unknown;
-        try {
+        this.checkEvenPayload(event)
 
-            this.checkEventData(event)
+        const executionData = this.createExecutionInputs(event, workflow);
+        await Promise.race([
+            earlyExitPromise,
+            workflow.execute({
+                payload: executionData,
+                subscriber: event.subscriber,
+                step: {
+                    email: this.executeStepFactory(event, setResult),
+                    sms: this.executeStepFactory(event, setResult),
+                    chat: this.executeStepFactory(event, setResult),
+                    push: this.executeStepFactory(event, setResult),
+                    app: this.executeStepFactory(event, setResult),
+                }
+            })
+        ])
 
-            const executionData = this.createExecutionInputs(event, workflow);
-            await Promise.race([
-                earlyExitPromise,
-                workflow.execute({
-                    payload: executionData,
-                    input: {},
-                    subscriber: event.subscriber,
-                    step: {
-                        email: this.executeStepFactory(event, setResult),
-                        sms: this.executeStepFactory(event, setResult),
-                        chat: this.executeStepFactory(event, setResult),
-                        push: this.executeStepFactory(event, setResult)
-                    }
-                })
-            ])
-        } catch (error) {
-            executionError = error
-        }
-
-        const endTime = process.hrtime(startTime);
-
-        const elapsedSeconds = endTime[0];
-        const elapsedNanoseconds = endTime[1];
-        const elapsedTimeInMilliseconds = elapsedSeconds * 1000 + elapsedNanoseconds / 1_000_000;
-
-        if (executionError) {
-            throw executionError;
-        }
-
-        return {
-            outputs: result.outputs,
-            stepId: result.stepId,
-            type: result.type,
-            metadata: {
-                status: 'success',
-                error: false,
-                duration: elapsedTimeInMilliseconds
-            }
-        }
+        return result
     }
 
-    private getStep(workflowId: string, stepId: string): DiscoverStepOutput {
+    private getStep(workflowId: string, stepId: string): StepOutput {
         const workflow = this.getWorkflow(workflowId)
 
         const foundStep = workflow.steps.find(step => step.stepId === stepId);
@@ -349,112 +335,67 @@ export class Echo {
         }
     }
 
-    private executeStepFactory<I, T, U>(event: ExecutionEvent, setResult: (result: any) => void): ActionStep<I, T, U> {
+    private executeStepFactory<O, R>(event: ExecutionEvent, setResult: (result: ExecuteOutput<O>) => void): ActionStep<O, R> {
         return async (stepId, resolve) => {
             const step = this.getStep(event.workflowId, stepId)
 
-            const previewStepHandler = this.previewStep.bind(this);
-            const executeStepHandler = this.executeStep.bind(this);
-
-            const handler = event.action === 'preview' ? previewStepHandler : executeStepHandler;
-
-            const stepResult = await handler(event, {
+            return this.executeStep(event, setResult, {
                 ...step,
                 resolve
             });
-
-            if (stepId === event.stepId) {
-                setResult(stepResult)
-            }
-
-            return stepResult.outputs as any;
         }
     }
 
-    private async executeStep(
+    private async executeStep<O, R>(
         event: ExecutionEvent,
-        step: DiscoverStepOutput
-    ): Promise<Omit<ExecuteOutput, 'metadata'>> {
+        setResult: (result: ExecuteOutput<O>) => void,
+        step: StepOutput
+    ): Promise<R> {
 
         const {stepId, type} = step
 
-        if (event.stepId === step.stepId) {
+        const state = event.state.find(
+            state => state.stepId === step.stepId)
 
-            const input = this.createStepInputs(event, step)
-            const outputs = await step.resolve(input);
+        if (state) {
+            this.validate(
+                state.result,
+                step.result,
+                'step',
+                'result',
+                event.workflowId,
+                step.stepId
+            )
+
+            return state.result
+        } else {
+
+            const output = await step.resolve();
 
             this.validate(
-                outputs,
-                step.output.validate,
+                output,
+                step.output,
                 'step',
                 'output',
                 event.workflowId,
                 step.stepId
             )
 
-            return {
-                outputs,
+            setResult({
                 stepId,
-                type
-            }
-        } else {
-            const result = event.result.find(state => state.stepId === step.stepId)
+                type,
+                output,
+                status: false
+            })
 
-            if (result) {
-                this.validate(
-                    result.outputs,
-                    step.result.validate,
-                    'step',
-                    'result',
-                    event.workflowId,
-                    step.stepId
-                )
-                return {
-                    outputs: result.outputs
-                }
-            } else {
-                throw new ExecutionStateCorruptError(event.workflowId, step.stepId)
-            }
+            return undefined as any
         }
     }
 
-    private async previewStep(
-        event: ExecutionEvent,
-        step: DiscoverStepOutput
-    ): Promise<Pick<ExecuteOutput, 'outputs'>> {
-        if (event.stepId === step.stepId) {
-            const input = this.createStepInputs(event, step)
-            const result = await step.resolve(input);
+    private createExecutionInputs(event: ExecutionEvent, workflow: WorkflowOutput): Record<string, unknown> {
+        const executionData = event.payload;
 
-            this.validate(
-                result,
-                step.outputs.validate,
-                'step',
-                'output',
-                event.workflowId,
-                step.stepId
-            )
-
-            return {
-                outputs: result
-            }
-        } else {
-            throw new ExecutionStateCorruptError(event.workflowId, step.stepId)
-        }
-    }
-
-    private createStepInputs(event: ExecutionEvent, step: DiscoverStepOutput): Record<string, unknown> {
-        const stepInputs = event.inputs;
-
-        this.validate(stepInputs, step.inputs.validate, 'step', 'input', event.workflowId, step.stepId)
-
-        return stepInputs;
-    }
-
-    private createExecutionInputs(event: ExecutionEvent, workflow: DiscoverWorkflowOutput): Record<string, unknown> {
-        const executionData = event.data;
-
-        this.validate(executionData, workflow.data.validate, 'event', 'input', event.workflowId)
+        this.validate(executionData, workflow.payload, 'event', 'payload', event.workflowId)
 
         return executionData;
     }

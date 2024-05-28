@@ -6,7 +6,7 @@ import {
     Notification,
     NotificationStatus,
     Resource,
-    ResourceConfig,
+    ResourceConfig, Step,
     Subscriber
 } from "@astoniq/norm-schema";
 import ky from "ky";
@@ -14,6 +14,7 @@ import {conditional, trySafe} from "@astoniq/essentials";
 import {sign} from "../utils/sign.js";
 import {ExecuteOutput, ExecutionEvent, ExecutionState} from "../types/index.js";
 import {logger} from "../utils/logger.js";
+import {HTTPError} from "ky";
 
 type SendExecutionEventOptions = {
     resource: Resource,
@@ -30,6 +31,15 @@ export const createEchoWorker = (options: WorkerOptions) => {
             notifications: {
                 findNotificationById,
                 updateNotificationStatusById
+            },
+            steps: {
+                findAllStepByNotificationId
+            },
+            subscribers: {
+                findSubscriberBySubscriberId
+            },
+            resources: {
+                findResourceByResourceId
             }
         }
     } = options
@@ -42,6 +52,10 @@ export const createEchoWorker = (options: WorkerOptions) => {
         const {url, headers} = config;
 
         return ky(url, {
+            searchParams: {
+                action: 'execute'
+            },
+            method: 'POST',
             headers: {
                 ...headers,
                 ...conditional(signingKey && {
@@ -76,9 +90,31 @@ export const createEchoWorker = (options: WorkerOptions) => {
             return response.json()
 
         } catch (error) {
-            logger.error('Invalid fetch')
+            if (error instanceof HTTPError) {
+                const {response} = error;
+                const contentType = response.headers.get('content-type');
+                if (contentType?.indexOf('application/json') !== -1) {
+                    const json = await response.json();
+                    logger.error(json)
+                } else {
+                    const message = await response.text();
+                    logger.error(message)
+                }
+            }
+
             throw error
         }
+    }
+
+    const stepsToExecutionState = (steps?: readonly Step[]): ExecutionState[] => {
+        if (!steps) {
+            return []
+        }
+        return steps.map(step => ({
+            stepId: step.stepId,
+            type: step.type,
+            result: step.result
+        }))
     }
 
     return new Worker<EchoJob>(JobTopic.Echo, async (job) => {
@@ -90,6 +126,7 @@ export const createEchoWorker = (options: WorkerOptions) => {
             } = job
 
             try {
+              await updateNotificationStatusById(notificationId, NotificationStatus.Running)
 
                 const notification = await findNotificationById(notificationId)
 
@@ -97,8 +134,6 @@ export const createEchoWorker = (options: WorkerOptions) => {
                     await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
                     return;
                 }
-
-                await updateNotificationStatusById(notificationId, NotificationStatus.Running)
 
                 const {
                     id,
@@ -112,6 +147,17 @@ export const createEchoWorker = (options: WorkerOptions) => {
                     trySafe(findResourceByResourceId(resourceId))
                 ])
 
+                if (!subscriber) {
+                    await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+                    return;
+                }
+
+                if (!resource) {
+                    await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+                    return;
+                }
+
+                const state = stepsToExecutionState(steps)
 
                 const executeOutput = await sendExecutionEvent({
                     subscriber,
@@ -120,7 +166,11 @@ export const createEchoWorker = (options: WorkerOptions) => {
                     resource
                 })
 
-            } catch {
+                logger.info(executeOutput)
+
+                await updateNotificationStatusById(notificationId, NotificationStatus.Completed)
+            } catch (error) {
+                logger.info(error)
                 await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
             }
         },

@@ -1,5 +1,6 @@
 import {expect, describe, beforeEach, it} from 'vitest'
 import {Echo} from "./client.js";
+import {z} from "zod";
 
 describe('client', () => {
 
@@ -14,46 +15,12 @@ describe('client', () => {
         echo.workflow('in-app-test-something-1', async ({ step, payload }) => {
             await step.email('send-email', async () => ({
                 body: 'Test Body',
-                subject: payload.teamName,
+                subject: payload.name,
             }));
         }, {
-            payloadSchema: {
-                type: "object",
-                properties: {
-                    showJoinButton: { type: "boolean", default: true },
-                    username: { type: "string", default: "alanturing" },
-                    userImage: {
-                        type: "string",
-                        default:
-                            "https://react-email-demo-bdj5iju9r-resend.vercel.app/static/vercel-user.png",
-                        format: "uri",
-                    },
-                    invitedByUsername: { type: "string", default: "Alan" },
-                    invitedByEmail: {
-                        type: "string",
-                        default: "alan.turing@example.com",
-                        format: "email",
-                    },
-                    teamName: { type: "string", default: "Team Awesome" },
-                    teamImage: {
-                        type: "string",
-                        default:
-                            "https://react-email-demo-bdj5iju9r-resend.vercel.app/static/vercel-team.png",
-                        format: "uri",
-                    },
-                    inviteLink: {
-                        type: "string",
-                        default: "https://vercel.com/teams/invite/foo",
-                        format: "uri",
-                    },
-                    inviteFromIp: { type: "string", default: "204.13.186.218" },
-                    inviteFromLocation: {
-                        type: "string",
-                        default: "São Paulo, Brazil",
-                    },
-                },
-                additionalProperties: false
-            },
+            payloadSchema: z.object({
+                name: z.string()
+            }),
         });
     });
 
@@ -63,17 +30,16 @@ describe('client', () => {
     });
 
     it('should run workflow', async () => {
-        const {outputs} = await echo.executeWorkflow({
+        const {output} = await echo.executeWorkflow({
             workflowId: 'in-app-test-something-1',
-            stepId: 'send-email',
-            action: 'execute',
-            subscriber: {},
-            inputs: {},
+            subscriber: {
+                subscriberId: "1"
+            },
             state: [],
-            data: {}
+            payload: {}
         });
 
-        expect(outputs).toEqual({
+        expect(output).toEqual({
             body: 'Test Body',
             subject: 'Team Awesome'})
     });

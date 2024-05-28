@@ -1,7 +1,7 @@
 import {sql} from "slonik";
 import {MigrationScript} from "../types/index.js";
 
-const addTopicTableMigrationScript: MigrationScript = {
+const addNotificationTableMigrationScript: MigrationScript = {
     up: async (pool) => {
         await pool.query(sql.unsafe`
             create table notifications
@@ -24,4 +24,4 @@ const addTopicTableMigrationScript: MigrationScript = {
     }
 }
 
-export default addTopicTableMigrationScript
+export default addNotificationTableMigrationScript

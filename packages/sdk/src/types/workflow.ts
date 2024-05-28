@@ -1,5 +1,6 @@
 import {Step} from "./step.js";
 import {Subscriber} from "./subscriber.js";
+import {ZodSchema} from "zod";
 
 export type WorkflowExecuteInput<Payload> = {
     step: Step;
@@ -10,5 +11,5 @@ export type WorkflowExecuteInput<Payload> = {
 export type WorkflowExecute<Payload> = (event: WorkflowExecuteInput<Payload>) => Promise<void>;
 
 export type WorkflowOptions<PayloadSchema> = {
-    payloadSchema?: PayloadSchema;
+    payloadSchema?: ZodSchema<PayloadSchema>;
 }

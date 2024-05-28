@@ -25,7 +25,7 @@ export const createNotificationQueries = (pool: CommonQueryMethods) => {
         id: string,
         status: string
     ) => updateNotification({
-        set: {status}, where: {id}, jsonbMode: 'merge'
+        set: {status}, where: {id}, jsonbMode: 'replace'
     });
 
     return {

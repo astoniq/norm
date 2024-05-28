@@ -1,6 +1,4 @@
 import {MaybePromise} from "./base.js";
-import {Schema} from "./schema.js";
-import {FromSchema} from "json-schema-to-ts";
 import {
     chatOutputSchema, chatResultSchema,
     emailOutputSchema,
@@ -9,60 +7,42 @@ import {
     smsOutputSchema,
     smsResultSchema
 } from "../schemas/index.js";
+import {ZodSchema, z} from "zod";
 
-export enum JobStatus {
-    Pending = 'pending',
-    Queued = 'queued',
-    Running = 'running',
-    Completed = 'completed',
-    Failed = 'failed',
-    Delayed = 'delayed',
-    Canceled = 'canceled',
-    Merged = 'merged',
-    Skipped = 'skipper'
-}
+export type ActionStepOptions = {}
 
-type StepContext = {
-    timestamp: number,
-    state: {
-        status: `${JobStatus}`,
-        error: boolean
-    }
-}
-
-export type ActionStepOptions = {
-
-}
-
-type StepOutput<StepResult> = Promise<StepResult & { ctx: StepContext }>;
-
-export type ActionStep<Inputs, Outputs, Result> = (
+export type ActionStep<Output, Result> = (
     stepId: string,
-    resolve: (inputs: Inputs) => MaybePromise<Outputs>,
+    resolve: () => MaybePromise<Output>,
     options?: ActionStepOptions
-) => StepOutput<Result>
+) => Promise<Result>
 
-export type ChannelStep<
-    Outputs,
-    Result> = <InputSchema extends Schema, Inputs = FromSchema<InputSchema>>(
+export type ChannelStep<Output, Result> = (
     stepId: string,
-    resolve: (inputs: Inputs) => MaybePromise<Outputs>,
+    resolve: () => MaybePromise<Output>,
+    options?: {}
+) => Promise<Result>
+
+export type AppStep = <Output, Result>(
+    stepId: string,
+    resolve: () => MaybePromise<Output>,
     options?: {
-
+        outputSchema?: ZodSchema<Output>;
+        resultSchema?: ZodSchema<Result>;
     }
-) => StepOutput<Result>
+) => Promise<Result>;
 
-export type EmailOutput = FromSchema<typeof emailOutputSchema>
-export type EmailResult = FromSchema<typeof emailResultSchema>
+export type EmailOutput = z.infer<typeof emailOutputSchema>
+export type EmailResult = z.infer<typeof emailResultSchema>
 
-export type SmsOutput = FromSchema<typeof smsOutputSchema>
-export type SmsResult = FromSchema<typeof smsResultSchema>
+export type SmsOutput = z.infer<typeof smsOutputSchema>
+export type SmsResult = z.infer<typeof smsResultSchema>
 
-export type PushOutput = FromSchema<typeof pushOutputSchema>
-export type PushResult = FromSchema<typeof pushResultSchema>
+export type PushOutput = z.infer<typeof pushOutputSchema>
+export type PushResult = z.infer<typeof pushResultSchema>
 
-export type ChatOutput = FromSchema<typeof chatOutputSchema>
-export type ChatResult = FromSchema<typeof chatResultSchema>
+export type ChatOutput = z.infer<typeof chatOutputSchema>
+export type ChatResult = z.infer<typeof chatResultSchema>
 
 
 export type Step = {
@@ -70,4 +50,5 @@ export type Step = {
     sms: ChannelStep<SmsOutput, SmsResult>;
     push: ChannelStep<PushOutput, PushResult>;
     chat: ChannelStep<ChatOutput, ChatResult>;
+    app: AppStep
 }

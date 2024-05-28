@@ -1,7 +1,7 @@
 import {sql} from "slonik";
 import {MigrationScript} from "../types/index.js";
 
-const addTopicTableMigrationScript: MigrationScript = {
+const addTopicSubscriberTableMigrationScript: MigrationScript = {
     up: async (pool) => {
         await pool.query(sql.unsafe`
             create table topic_subscribers
@@ -21,4 +21,4 @@ const addTopicTableMigrationScript: MigrationScript = {
     }
 }
 
-export default addTopicTableMigrationScript
+export default addTopicSubscriberTableMigrationScript

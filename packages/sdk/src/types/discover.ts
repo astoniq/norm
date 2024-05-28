@@ -1,35 +1,36 @@
 import {WorkflowExecute, WorkflowOptions} from "./workflow.js";
 import {ActionStepType, ChannelStepType} from "../constants/step.js";
-import {Schema} from "./schema.js";
-import {ValidateFunction} from "ajv";
 import {ActionStepOptions} from "./step.js";
+import {ZodSchema} from "zod";
 
 export type StepType = `${ChannelStepType | ActionStepType}`;
 
-export type Validate = ValidateFunction;
+export type StepOutput = {
+    stepId: string;
+    type: StepType;
+    output: ZodSchema
+    result: ZodSchema
+    resolve: () => any | Promise<any>;
+    options: ActionStepOptions;
+}
+
+export type WorkflowOutput = {
+    workflowId: string;
+    execute: WorkflowExecute<any>;
+    options: WorkflowOptions<any>;
+    steps: Array<StepOutput>;
+    payload: ZodSchema
+}
 
 export type DiscoverStepOutput = {
     stepId: string;
     type: StepType;
-    output: {
-        schema: Schema
-        validate: Validate;
-    }
-    result: {
-        schema: Schema;
-        validate: Validate;
-    },
-    resolve: (inputs: any) => any | Promise<any>;
-    options: ActionStepOptions;
+    output: object
+    result: object
 }
 
 export type DiscoverWorkflowOutput = {
     workflowId: string;
-    execute: WorkflowExecute<any, any>;
-    options: WorkflowOptions<any, any>;
     steps: Array<DiscoverStepOutput>;
-    payload: {
-        schema: Schema,
-        validate: Validate;
-    }
+    payload: object
 }
