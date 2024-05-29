@@ -17,6 +17,9 @@ importers:
       '@astoniq/essentials':
         specifier: ^0.2.1
         version: 0.2.1
+      '@astoniq/norm-connectors':
+        specifier: workspace:^0.1.0
+        version: link:../connectors
       '@astoniq/norm-phrase':
         specifier: workspace:^0.1.0
         version: link:../phrase

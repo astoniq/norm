@@ -11,6 +11,7 @@ export const stepEntity: Entity<Step> =
             stepId: 'step_id',
             notificationId: 'notification_id',
             type: 'type',
-            result: 'result'
+            result: 'result',
+            output: 'output'
         },
     })

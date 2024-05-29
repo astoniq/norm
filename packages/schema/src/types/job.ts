@@ -26,3 +26,9 @@ export const echoJob = z.object({
 })
 
 export type EchoJob = z.infer<typeof echoJob>
+
+export const messageJob = z.object({
+    stepId: z.string().min(1).max(21)
+})
+
+export type MessageJob = z.infer<typeof messageJob>

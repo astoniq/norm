@@ -17,3 +17,11 @@ export const subscriberDefineGuard = z.object({
 }).merge(subscriberPayloadGuard)
 
 export type SubscriberDefine = z.infer<typeof subscriberDefineGuard>
+
+export const subscriberCredentialEmailGuard = z.object({
+    email: z.string()
+})
+
+export const subscriberCredentialSmsGuard = z.object({
+    phone: z.string()
+})

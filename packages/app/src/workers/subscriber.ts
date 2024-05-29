@@ -78,7 +78,8 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
         })
 
         if (!notification) {
-            throw new Error('Notification could not be created');
+            logger.error('Notification could not be created');
+            return;
         }
 
         // Отправка записи в echo worker

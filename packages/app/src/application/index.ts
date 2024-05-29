@@ -8,6 +8,7 @@ import {createQueues} from "../queues/index.js";
 import {initApis} from "../routes/index.js";
 import {createRedis} from "./redis.js";
 import {createWorkers} from "../workers/index.js";
+import {createLibraries} from "../libraries/index.js";
 
 const serverTimeout = 120_000;
 
@@ -25,10 +26,13 @@ export async function initApp() {
 
     const queries = createQueries(pool);
 
+    const libraries = createLibraries(queries);
+
     const queues = createQueues(redis)
 
     createWorkers({
         queries,
+        libraries,
         queues,
         redis
     })

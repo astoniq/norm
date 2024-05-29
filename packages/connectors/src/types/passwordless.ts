@@ -1,5 +1,6 @@
 import {z} from "zod";
 import {BaseConnector, ConnectorType} from "./foundation.js";
+import {CreateConnector} from "./factory.js";
 
 export const sendEmailOptionsGuard = z.object({
     to: z.string(),
@@ -9,10 +10,10 @@ export const sendEmailOptionsGuard = z.object({
 
 export type SendEmailOptions = z.infer<typeof sendEmailOptionsGuard>
 
-export type SendEmailFunction = (data: SendEmailOptions) => Promise<unknown>;
+export type SendEmailFunction = (data: SendEmailOptions) => Promise<any>;
 
 export type EmailConnector = BaseConnector<ConnectorType.Email> & {
-    sendMessage: Promise<SendEmailFunction>
+    createConnector: CreateConnector<SendEmailFunction>
 }
 
 export const sendSmsOptionsGuard = z.object({
@@ -22,8 +23,8 @@ export const sendSmsOptionsGuard = z.object({
 
 export type SendSmsOptions = z.infer<typeof sendSmsOptionsGuard>
 
-export type SendSmsFunction = (data: SendSmsOptions) => Promise<unknown>;
+export type SendSmsFunction = (data: SendSmsOptions) => Promise<any>;
 
 export type SmsConnector = BaseConnector<ConnectorType.Sms> & {
-    sendMessage: Promise<SendSmsFunction>
+    createConnector: CreateConnector<SendSmsFunction>
 }

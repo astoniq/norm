@@ -1,8 +1,8 @@
 import {ConnectorConfigFormItemType, ConnectorMetadata} from "../types/index.js";
 
 export const defaultMetadata: ConnectorMetadata = {
+    id: 'smtp',
     target: 'smtp',
-    name: 'smtp',
     formItems: [
         {
             key: 'host',

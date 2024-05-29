@@ -6,7 +6,7 @@ import {
     Notification,
     NotificationStatus,
     Resource,
-    ResourceConfig, Step,
+    ResourceConfig, Step, StepStatus,
     Subscriber
 } from "@astoniq/norm-schema";
 import ky from "ky";
@@ -15,6 +15,7 @@ import {sign} from "../utils/sign.js";
 import {ExecuteOutput, ExecutionEvent, ExecutionState} from "../types/index.js";
 import {logger} from "../utils/logger.js";
 import {HTTPError} from "ky";
+import {generateStandardId} from "../utils/id.js";
 
 type SendExecutionEventOptions = {
     resource: Resource,
@@ -29,11 +30,11 @@ export const createEchoWorker = (options: WorkerOptions) => {
         redis,
         queries: {
             notifications: {
-                findNotificationById,
                 updateNotificationStatusById
             },
             steps: {
-                findAllStepByNotificationId
+                findAllStepByNotificationId,
+                insertStep
             },
             subscribers: {
                 findSubscriberBySubscriberId
@@ -41,7 +42,8 @@ export const createEchoWorker = (options: WorkerOptions) => {
             resources: {
                 findResourceByResourceId
             }
-        }
+        },
+        queues: {message}
     } = options
 
     const sendExecutionEventRequest = async (
@@ -82,7 +84,6 @@ export const createEchoWorker = (options: WorkerOptions) => {
                     payload,
                     workflowId,
                     state,
-                    action: 'execute',
                     subscriber
                 },
                 signingKey);
@@ -126,12 +127,11 @@ export const createEchoWorker = (options: WorkerOptions) => {
             } = job
 
             try {
-              await updateNotificationStatusById(notificationId, NotificationStatus.Running)
-
-                const notification = await findNotificationById(notificationId)
+                const notification = await updateNotificationStatusById(
+                    notificationId, NotificationStatus.Running)
 
                 if (!notification) {
-                    await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+                    logger.error('Notification not found');
                     return;
                 }
 
@@ -159,16 +159,44 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
                 const state = stepsToExecutionState(steps)
 
-                const executeOutput = await sendExecutionEvent({
+                const {
+                    type,
+                    stepId,
+                    status,
+                    output
+                } = await sendExecutionEvent({
                     subscriber,
                     notification,
                     state,
                     resource
                 })
 
-                logger.info(executeOutput)
+                if (status) {
+                    await updateNotificationStatusById(notificationId, NotificationStatus.Completed)
+                } else {
 
-                await updateNotificationStatusById(notificationId, NotificationStatus.Completed)
+                    const insertStepId = generateStandardId()
+
+                    const step = await insertStep({
+                        notificationId,
+                        stepId,
+                        type,
+                        output,
+                        id: insertStepId,
+                        status: StepStatus.Pending
+                    })
+
+                    if (!step) {
+                        logger.error('Step could not be created');
+                        return;
+                    }
+
+                    await message.add({
+                        name: generateStandardId(),
+                        data: {stepId: insertStepId}
+                    })
+                }
+
             } catch (error) {
                 logger.info(error)
                 await updateNotificationStatusById(notificationId, NotificationStatus.Failed)

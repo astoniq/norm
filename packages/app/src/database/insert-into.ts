@@ -29,14 +29,14 @@ type InsertIntoConfigReturning = {
 
 type BuildInsertInto = {
     <T extends EntityLike<T>,
-        CreateEntity extends Partial<EntityLike<T>>>
+        CreateEntity extends Partial<T>>
     (
         entity: Entity<T>,
         guard: EntityGuard<T>,
         config?: InsertIntoConfig):
         (data: OmitAutoSetFields<CreateEntity>) => Promise<void>;
     <T extends EntityLike<T>,
-        CreateEntity extends Partial<EntityLike<T>>>
+        CreateEntity extends Partial<T>>
     (
         entity: Entity<T>,
         guard: EntityGuard<T>,
@@ -50,7 +50,7 @@ const setExcluded = (...fields: IdentifierSqlToken[]) =>
 export const buildInsertIntoWithPool =
     (pool: CommonQueryMethods): BuildInsertInto =>
         <T extends EntityLike<T>,
-            CreateEntity extends Partial<EntityLike<T>>>
+            CreateEntity extends Partial<T>>
         (
             entity: Entity<T>,
             guard: EntityGuard<T>,
