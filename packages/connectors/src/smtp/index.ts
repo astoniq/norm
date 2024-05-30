@@ -23,6 +23,8 @@ const createConnector: CreateConnector<SendEmailFunction> = async (options: GetC
     return async (data) => {
         try {
             return await transport.sendMail({
+                from: config.fromEmail,
+                replyTo: config.replyTo,
                 to: data.to,
                 html: data.html,
                 subject: data.subject

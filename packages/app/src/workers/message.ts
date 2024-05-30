@@ -4,6 +4,7 @@ import {ConnectorType, JobTopic, MessageJob, Notification, Step, StepStatus, Sub
 import {logger} from "../utils/logger.js";
 import {connectors, EmailConnector, SmsConnector} from "@astoniq/norm-connectors";
 import {z} from "zod";
+import {generateStandardId} from "../utils/id.js";
 
 type SendMessageOptions = {
     step: Step,
@@ -20,6 +21,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
     const {
         redis,
+        queues: {echo},
         queries: {
             steps: {
                 updateStepStatusById,
@@ -46,7 +48,8 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
         const {
             step,
-            subscriber
+            subscriber,
+            notification
         } = options
 
         try {
@@ -81,13 +84,18 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 return
             }
 
-            const result = await sendMessage({
+            await sendMessage({
                 to: subscriber.email,
                 subject: data.subject,
                 html: data.body
             });
 
-            await updateStepResultById(step.id, StepStatus.Completed, result)
+            await updateStepResultById(step.id, StepStatus.Completed, {})
+
+            await echo.add({
+                name: generateStandardId(),
+                data: {notificationId: notification.id}
+            })
 
         } catch (error) {
             logger.error(error)

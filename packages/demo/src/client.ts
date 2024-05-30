@@ -11,10 +11,11 @@ await client.workflow('hello', async ({step, payload}) => {
 
     await step.email('send-email', async () => {
         return {
-            subject: 'This is an email subject',
+            subject: 'Send Email',
             body: `hello message ${payload.username}`
         }
     })
+
 }, {
     payloadSchema: z.object({
         username: z.string()

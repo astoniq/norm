@@ -1,12 +1,10 @@
 import {z} from "zod";
-import {ConnectorType} from "../types/index.js";
 import {jsonObjectGuard} from "../foundations/index.js";
 
 export const createSubscriberReferenceGuard = z.object({
     id: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(128),
-    active: z.boolean(),
-    type: z.nativeEnum(ConnectorType),
+    target: z.string().min(1).max(128),
     credentials: jsonObjectGuard
 });
 
@@ -15,8 +13,7 @@ export type CreateSubscriberReference = z.infer<typeof createSubscriberReference
 export const subscriberReferenceGuard = z.object({
     id: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(128),
-    active: z.boolean(),
-    type: z.nativeEnum(ConnectorType),
+    target: z.string().min(1).max(128),
     credentials: jsonObjectGuard
 });
 

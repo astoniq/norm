@@ -1,7 +1,7 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {buildFindAllEntitiesWithPool, buildInsertIntoWithPool} from "../database/index.js";
 import {subscriberReferenceEntity} from "../entities/index.js";
-import {ConnectorType, subscriberReferenceGuard} from "@astoniq/norm-schema";
+import {subscriberReferenceGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
 
 const {table, fields} = convertToIdentifiers(subscriberReferenceEntity);
@@ -16,18 +16,17 @@ export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
         subscriberReferenceEntity, subscriberReferenceGuard, {returning: true}
     )
 
-    const findSubscriberReferencesByType = async (subscriberId: string, type: ConnectorType) => {
+    const findSubscriberReferencesBySubscriberId = async (subscriberId: string) => {
         return pool.any(sql.type(subscriberReferenceGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
             where ${fields.subscriberId} = ${subscriberId}
-              and ${fields.type} = ${type}
         `)
     }
 
     return {
         findAllSubscriberReferences,
         insertSubscriberReference,
-        findSubscriberReferencesByType
+        findSubscriberReferencesBySubscriberId
     }
 }

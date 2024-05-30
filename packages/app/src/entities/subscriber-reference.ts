@@ -9,7 +9,6 @@ export const subscriberReferenceEntity: Entity<SubscriberReference> =
             id: 'id',
             subscriberId: 'subscriber_id',
             credentials: 'credentials',
-            type: 'type',
-            active: 'active'
+            target: 'target'
         },
     })

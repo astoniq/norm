@@ -2,6 +2,9 @@
 
 Упрощённая инфраструктура уведомлений как код
 
+- Поддержка multi tenant по адресу
+- actor в запросе
+
 ~~~
 // http -> workflow worker -> subscriber worker -> echo worker -> message worker
 
