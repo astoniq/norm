@@ -12,7 +12,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
     const {
         redis,
-        queries: {subscribers, notifications},
+        queries: {subscribers, notifications, subscriberReferences},
         queues: {echo}
     } = options
 
@@ -43,6 +43,24 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
         return createSubscriber(subscriberDefine)
     }
 
+    const updateSubscriberReferences = async (subscriber: Subscriber, subscriberDefine: SubscriberDefine) => {
+        const {references} = subscriberDefine;
+
+        if (!references) {
+            return
+        }
+
+        for (const reference of references) {
+
+            await subscriberReferences.upsertSubscriberReference({
+                id: generateStandardId(),
+                subscriberId: subscriber.subscriberId,
+                target: reference.target,
+                credentials: reference.credentials
+            })
+        }
+    }
+
     const processSubscriber = async (subscriberDefine: SubscriberDefine) => {
 
         const subscriber = await getSubscriber(subscriberDefine)
@@ -51,6 +69,8 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
             return undefined
         }
 
+        await updateSubscriberReferences(subscriber, subscriberDefine);
+
         return subscriber
     }
 
@@ -58,35 +78,40 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
         const {data} = job
 
-        const subscriberProcessed = await processSubscriber(data.subscriber)
+        try {
+            const subscriberProcessed = await processSubscriber(data.subscriber)
 
-        if (!subscriberProcessed) {
-            logger.warn(data.subscriber, `Subscriber was not processed`);
-            return;
+            if (!subscriberProcessed) {
+                logger.warn(data.subscriber, `Subscriber was not processed`);
+                return;
+            }
+
+            const notificationId = generateStandardId()
+
+            // Создание записи notification
+            const notification = await notifications.insertNotification({
+                id: notificationId,
+                subscriberId: subscriberProcessed.subscriberId,
+                payload: data.payload,
+                resourceId: data.resourceId,
+                workflowId: data.workflowId,
+                status: NotificationStatus.Pending
+            })
+
+            if (!notification) {
+                logger.error('Notification could not be created');
+                return;
+            }
+
+            // Отправка записи в echo worker
+            await echo.add({
+                name: generateStandardId(),
+                data: {notificationId}
+            })
+        } catch (error) {
+            logger.error(error)
         }
 
-        const notificationId = generateStandardId()
-
-        // Создание записи notification
-        const notification = await notifications.insertNotification({
-            id: notificationId,
-            subscriberId: subscriberProcessed.subscriberId,
-            payload: data.payload,
-            resourceId: data.resourceId,
-            workflowId: data.workflowId,
-            status: NotificationStatus.Pending
-        })
-
-        if (!notification) {
-            logger.error('Notification could not be created');
-            return;
-        }
-
-        // Отправка записи в echo worker
-        await echo.add({
-            name: generateStandardId(),
-            data: {notificationId}
-        })
     }, {
         connection: redis
     })

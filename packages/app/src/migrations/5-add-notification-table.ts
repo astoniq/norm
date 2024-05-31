@@ -7,9 +7,9 @@ const addNotificationTableMigrationScript: MigrationScript = {
             create table notifications
             (
                 id            varchar(21) not null,
-                workflow_id      varchar(255) not null,
-                resource_id varchar(21) not null,
-                subscriber_id varchar(21) not null,
+                workflow_id      varchar(128) not null,
+                resource_id varchar(128) not null,
+                subscriber_id varchar(128) not null,
                 status varchar(128) not null,
                 payload jsonb,
                 primary key (id)

@@ -13,10 +13,10 @@ export interface ExecutionState {
     result: JsonObject;
 }
 
-export type ExecuteOutput = {
-    status: boolean;
-    output?: JsonObject;
-    stepId?: string;
-    type?: ConnectorType;
+export type ExecuteOutput = { status: true } | {
+    status: false;
+    output: JsonObject;
+    stepId: string;
+    type: ConnectorType;
 }
 

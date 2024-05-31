@@ -8,7 +8,12 @@ const addSubscriberTableMigrationScript: MigrationScript = {
             (
                 id            varchar(21)  not null,
                 subscriber_id varchar(128) not null,
-                email         varchar(128) null,
+                name          varchar(256),
+                avatar        varchar(2048),
+                phone         varchar(128),
+                email         varchar(128),
+                username      varchar(128),
+                locale        varchar(128),
                 primary key (id)
             );
             create index subscribers_id on subscribers (id);

@@ -148,30 +148,27 @@ export const createEchoWorker = (options: WorkerOptions) => {
                 ])
 
                 if (!subscriber) {
+                    logger.info(`Subscriber ${subscriberId} not found`);
                     await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
                     return;
                 }
 
                 if (!resource) {
+                    logger.info(`Resource ${resourceId} not found`);
                     await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
                     return;
                 }
 
                 const state = stepsToExecutionState(steps)
 
-                const {
-                    type,
-                    stepId,
-                    status,
-                    output
-                } = await sendExecutionEvent({
+                const executionOutput = await sendExecutionEvent({
                     subscriber,
                     notification,
                     state,
                     resource
                 })
 
-                if (status) {
+                if (executionOutput.status) {
                     await updateNotificationStatusById(notificationId, NotificationStatus.Completed)
                 } else {
 
@@ -179,15 +176,16 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
                     const step = await insertStep({
                         notificationId,
-                        stepId,
-                        type,
-                        output,
+                        stepId: executionOutput.stepId,
+                        type: executionOutput.type,
+                        output: executionOutput.output,
                         id: insertStepId,
                         status: StepStatus.Pending
                     })
 
                     if (!step) {
                         logger.error('Step could not be created');
+                        await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
                         return;
                     }
 

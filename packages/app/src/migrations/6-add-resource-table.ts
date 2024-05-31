@@ -7,7 +7,7 @@ const addResourceTableMigrationScript: MigrationScript = {
             create table resources
             (
                 id            varchar(21) not null,
-                resource_id varchar(256) not null,
+                resource_id varchar(128) not null,
                 signing_key varchar(64) not null,
                 config jsonb,
                 primary key (id)

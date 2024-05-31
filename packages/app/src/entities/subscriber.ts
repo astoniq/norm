@@ -8,6 +8,11 @@ export const subscriberEntity: Entity<Subscriber> =
         fields: {
             id: 'id',
             subscriberId: 'subscriber_id',
-            email: 'email'
+            name: 'name',
+            avatar: 'avatar',
+            phone: 'phone',
+            email: 'email',
+            username: 'username',
+            locale: 'locale'
         },
     })

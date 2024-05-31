@@ -25,6 +25,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
         queries: {
             steps: {
                 updateStepStatusById,
+                findStepById,
                 updateStepResultById
             },
             notifications: {
@@ -34,7 +35,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 findSubscriberBySubscriberId
             },
             connectors: {
-                findConnectorByType
+                findConnectorsByType
             }
         },
     } = options
@@ -48,60 +49,119 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
         const {
             step,
-            subscriber,
-            notification
+            notification,
+            subscriber: {email}
         } = options
 
         try {
 
-            const databaseConnector = await findConnectorByType(
-                ConnectorType.Email);
-
-            if (!databaseConnector) {
-                logger.error('Database connector not found')
-                return
+            if (!email) {
+                logger.info('The subscriber does not have email. Skip send message email')
+                await updateStepStatusById(step.id, StepStatus.Failed)
+                return;
             }
-
-            const {config, connectorId} = databaseConnector
-
-            const connectorFactory = connectors[ConnectorType.Email]
-                .find((connector): connector is MappedConnectorType[ConnectorType.Email] =>
-                    connector.metadata.id === connectorId)
-
-            if (!connectorFactory) {
-                logger.error('Connector factory not found')
-                return
-            }
-
-            const sendMessage = await connectorFactory.createConnector({
-                config
-            })
 
             const {data, success} = emailOutputSchema.safeParse(step.output);
 
             if (!success) {
-                logger.error('Invalid output')
+                logger.error('Invalid email output')
+                await updateStepStatusById(step.id, StepStatus.Failed)
                 return
             }
 
-            await sendMessage({
-                to: subscriber.email,
-                subject: data.subject,
-                html: data.body
-            });
+            const databaseConnectors = await findConnectorsByType(
+                ConnectorType.Email);
 
-            await updateStepResultById(step.id, StepStatus.Completed, {})
+            let successSendMessage = false
 
-            await echo.add({
-                name: generateStandardId(),
-                data: {notificationId: notification.id}
-            })
+            for (const databaseConnector of databaseConnectors) {
 
+                if (successSendMessage) {
+                    return;
+                }
+
+                const {config, connectorId} = databaseConnector
+
+                const connectorFactory = connectors[ConnectorType.Email]
+                    .find((connector): connector is MappedConnectorType[ConnectorType.Email] =>
+                        connector.metadata.id === connectorId)
+
+                if (!connectorFactory) {
+                    logger.error('Connector factory not found')
+                    break;
+                }
+
+                const {metadata, createConnector} = connectorFactory
+
+                try {
+                    const sendMessage = await createConnector({
+                        config
+                    })
+
+                    await sendMessage({
+                        to: email,
+                        subject: data.subject,
+                        html: data.body
+                    });
+
+                    successSendMessage = true
+
+                } catch (error) {
+                    logger.error(error, `Error send connector ${metadata.id}. Skip connector`)
+                }
+            }
+
+            if (successSendMessage) {
+                await updateStepResultById(step.id, StepStatus.Completed, {})
+
+                await echo.add({
+                    name: generateStandardId(),
+                    data: {notificationId: notification.id}
+                })
+            } else {
+                logger.info(`Error send email message`)
+                await updateStepStatusById(step.id, StepStatus.Failed)
+            }
         } catch (error) {
             logger.error(error)
         }
     }
 
+    const sendMessageByStep = async (step: Step) => {
+
+        try {
+            await updateStepStatusById(step.id, StepStatus.Running)
+
+            const notification = await findNotificationById(step.notificationId)
+
+            if (!notification) {
+                logger.error('Notification not found');
+                return;
+            }
+
+            const subscriber = await findSubscriberBySubscriberId(notification.subscriberId)
+
+            if (!subscriber) {
+                logger.error('Subscriber not found');
+                return;
+            }
+
+            switch (step.type) {
+                case ConnectorType.Email:
+                    await sendMessageEmail({
+                        step,
+                        notification,
+                        subscriber,
+                    })
+                    break;
+                default:
+                    logger.error('Step type not found')
+            }
+
+        } catch (error) {
+            await updateStepStatusById(step.id, StepStatus.Failed)
+        }
+    }
 
     return new Worker<MessageJob>(JobTopic.Message, async (job) => {
 
@@ -111,50 +171,19 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 }
             } = job
 
-            let shouldQueueNextJob = true
-
             try {
-                const step = await updateStepStatusById(stepId, StepStatus.Running)
+                const step = await findStepById(stepId)
 
                 if (!step) {
-                    logger.error('Step not found');
+                    logger.error(`Step ${stepId} not found. Skip step`);
                     return;
                 }
 
-                const notification = await findNotificationById(step.notificationId)
-
-                if (!notification) {
-                    logger.error('Notification not found');
-                    return;
-                }
-
-                const subscriber = await findSubscriberBySubscriberId(notification.subscriberId)
-
-                if (!subscriber) {
-                    logger.error('Subscriber not found');
-                    return;
-                }
-
-                switch (step.type) {
-                    case ConnectorType.Email:
-                        return await sendMessageEmail({
-                            step,
-                            notification,
-                            subscriber,
-                        })
-                    default:
-                        logger.error('Step type not found')
-                }
+                return sendMessageByStep(step)
 
             } catch (error) {
                 logger.error(error, 'Sending message hash thrown an error')
-                shouldQueueNextJob = false;
-            } finally {
-                if (shouldQueueNextJob) {
-
-                }
             }
-
         },
         {
             connection: redis
