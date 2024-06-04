@@ -1,6 +1,7 @@
 import {ZodType, ZodTypeDef} from "zod";
 import {ConnectorError, ConnectorErrorCodes} from "../types/index.js";
-import {Json, jsonGuard, JsonObject, jsonObjectGuard} from "@astoniq/norm-schema";
+import { jsonGuard,  jsonObjectGuard} from "@astoniq/norm-schema";
+import {Json, JsonObject} from "@astoniq/norm-shared";
 
 export function validateConfig<Output, Input = Output>(
     config: unknown,

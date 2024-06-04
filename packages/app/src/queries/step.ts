@@ -1,8 +1,9 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {stepEntity} from "../entities/index.js";
 import {convertToIdentifiers} from "../utils/sql.js";
-import {JsonObject, stepGuard} from "@astoniq/norm-schema";
+import {stepGuard} from "@astoniq/norm-schema";
 import {buildInsertIntoWithPool, buildUpdateWhereWithPool} from "../database/index.js";
+import {JsonObject} from "@astoniq/norm-shared";
 
 const {table, fields} = convertToIdentifiers(stepEntity);
 

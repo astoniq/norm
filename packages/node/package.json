@@ -24,7 +24,9 @@
     "node": "^20.0.0"
   },
   "dependencies": {
-    "@astoniq/essentials": "^0.2.1"
+    "@astoniq/norm-shared": "workspace:^0.1.0",
+    "axios": "^1.7.2",
+    "axios-retry": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

@@ -14,10 +14,9 @@ export const workflowJob = triggerEventGuard
 export type WorkflowJob = z.infer<typeof workflowJob>
 
 export const subscriberJob = z.object({
-    ...triggerEventBaseGuard,
     subscriber: subscriberDefineGuard,
     subscriberSource: z.nativeEnum(SubscriberSource)
-})
+}).merge(triggerEventBaseGuard)
 
 export type SubscriberJob = z.infer<typeof subscriberJob>
 

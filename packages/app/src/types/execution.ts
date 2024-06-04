@@ -1,4 +1,5 @@
-import {ConnectorType, JsonObject, SubscriberDefine} from "@astoniq/norm-schema";
+import {ConnectorType} from "@astoniq/norm-schema";
+import {JsonObject, SubscriberDefine} from "@astoniq/norm-shared";
 
 export interface ExecutionEvent {
     payload: Record<string, unknown>;

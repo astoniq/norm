@@ -9,6 +9,7 @@ import {initApis} from "../routes/index.js";
 import {createRedis} from "./redis.js";
 import {createWorkers} from "../workers/index.js";
 import {createLibraries} from "../libraries/index.js";
+import {initClient} from "../client/index.js";
 
 const serverTimeout = 120_000;
 
@@ -41,12 +42,15 @@ export async function initApp() {
 
     app.use(koaErrorHandler())
 
-    const api = initApis({
+    app.use(mount('/api', initApis({
         queues,
         queries
-    })
+    })));
 
-    app.use(mount('/api', api));
+    app.use(mount('/client', initClient({
+        queues,
+        queries
+    })));
 
     const server = app.listen(3000);
 

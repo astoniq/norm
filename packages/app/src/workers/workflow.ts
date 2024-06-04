@@ -1,17 +1,9 @@
 import {Worker} from "bullmq";
 import {
-    AddressingType,
     JobTopic,
     SubscriberJob,
-    SubscriberDefine,
     SubscriberSource,
     Topic,
-    TriggerEvent, TriggerEventBroadcast,
-    TriggerEventMulticast,
-    TriggerRecipient,
-    TriggerRecipientsType,
-    TriggerRecipientSubscriber,
-    TriggerRecipientTopic,
     WorkflowJob
 } from "@astoniq/norm-schema";
 import {logger} from "../utils/logger.js";
@@ -19,6 +11,17 @@ import {WorkerOptions} from "./types.js";
 import {JobParams} from "../queues/types.js";
 import {generateStandardId} from "../utils/id.js";
 import {chunk} from "../utils/array.js";
+import {
+    TriggerAddressingType,
+    SubscriberDefine,
+    TriggerEvent,
+    TriggerEventBroadcast,
+    TriggerEventMulticast,
+    TriggerRecipient,
+    TriggerRecipientsType,
+    TriggerRecipientSubscriber,
+    TriggerRecipientTopic
+} from "@astoniq/norm-shared";
 
 export const createWorkflowWorker = (options: WorkerOptions) => {
 
@@ -237,10 +240,10 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
         try {
             switch (data.type) {
-                case AddressingType.Multicast: {
+                case TriggerAddressingType.Multicast: {
                     return triggerMulticastEvent(data)
                 }
-                case AddressingType.Broadcast: {
+                case TriggerAddressingType.Broadcast: {
                     return triggerBroadcastEvent(data)
                 }
                 default: {

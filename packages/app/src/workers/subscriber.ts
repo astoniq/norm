@@ -2,11 +2,12 @@ import {Worker} from "bullmq";
 import {
     JobTopic,
     Subscriber,
-    SubscriberJob, SubscriberDefine, NotificationStatus,
+    SubscriberJob,  NotificationStatus,
 } from "@astoniq/norm-schema";
 import {WorkerOptions} from "./types.js";
 import {generateStandardId} from "../utils/id.js";
 import {logger} from "../utils/logger.js";
+import {SubscriberDefine} from "@astoniq/norm-shared";
 
 export const createSubscriberWorker = (options: WorkerOptions) => {
 

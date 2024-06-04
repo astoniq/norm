@@ -1,70 +1,50 @@
-import {z} from "zod";
+import {z, ZodType} from "zod";
 import {jsonObjectGuard} from "../foundations/index.js";
 import {subscriberDefineGuard} from "./subscriber.js";
+import {
+    TriggerAddressingType, TriggerEvent,
+    TriggerEventBase, TriggerEventBroadcast, TriggerEventMulticast,
+    TriggerRecipient,
+    TriggerRecipientsPayload,
+    TriggerRecipientsType,
+    TriggerRecipientSubscriber,
+    TriggerRecipientTopic
+} from "@astoniq/norm-shared";
 
-export enum TriggerEventStatus {
-    Error = 'error',
-    Processed = 'processed',
-}
-
-export enum TriggerRecipientsType {
-    Subscriber = 'subscriber',
-    Topic = 'topic'
-}
-
-export enum AddressingType {
-    Broadcast = 'broadcast',
-    Multicast = 'multicast'
-}
-
-export const triggerEventBaseGuard = {
+export const triggerEventBaseGuard = z.object({
     resourceId: z.string().min(1),
     workflowId: z.string().min(1),
     payload: jsonObjectGuard
-}
+})  satisfies ZodType<TriggerEventBase>
 
-export const triggerRecipientTopic = z.object({
+export const triggerRecipientTopicGuard = z.object({
     type: z.literal(TriggerRecipientsType.Topic),
     recipient: z.string()
-})
+}) satisfies ZodType<TriggerRecipientTopic>
 
-export type TriggerRecipientTopic = z.infer<typeof triggerRecipientTopic>
-
-export const triggerRecipientSubscriber = z.object({
+export const triggerRecipientSubscriberGuard = z.object({
     type: z.literal(TriggerRecipientsType.Subscriber),
     recipient: z.union([z.string(), subscriberDefineGuard])
-})
-
-export type TriggerRecipientSubscriber = z.infer<typeof triggerRecipientSubscriber>
+}) satisfies ZodType<TriggerRecipientSubscriber>
 
 export const triggerRecipientGuard = z.discriminatedUnion('type', [
-    triggerRecipientTopic,
-    triggerRecipientSubscriber
-])
+    triggerRecipientTopicGuard,
+    triggerRecipientSubscriberGuard
+]) satisfies ZodType<TriggerRecipient>
 
-export type TriggerRecipient = z.infer<typeof triggerRecipientGuard>;
-
-export const triggerRecipientsPayloadGuard =
+export const triggerRecipientsPayloadGuard: z.ZodType<TriggerRecipientsPayload> =
     z.union([z.array(triggerRecipientGuard), triggerRecipientGuard])
 
 export const triggerEventMulticastGuard = z.object({
-    type: z.literal(AddressingType.Multicast),
-    to: triggerRecipientsPayloadGuard,
-    ...triggerEventBaseGuard
-})
-
-export type TriggerEventMulticast = z.infer<typeof triggerEventMulticastGuard>
+    type: z.literal(TriggerAddressingType.Multicast),
+    to: triggerRecipientsPayloadGuard
+}).merge(triggerEventBaseGuard) satisfies ZodType<TriggerEventMulticast>
 
 export const triggerEventBroadcastGuard = z.object({
-    type: z.literal(AddressingType.Broadcast),
-    ...triggerEventBaseGuard
-})
-
-export type TriggerEventBroadcast = z.infer<typeof triggerEventBroadcastGuard>
+    type: z.literal(TriggerAddressingType.Broadcast)
+}).merge(triggerEventBaseGuard) satisfies ZodType<TriggerEventBroadcast>
 
 export const triggerEventGuard = z.discriminatedUnion('type', [
     triggerEventMulticastGuard,
     triggerEventBroadcastGuard
-])
-
-export type TriggerEvent = z.infer<typeof triggerEventGuard>
+])  satisfies ZodType<TriggerEvent>

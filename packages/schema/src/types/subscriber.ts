@@ -1,5 +1,6 @@
 import {z} from "zod";
 import {jsonObjectGuard} from "../foundations/index.js";
+import {SubscriberDefine, SubscriberPayload, SubscriberReferencePayload} from "@astoniq/norm-shared";
 
 export enum SubscriberSource {
     Broadcast = 'broadcast',
@@ -7,12 +8,12 @@ export enum SubscriberSource {
     Topic = 'topic'
 }
 
-export const subscriberReferencePayloadGuard = z.object({
+export const subscriberReferencePayloadGuard: z.ZodType<SubscriberReferencePayload> = z.object({
     target: z.string().min(1).max(128),
     credentials: jsonObjectGuard
 })
 
-export const subscriberPayloadGuard = z.object({
+export const subscriberPayloadGuard: z.ZodType<SubscriberPayload> = z.object({
     username: z.string().max(128).nullable().optional(),
     email: z.string().max(128).nullable().optional(),
     phone: z.string().max(128).nullable().optional(),
@@ -22,10 +23,6 @@ export const subscriberPayloadGuard = z.object({
     references: z.array(subscriberReferencePayloadGuard).optional()
 })
 
-export type SubscriberPayload = z.infer<typeof subscriberPayloadGuard>;
-
-export const subscriberDefineGuard = z.object({
+export const subscriberDefineGuard: z.ZodType<SubscriberDefine> = z.object({
     subscriberId: z.string(),
-}).merge(subscriberPayloadGuard)
-
-export type SubscriberDefine = z.infer<typeof subscriberDefineGuard>
+}).and(subscriberPayloadGuard)
