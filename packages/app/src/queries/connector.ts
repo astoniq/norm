@@ -1,8 +1,9 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {buildInsertIntoWithPool} from "../database/index.js";
 import {connectorEntity} from "../entities/index.js";
-import {connectorGuard, ConnectorType} from "@astoniq/norm-schema";
+import {connectorGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
+import {ConnectorType} from "@astoniq/norm-shared";
 
 const {table, fields} = convertToIdentifiers(connectorEntity);
 

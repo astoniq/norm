@@ -12,10 +12,10 @@ import {
 import ky from "ky";
 import {conditional, trySafe} from "@astoniq/essentials";
 import {sign} from "../utils/sign.js";
-import {ExecuteOutput, ExecutionEvent, ExecutionState} from "../types/index.js";
 import {logger} from "../utils/logger.js";
 import {HTTPError} from "ky";
 import {generateStandardId} from "../utils/id.js";
+import {ExecuteOutput, ExecutionEvent, ExecutionState} from "@astoniq/norm-shared";
 
 type SendExecutionEventOptions = {
     resource: Resource,

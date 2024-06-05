@@ -65,3 +65,10 @@ export const smtpConfigGuard = z.object({
 })
 
 export type SmtpConfig = z.infer<typeof smtpConfigGuard>;
+
+export const emailOptionsGuard = z.object({
+    subject: z.string(),
+    body: z.string()
+})
+
+export type EmailOptions = z.infer<typeof emailOptionsGuard>;

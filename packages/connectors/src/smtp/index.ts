@@ -1,18 +1,18 @@
 import {
+    BaseConnector,
     ConnectorError,
     ConnectorErrorCodes,
-    ConnectorType,
-    CreateConnector,
-    EmailConnector,
-    GetConnectorOptions,
-    SendEmailFunction
+    GetConnectorOptions, SendFunction,
 } from "../types/index.js";
 import {defaultMetadata} from "./metadata.js";
 import {validateConfig} from "../utils/index.js";
-import {smtpConfigGuard} from "./types.js";
+import {EmailOptions, emailOptionsGuard, smtpConfigGuard} from "./types.js";
 import {createTransport} from 'nodemailer';
+import {SubscriberEmailCredentials, SubscriberTarget} from "@astoniq/norm-shared";
+import {subscriberEmailCredentialsGuard} from "@astoniq/norm-schema";
 
-const createConnector: CreateConnector<SendEmailFunction> = async (options: GetConnectorOptions): Promise<SendEmailFunction> => {
+const createConnector = async (options: GetConnectorOptions):
+    Promise<SendFunction<SubscriberEmailCredentials, EmailOptions>> => {
 
     const {config} = options
 
@@ -20,13 +20,13 @@ const createConnector: CreateConnector<SendEmailFunction> = async (options: GetC
 
     const transport = createTransport(config)
 
-    return async (data) => {
+    return async (credentials, data) => {
         try {
-            return await transport.sendMail({
+            await transport.sendMail({
                 from: config.fromEmail,
                 replyTo: config.replyTo,
-                to: data.to,
-                html: data.html,
+                to: credentials.email,
+                html: data.body,
                 subject: data.subject
             })
         } catch (error) {
@@ -38,9 +38,12 @@ const createConnector: CreateConnector<SendEmailFunction> = async (options: GetC
     }
 }
 
-export const smtpConnector: EmailConnector = {
+export const smtpConnector: BaseConnector<SubscriberEmailCredentials, EmailOptions> = {
+    id: 'smtp',
+    target: SubscriberTarget.Email,
     metadata: defaultMetadata,
-    type: ConnectorType.Email,
     configGuard: smtpConfigGuard,
+    optionsGuard: emailOptionsGuard,
+    credentialsGuard: subscriberEmailCredentialsGuard,
     createConnector: createConnector
 }

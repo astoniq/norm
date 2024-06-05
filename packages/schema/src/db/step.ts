@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {jsonObjectGuard} from "../foundations/index.js";
-import {ConnectorType} from "../types/index.js";
+import {ConnectorType} from "@astoniq/norm-shared";
 
 export const createStepGuard = z.object({
     id: z.string().min(1).max(21),

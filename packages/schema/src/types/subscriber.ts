@@ -1,6 +1,16 @@
-import {z} from "zod";
-import {jsonObjectGuard} from "../foundations/index.js";
-import {SubscriberDefine, SubscriberPayload, SubscriberReferencePayload} from "@astoniq/norm-shared";
+import {z, ZodType} from "zod";
+import {
+    SubscriberAppCredentials,
+    SubscriberDefine,
+    SubscriberEmailCredentials,
+    SubscriberPayload,
+    SubscriberReferenceAppPayload,
+    SubscriberReferenceEmailPayload,
+    SubscriberReferencePayload,
+    SubscriberReferenceSmsPayload,
+    SubscriberSmsCredentials,
+    SubscriberTarget
+} from "@astoniq/norm-shared";
 
 export enum SubscriberSource {
     Broadcast = 'broadcast',
@@ -8,10 +18,40 @@ export enum SubscriberSource {
     Topic = 'topic'
 }
 
-export const subscriberReferencePayloadGuard: z.ZodType<SubscriberReferencePayload> = z.object({
-    target: z.string().min(1).max(128),
-    credentials: jsonObjectGuard
+export const subscriberEmailCredentialsGuard: z.ZodType<SubscriberEmailCredentials> = z.object({
+    email: z.string()
 })
+
+export const subscriberReferenceEmailPayloadGuard = z.object({
+    target: z.literal(SubscriberTarget.Email),
+    credentials: subscriberEmailCredentialsGuard
+}) satisfies ZodType<SubscriberReferenceEmailPayload>
+
+export const subscriberSmsCredentialsGuard: z.ZodType<SubscriberSmsCredentials> = z.object({
+    phone: z.string()
+})
+
+export const subscriberReferenceSmsPayloadGuard = z.object({
+    target: z.literal(SubscriberTarget.Sms),
+    credentials: subscriberSmsCredentialsGuard
+}) satisfies ZodType<SubscriberReferenceSmsPayload>
+
+export const subscriberAppCredentialsGuard: z.ZodType<SubscriberAppCredentials> = z.object({
+    token: z.string()
+})
+
+export const subscriberReferenceAppPayloadGuard = z.object({
+    target: z.literal(SubscriberTarget.App),
+    credentials: subscriberAppCredentialsGuard
+}) satisfies ZodType<SubscriberReferenceAppPayload>
+
+export const subscriberReferencePayloadGuard: z.ZodType<SubscriberReferencePayload> = z.discriminatedUnion(
+    'target',
+    [
+        subscriberReferenceEmailPayloadGuard,
+        subscriberReferenceSmsPayloadGuard,
+        subscriberReferenceAppPayloadGuard
+    ])
 
 export const subscriberPayloadGuard: z.ZodType<SubscriberPayload> = z.object({
     username: z.string().max(128).nullable().optional(),
@@ -20,9 +60,9 @@ export const subscriberPayloadGuard: z.ZodType<SubscriberPayload> = z.object({
     name: z.string().max(128).nullable().optional(),
     locale: z.string().max(128).nullable().optional(),
     avatar: z.string().max(2048).nullable().optional(),
-    references: z.array(subscriberReferencePayloadGuard).optional()
 })
 
 export const subscriberDefineGuard: z.ZodType<SubscriberDefine> = z.object({
     subscriberId: z.string(),
+    references: z.array(subscriberReferencePayloadGuard).optional()
 }).and(subscriberPayloadGuard)

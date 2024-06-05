@@ -16,6 +16,12 @@ await client.workflow('hello', async ({step, payload}) => {
         }
     })
 
+    await step.sms('send-sms', async () => {
+        return {
+            body: 'Send sms'
+        }
+    })
+
 }, {
     payloadSchema: z.object({
         username: z.string()

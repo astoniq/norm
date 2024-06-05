@@ -1,13 +1,21 @@
-import type { ZodType } from 'zod';
+import type {ZodType} from 'zod';
 import {ConnectorMetadata} from "./metadata.js";
+import {SubscriberTarget} from "@astoniq/norm-shared";
 
-export enum ConnectorType {
-    Email = 'email',
-    Sms = 'sms',
+export type GetConnectorOptions = {
+    config: any
 }
 
-export type BaseConnector<Type extends ConnectorType> = {
-    type: Type;
+export type SendFunction<C, D> = (credentials: C, data: D) => Promise<any>
+
+export type CreateConnector<T> = (options: GetConnectorOptions) => Promise<T>
+
+export type BaseConnector<C , D > = {
+    target: SubscriberTarget;
+    id: string;
     metadata: ConnectorMetadata;
     configGuard: ZodType;
+    optionsGuard: ZodType<D>;
+    credentialsGuard: ZodType<C>;
+    createConnector: CreateConnector<SendFunction<C, D>>
 };

@@ -27,10 +27,12 @@ export const triggerRecipientSubscriberGuard = z.object({
     recipient: z.union([z.string(), subscriberDefineGuard])
 }) satisfies ZodType<TriggerRecipientSubscriber>
 
-export const triggerRecipientGuard = z.discriminatedUnion('type', [
-    triggerRecipientTopicGuard,
-    triggerRecipientSubscriberGuard
-]) satisfies ZodType<TriggerRecipient>
+export const triggerRecipientGuard: z.ZodType<TriggerRecipient> = z.discriminatedUnion(
+    'type',
+    [
+        triggerRecipientTopicGuard,
+        triggerRecipientSubscriberGuard
+    ])
 
 export const triggerRecipientsPayloadGuard: z.ZodType<TriggerRecipientsPayload> =
     z.union([z.array(triggerRecipientGuard), triggerRecipientGuard])
