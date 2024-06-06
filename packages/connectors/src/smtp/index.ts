@@ -2,13 +2,14 @@ import {
     BaseConnector,
     ConnectorError,
     ConnectorErrorCodes,
-    GetConnectorOptions, SendFunction,
+    GetConnectorOptions,
+    SendFunction,
 } from "../types/index.js";
 import {defaultMetadata} from "./metadata.js";
 import {validateConfig} from "../utils/index.js";
 import {EmailOptions, emailOptionsGuard, smtpConfigGuard} from "./types.js";
 import {createTransport} from 'nodemailer';
-import {SubscriberEmailCredentials, SubscriberTarget} from "@astoniq/norm-shared";
+import {ConnectorType, SubscriberEmailCredentials, SubscriberTarget} from "@astoniq/norm-shared";
 import {subscriberEmailCredentialsGuard} from "@astoniq/norm-schema";
 
 const createConnector = async (options: GetConnectorOptions):
@@ -40,6 +41,7 @@ const createConnector = async (options: GetConnectorOptions):
 
 export const smtpConnector: BaseConnector<SubscriberEmailCredentials, EmailOptions> = {
     id: 'smtp',
+    type: ConnectorType.Email,
     target: SubscriberTarget.Email,
     metadata: defaultMetadata,
     configGuard: smtpConfigGuard,

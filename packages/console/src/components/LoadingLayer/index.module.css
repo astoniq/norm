@@ -1,0 +1,40 @@
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+.loadingIcon {
+  color: var(--color-type-primary);
+  animation: rotating 1s steps(12, end) infinite;
+}
+
+.container {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .loadingIcon {
+    color: var(--color-static-dark-type-primary);
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

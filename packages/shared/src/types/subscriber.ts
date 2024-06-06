@@ -1,7 +1,7 @@
 export enum SubscriberTarget {
     Email = 'email',
     Sms = 'sms',
-    App = 'app'
+    Id = 'id'
 }
 
 export type SubscriberEmailCredentials = {
@@ -13,13 +13,13 @@ export type SubscriberReferenceEmailPayload = {
     credentials: SubscriberEmailCredentials
 };
 
-export type SubscriberAppCredentials = {
-    token: string;
+export type SubscriberIdCredentials = {
+    id: string;
 }
 
-export type SubscriberReferenceAppPayload = {
-    target: SubscriberTarget.App,
-    credentials: SubscriberAppCredentials
+export type SubscriberReferenceIdPayload = {
+    target: SubscriberTarget.Id,
+    credentials: SubscriberIdCredentials
 };
 
 export type SubscriberSmsCredentials = {
@@ -33,7 +33,7 @@ export type SubscriberReferenceSmsPayload = {
 
 export type SubscriberReferencePayload =
     | SubscriberReferenceEmailPayload
-    | SubscriberReferenceAppPayload
+    | SubscriberReferenceIdPayload
     | SubscriberReferenceSmsPayload
 
 export type SubscriberPayload = {

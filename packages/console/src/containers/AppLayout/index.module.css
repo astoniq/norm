@@ -1,0 +1,60 @@
+
+/* Main Layout */
+.viewBox {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
+.container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(body.mobile) {
+  .container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .main {
+    flex: 1;
+    align-self: stretch;
+    padding: 4px;
+    position: relative;
+    background: var(--color-bg-body);
+  }
+
+}
+
+:global(body.desktop) {
+  .container {
+    padding: 4px;
+  }
+
+  .main {
+    width: 540px;
+    min-height: 540px;
+    position: relative;
+    padding: 4px;
+    border-radius: 16px;
+    background: var(--color-bg-float);
+    box-shadow: var(--color-shadow-2);
+  }
+
+  @media only screen and (max-width: 580px) {
+    .main {
+      align-self: stretch;
+      width: auto;
+    }
+  }
+}
