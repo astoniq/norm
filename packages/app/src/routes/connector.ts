@@ -3,7 +3,7 @@ import {AnonymousRouter, RouterInitArgs} from "./types.js";
 export default function connectorRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
 
     router.get(
-        '/connectors',
+        '/tenants/:tenantId/connectors',
         async (_ctx, next) => {
 
             return next()
@@ -11,7 +11,7 @@ export default function connectorRoutes<T extends AnonymousRouter>(...[router]: 
     )
 
     router.post(
-        '/connectors',
+        '/tenants/:tenantId/connectors',
         async (_ctx, next) => {
 
             return next()
@@ -19,7 +19,7 @@ export default function connectorRoutes<T extends AnonymousRouter>(...[router]: 
     )
 
     router.get(
-        '/connectors/:id',
+        '/tenants/:tenantId/connectors/:id',
         async (_ctx, next) => {
 
             return next();
@@ -27,7 +27,7 @@ export default function connectorRoutes<T extends AnonymousRouter>(...[router]: 
     )
 
     router.delete(
-        '/connectors/:id',
+        '/tenants/:tenantId/connectors/:id',
         async (_ctx, next) => {
 
             return next();
