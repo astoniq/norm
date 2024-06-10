@@ -13,6 +13,7 @@ import {connectors} from "@astoniq/norm-connectors";
 import {generateStandardId} from "../utils/id.js";
 
 type SendMessageOptions = {
+    tenantId: string;
     step: Step,
     notification: Notification,
     subscriber: Subscriber
@@ -33,7 +34,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 findNotificationById
             },
             subscribers: {
-                findSubscriberBySubscriberId,
+                findSubscriberById,
             },
             subscriberReferences: {
                 findSubscriberReferencesBySubscriberId
@@ -49,14 +50,15 @@ export const createMessageWorker = (options: WorkerOptions) => {
         const {
             step,
             notification,
-            subscriber: {subscriberId}
+            tenantId,
+            subscriber
         } = options
 
         try {
 
             const databaseConnectors = await findConnectorsByType(step.type);
 
-            const references = await findSubscriberReferencesBySubscriberId(subscriberId)
+            const subscriberReferences = await findSubscriberReferencesBySubscriberId(subscriber.id)
 
             let successSendMessage = false
             let resultSendMessage = {}
@@ -92,16 +94,17 @@ export const createMessageWorker = (options: WorkerOptions) => {
                         break;
                     }
 
-                    const reference = references.find(reference => {
-                        return reference.target === target
-                    })
+                    const subscriberReference = subscriberReferences
+                        .find(reference => {
+                            return reference.target === target
+                        })
 
-                    if (!reference) {
-                        logger.error('Invalid reference')
+                    if (!subscriberReference) {
+                        logger.error('Invalid subscriber reference')
                         break;
                     }
 
-                    const credentials = credentialsGuard.safeParse(reference.credentials);
+                    const credentials = credentialsGuard.safeParse(subscriberReference.credentials);
 
                     if (!credentials.success) {
                         logger.error('Invalid credentials')
@@ -122,7 +125,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
                 await echo.add({
                     name: generateStandardId(),
-                    data: {notificationId: notification.id}
+                    data: {notificationId: notification.id, tenantId}
                 })
             } else {
                 logger.info(`Error send message`)
@@ -133,7 +136,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
         }
     }
 
-    const sendMessageByStep = async (step: Step) => {
+    const sendMessageByStep = async (tenantId: string, step: Step) => {
 
         try {
             await updateStepStatusById(step.id, StepStatus.Running)
@@ -145,7 +148,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 return;
             }
 
-            const subscriber = await findSubscriberBySubscriberId(notification.subscriberId)
+            const subscriber = await findSubscriberById(notification.subscriberId)
 
             if (!subscriber) {
                 logger.error('Subscriber not found');
@@ -153,6 +156,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
             }
 
             return sendMessageConnectors({
+                tenantId,
                 step,
                 notification,
                 subscriber,
@@ -167,7 +171,8 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
             const {
                 data: {
-                    stepId
+                    stepId,
+                    tenantId
                 }
             } = job
 
@@ -179,7 +184,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                     return;
                 }
 
-                return sendMessageByStep(step)
+                return sendMessageByStep(tenantId, step)
 
             } catch (error) {
                 logger.error(error, 'Sending message hash thrown an error')

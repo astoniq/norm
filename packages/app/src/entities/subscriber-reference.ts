@@ -6,6 +6,7 @@ export const subscriberReferenceEntity: Entity<SubscriberReference> =
         table: 'subscriber_references',
         tableSingular: 'subscriber_reference',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
             subscriberId: 'subscriber_id',
             credentials: 'credentials',

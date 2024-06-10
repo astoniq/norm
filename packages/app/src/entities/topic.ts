@@ -6,8 +6,8 @@ export const topicEntity: Entity<Topic> =
         table: 'topics',
         tableSingular: 'topic',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
-            name: 'name',
-            description: 'description',
+            topicId: 'topic_id'
         },
     });

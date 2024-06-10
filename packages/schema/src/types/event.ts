@@ -13,7 +13,7 @@ import {
 
 export const triggerEventBaseGuard = z.object({
     resourceId: z.string().min(1),
-    workflowId: z.string().min(1),
+    notificationId: z.string().min(1),
     payload: jsonObjectGuard
 })  satisfies ZodType<TriggerEventBase>
 

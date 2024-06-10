@@ -6,6 +6,7 @@ export const connectorEntity: Entity<Connector> =
         table: 'connectors',
         tableSingular: 'connector',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
             config: 'config',
             type: 'type',

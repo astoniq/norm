@@ -13,20 +13,20 @@ export const createTopicSubscriberQueries = (pool: CommonQueryMethods) => {
             returning: true
         })
 
-    const findTopicSubscribersByIds = async (topicsIds: string[], excludeExternalIds: string[]) => {
+    const findTopicSubscribersByTopicIds = async (topicsIds: string[], excludeSubscriberIds: string[]) => {
         return topicsIds.length > 0
             ? pool.any(sql.type(topicSubscriberGuard)`
                     select ${sql.join(Object.values(fields), sql.fragment`, `)}
                     from ${table}
                     where ${fields.topicId} in (${sql.join(topicsIds, sql.fragment`, `)})
-                        ${conditionalArraySql(excludeExternalIds, value =>
-                                sql.fragment`and ${fields.externalId} not in (${sql.join(value, sql.fragment`, `)})`)}
+                        ${conditionalArraySql(excludeSubscriberIds, value =>
+                                sql.fragment`and ${fields.subscriberId} not in (${sql.join(value, sql.fragment`, `)})`)}
             `)
             : [];
     }
 
     return {
-        findTopicSubscribersByIds,
+        findTopicSubscribersByTopicIds,
         insertTopicSubscriber
     }
 }

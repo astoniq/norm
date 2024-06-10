@@ -3,9 +3,10 @@ import {jsonObjectGuard} from "../foundations/index.js";
 import {ConnectorType} from "@astoniq/norm-shared";
 
 export const createStepGuard = z.object({
+    tenantId: z.string().max(21),
     id: z.string().min(1).max(21),
     notificationId: z.string().min(1).max(21),
-    stepId: z.string().min(1).max(21),
+    stepId: z.string().min(1).max(128),
     type: z.nativeEnum(ConnectorType),
     status: z.string().min(1).max(128),
     output: jsonObjectGuard.optional(),
@@ -15,9 +16,10 @@ export const createStepGuard = z.object({
 export type CreateStep = z.infer<typeof createStepGuard>;
 
 export const stepGuard = z.object({
+    tenantId: z.string().max(21),
     id: z.string().min(1).max(21),
     notificationId: z.string().min(1).max(21),
-    stepId: z.string().min(1).max(21),
+    stepId: z.string().min(1).max(128),
     type: z.nativeEnum(ConnectorType),
     status: z.string().min(1).max(128),
     output: jsonObjectGuard,

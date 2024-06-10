@@ -2,7 +2,7 @@ import {Subscriber} from "./subscriber.js";
 
 export interface ExecutionEvent {
     payload: Record<string, unknown>;
-    workflowId: string;
+    notificationId: string;
     state: ExecutionState[];
     subscriber: Subscriber;
 }

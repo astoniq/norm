@@ -2,7 +2,7 @@ import {Worker} from "bullmq";
 import {
     JobTopic,
     Subscriber,
-    SubscriberJob,  NotificationStatus,
+    SubscriberJob, NotificationStatus,
 } from "@astoniq/norm-schema";
 import {WorkerOptions} from "./types.js";
 import {generateStandardId} from "../utils/id.js";
@@ -17,34 +17,42 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
         queues: {echo}
     } = options
 
-    const createSubscriber = async (subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+    const createSubscriber = async (
+        tenantId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+
         return subscribers.insertSubscriber({
+            ...subscriberDefine,
             id: generateStandardId(),
-            ...subscriberDefine
+            tenantId,
         })
     }
 
-    const updateSubscriber = async (subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+    const updateSubscriber = async (
+        tenantId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+
         return subscribers.updateSubscriber({
             set: subscriberDefine,
-            where: {subscriberId: subscriberDefine.subscriberId},
+            where: {subscriberId: subscriberDefine.subscriberId, tenantId},
             jsonbMode: "merge"
         })
     }
 
-    const getSubscriber = async (subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+    const getSubscriber = async (
+        tenantId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
 
         const subscriber = await subscribers.hasSubscriberBySubscriberId(
-            subscriberDefine.subscriberId)
+            tenantId, subscriberDefine.subscriberId)
 
         if (subscriber) {
-            return updateSubscriber(subscriberDefine)
+            return updateSubscriber(tenantId, subscriberDefine)
         }
 
-        return createSubscriber(subscriberDefine)
+        return createSubscriber(tenantId, subscriberDefine)
     }
 
-    const updateSubscriberReferences = async (subscriber: Subscriber, subscriberDefine: SubscriberDefine) => {
+    const updateSubscriberReferences = async (
+        tenantId: string, subscriber: Subscriber, subscriberDefine: SubscriberDefine) => {
+
         const {references} = subscriberDefine;
 
         if (!references) {
@@ -55,47 +63,56 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
             await subscriberReferences.upsertSubscriberReference({
                 id: generateStandardId(),
-                subscriberId: subscriber.subscriberId,
+                tenantId,
+                subscriberId: subscriber.id,
                 target: reference.target,
                 credentials: reference.credentials
             })
         }
     }
 
-    const processSubscriber = async (subscriberDefine: SubscriberDefine) => {
+    const processSubscriber = async (
+        tenantId: string, subscriberDefine: SubscriberDefine) => {
 
-        const subscriber = await getSubscriber(subscriberDefine)
+        const subscriber = await getSubscriber(tenantId, subscriberDefine)
 
         if (subscriber === null) {
             return undefined
         }
 
-        await updateSubscriberReferences(subscriber, subscriberDefine);
+        await updateSubscriberReferences(tenantId, subscriber, subscriberDefine);
 
         return subscriber
     }
 
     return new Worker<SubscriberJob>(JobTopic.Subscriber, async (job) => {
 
-        const {data} = job
+        const {
+            data: {
+                event,
+                subscriber,
+                resourceId,
+                tenantId
+            }
+        } = job
 
         try {
-            const subscriberProcessed = await processSubscriber(data.subscriber)
+            const subscriberProcessed = await processSubscriber(tenantId, subscriber)
 
             if (!subscriberProcessed) {
-                logger.warn(data.subscriber, `Subscriber was not processed`);
+                logger.warn(subscriber, `Subscriber was not processed`);
                 return;
             }
 
-            const notificationId = generateStandardId()
+            const insertNotificationId = generateStandardId()
 
-            // Создание записи notification
             const notification = await notifications.insertNotification({
-                id: notificationId,
-                subscriberId: subscriberProcessed.subscriberId,
-                payload: data.payload,
-                resourceId: data.resourceId,
-                workflowId: data.workflowId,
+                id: insertNotificationId,
+                tenantId,
+                resourceId,
+                payload: event.payload,
+                notificationId: event.notificationId,
+                subscriberId: subscriberProcessed.id,
                 status: NotificationStatus.Pending
             })
 
@@ -104,11 +121,14 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
                 return;
             }
 
-            // Отправка записи в echo worker
             await echo.add({
                 name: generateStandardId(),
-                data: {notificationId}
+                data: {
+                    tenantId: tenantId,
+                    notificationId: insertNotificationId
+                }
             })
+
         } catch (error) {
             logger.error(error)
         }

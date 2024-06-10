@@ -20,25 +20,37 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         subscriberEntity, subscriberGuard, true
     )
 
-    const hasSubscriberBySubscriberId = async (subscriberId: string) => {
+    const hasSubscriberBySubscriberId = async (tenantId: string, subscriberId: string) => {
         return pool.exists(sql.type(subscriberGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
             where ${fields.subscriberId} = ${subscriberId}
+              and ${fields.tenantId} = ${tenantId}
         `)
     }
 
-    const findSubscriberBySubscriberId = async (subscriberId: string) => {
+    const findSubscriberBySubscriberIds = async (ids: string[]) => {
+        return ids.length > 0
+            ? pool.any(sql.type(subscriberGuard)`
+                    select ${sql.join(Object.values(fields), sql.fragment`, `)}
+                    from ${table}
+                    where ${fields.subscriberId} in (${sql.join(ids, sql.fragment`, `)})
+            `)
+            : [];
+    }
+
+    const findSubscriberById = async (id: string) => {
         return pool.maybeOne(sql.type(subscriberGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
-            where ${fields.subscriberId} = ${subscriberId}
+            where ${fields.id} = ${id}
         `)
     }
 
     return {
+        findSubscriberBySubscriberIds,
         hasSubscriberBySubscriberId,
-        findSubscriberBySubscriberId,
+        findSubscriberById,
         updateSubscriber,
         insertSubscriber,
         findAllSubscribers

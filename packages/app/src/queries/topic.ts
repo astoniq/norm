@@ -12,18 +12,18 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
         returning: true
     })
 
-    const findTopicsByNames = async (names: string[]) => {
-        return names.length > 0
+    const findTopicsByTopicIds = async (ids: string[]) => {
+        return ids.length > 0
             ? pool.any(sql.type(topicGuard)`
                     select ${sql.join(Object.values(fields), sql.fragment`, `)}
                     from ${table}
-                    where ${fields.id} in (${sql.join(names, sql.fragment`, `)})
+                    where ${fields.topicId} in (${sql.join(ids, sql.fragment`, `)})
             `)
             : [];
     }
 
     return {
-        findTopicsByNames,
+        findTopicsByTopicIds,
         insertTopic
     }
 }

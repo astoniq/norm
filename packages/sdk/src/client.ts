@@ -58,55 +58,55 @@ export class Echo {
     }
 
     public async workflow<Payload>(
-        workflowId: string,
+        notificationId: string,
         execute: WorkflowExecute<Payload>,
         options?: WorkflowOptions<Payload>
     ): Promise<void> {
-        this.discoverWorkflow(workflowId, execute, options);
+        this.discoverWorkflow(notificationId, execute, options);
 
         await execute({
             subscriber: {} as Subscriber,
             payload: {} as Payload,
             step: {
                 email: this.discoverStepFactory(
-                    workflowId,
+                    notificationId,
                     'email',
                     emailOutputSchema,
                     emailResultSchema
                 ),
                 push: this.discoverStepFactory(
-                    workflowId,
+                    notificationId,
                     'push',
                     pushOutputSchema,
                     pushResultSchema
                 ),
                 chat: this.discoverStepFactory(
-                    workflowId,
+                    notificationId,
                     'chat',
                     chatOutputSchema,
                     chatResultSchema
                 ),
                 sms: this.discoverStepFactory(
-                    workflowId,
+                    notificationId,
                     'sms',
                     smsOutputSchema,
                     smsResultSchema
                 ),
                 app: this.discoveryAppStepFactory(
-                    workflowId,
+                    notificationId,
                     'app'
                 )
             }
         })
     }
 
-    private discoveryAppStepFactory(workflowId: string, type: StepType): AppStep {
+    private discoveryAppStepFactory(notificationId: string, type: StepType): AppStep {
         return async (stepId, resolve, options = {}) => {
 
             const resultSchema = options?.resultSchema || emptySchema;
             const outputSchema = options?.outputSchema || emptySchema;
 
-            this.discoverStep(workflowId, stepId, {
+            this.discoverStep(notificationId, stepId, {
                 stepId,
                 type,
                 output: outputSchema,
@@ -120,14 +120,14 @@ export class Echo {
     }
 
     private discoverStepFactory<O, R>(
-        workflowId: string,
+        notificationId: string,
         type: StepType,
         outputSchema: ZodSchema,
         resultSchema: ZodSchema
     ): ActionStep<O, R> {
         return async (stepId, resolve, options = {}) => {
 
-            this.discoverStep(workflowId, stepId, {
+            this.discoverStep(notificationId, stepId, {
                 stepId,
                 type,
                 output: outputSchema,
@@ -144,7 +144,7 @@ export class Echo {
         return this.workflows.map(workflow => {
 
             const {
-                workflowId,
+                notificationId,
                 steps: workflowSteps
             } =workflow
 
@@ -158,7 +158,7 @@ export class Echo {
             })
 
             return {
-                workflowId,
+                notificationId,
                 steps,
                 payload: zodToJsonSchema(workflow.payload)
             }
@@ -166,36 +166,36 @@ export class Echo {
     }
 
 
-    private discoverStep(workflowId: string, stepId: string, step: StepOutput): void {
-        if (this.getWorkflow(workflowId).steps.some(workflowStep => workflowStep.stepId === stepId)) {
+    private discoverStep(notificationId: string, stepId: string, step: StepOutput): void {
+        if (this.getWorkflow(notificationId).steps.some(workflowStep => workflowStep.stepId === stepId)) {
             throw new StepAlreadyExistsError(stepId);
         } else {
-            const workflow = this.getWorkflow(workflowId);
+            const workflow = this.getWorkflow(notificationId);
             workflow.steps.push(step)
         }
     }
 
-    private getWorkflow(workflowId: string): WorkflowOutput {
-        const foundWorkflow = this.workflows.find(workflow => workflow.workflowId === workflowId);
+    private getWorkflow(notificationId: string): WorkflowOutput {
+        const foundWorkflow = this.workflows.find(workflow => workflow.notificationId === notificationId);
 
         if (foundWorkflow) {
             return foundWorkflow
         } else {
-            throw new WorkflowNotFoundError(workflowId)
+            throw new WorkflowNotFoundError(notificationId)
         }
     }
 
     private discoverWorkflow<Payload>
     (
-        workflowId: string,
+        notificationId: string,
         execute: WorkflowExecute<Payload>,
         options: WorkflowOptions<Payload> = {}
     ): void {
-        if (this.workflows.some(workflow => workflow.workflowId === workflowId)) {
-            throw new WorkflowAlreadyExistsError(workflowId)
+        if (this.workflows.some(workflow => workflow.notificationId === notificationId)) {
+            throw new WorkflowAlreadyExistsError(notificationId)
         } else {
             this.workflows.push({
-                workflowId,
+                notificationId,
                 options,
                 steps: [],
                 payload: options.payloadSchema || emptySchema,
@@ -209,7 +209,7 @@ export class Echo {
         schema: ZodSchema,
         component: 'event' | 'step',
         payloadType: 'output' | 'result' | 'payload',
-        workflowId: string,
+        notificationId: string,
         stepId?: string): void {
 
         const valid = schema.safeParse(data)
@@ -217,10 +217,10 @@ export class Echo {
         if (!valid.success) {
             switch (component) {
                 case "event":
-                    this.validateEvent(payloadType, workflowId, valid.error)
+                    this.validateEvent(payloadType, notificationId, valid.error)
                     break;
                 case "step":
-                    this.validateStep(stepId, payloadType, workflowId, valid.error)
+                    this.validateStep(stepId, payloadType, notificationId, valid.error)
                     break;
                 default:
                     throw new Error(`Invalid component type ${component}`)
@@ -244,12 +244,12 @@ export class Echo {
 
     private validateEvent(
         payloadType: 'output' | 'result' | 'payload',
-        workflowId: string,
+        notificationId: string,
         error: ZodError
     ) {
         switch (payloadType) {
             case "payload":
-                throw new ExecutionEventDataInvalidError(workflowId, this.formatZodError(error));
+                throw new ExecutionEventDataInvalidError(notificationId, this.formatZodError(error));
             default:
                 throw new Error(`Invalid payload type '${payloadType}'`)
         }
@@ -258,7 +258,7 @@ export class Echo {
     private validateStep(
         stepId: string | undefined,
         payloadType: 'output' | 'result' | 'payload',
-        workflowId: string,
+        notificationId: string,
         error: ZodError
     ) {
         if (!stepId) {
@@ -267,10 +267,10 @@ export class Echo {
 
         switch (payloadType) {
             case 'output':
-                throw new ExecutionStateOutputInvalidError(workflowId, stepId, this.formatZodError(error));
+                throw new ExecutionStateOutputInvalidError(notificationId, stepId, this.formatZodError(error));
 
             case 'result':
-                throw new ExecutionStateResultInvalidError(workflowId, stepId, this.formatZodError(error));
+                throw new ExecutionStateResultInvalidError(notificationId, stepId, this.formatZodError(error));
             default:
                 throw new Error(`Invalid payload type: '${payloadType}'`);
         }
@@ -278,7 +278,7 @@ export class Echo {
 
     private checkEvenPayload(event: ExecutionEvent) {
         if (!event.payload) {
-            throw new ExecutionEventInputInvalidError(event.workflowId, {
+            throw new ExecutionEventInputInvalidError(event.notificationId, {
                 message: 'Event `data` is required'
             })
         }
@@ -286,7 +286,7 @@ export class Echo {
 
     public async executeWorkflow(event: ExecutionEvent): Promise<ExecuteOutput> {
 
-        const workflow = this.getWorkflow(event.workflowId);
+        const workflow = this.getWorkflow(event.notificationId);
 
         let result: ExecuteOutput = {
             status: true
@@ -323,8 +323,8 @@ export class Echo {
         return result
     }
 
-    private getStep(workflowId: string, stepId: string): StepOutput {
-        const workflow = this.getWorkflow(workflowId)
+    private getStep(notificationId: string, stepId: string): StepOutput {
+        const workflow = this.getWorkflow(notificationId)
 
         const foundStep = workflow.steps.find(step => step.stepId === stepId);
 
@@ -337,7 +337,7 @@ export class Echo {
 
     private executeStepFactory<O, R>(event: ExecutionEvent, setResult: (result: ExecuteOutput<O>) => void): ActionStep<O, R> {
         return async (stepId, resolve) => {
-            const step = this.getStep(event.workflowId, stepId)
+            const step = this.getStep(event.notificationId, stepId)
 
             return this.executeStep(event, setResult, {
                 ...step,
@@ -363,7 +363,7 @@ export class Echo {
                 step.result,
                 'step',
                 'result',
-                event.workflowId,
+                event.notificationId,
                 step.stepId
             )
 
@@ -377,7 +377,7 @@ export class Echo {
                 step.output,
                 'step',
                 'output',
-                event.workflowId,
+                event.notificationId,
                 step.stepId
             )
 
@@ -395,7 +395,7 @@ export class Echo {
     private createExecutionInputs(event: ExecutionEvent, workflow: WorkflowOutput): Record<string, unknown> {
         const executionData = event.payload;
 
-        this.validate(executionData, workflow.payload, 'event', 'payload', event.workflowId)
+        this.validate(executionData, workflow.payload, 'event', 'payload', event.notificationId)
 
         return executionData;
     }

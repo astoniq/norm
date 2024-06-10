@@ -2,15 +2,18 @@ import {ApplicationContext} from "../application/types.js";
 import Koa from 'koa';
 import Router from "koa-router";
 import eventRoutes from "./event.js";
-import {AnonymousRouter} from "./types.js";
+import {ClientRouter} from "./types.js";
+import koaTenant from "../middlewares/koa-tenant.js";
 
 const createRouters = (application: ApplicationContext) => {
 
-    const anonymousRouter: AnonymousRouter = new Router();
+    const clientRouter: ClientRouter = new Router();
 
-    eventRoutes(anonymousRouter, application)
+    clientRouter.use(koaTenant(application.queries))
 
-    return [anonymousRouter]
+    eventRoutes(clientRouter, application)
+
+    return [clientRouter]
 }
 
 export function initClient(application: ApplicationContext): Koa {

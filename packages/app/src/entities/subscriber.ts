@@ -6,6 +6,7 @@ export const subscriberEntity: Entity<Subscriber> =
         table: 'subscribers',
         tableSingular: 'system',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
             subscriberId: 'subscriber_id',
             name: 'name',

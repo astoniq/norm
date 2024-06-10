@@ -37,10 +37,10 @@ export const createEchoWorker = (options: WorkerOptions) => {
                 insertStep
             },
             subscribers: {
-                findSubscriberBySubscriberId
+                findSubscriberById
             },
             resources: {
-                findResourceByResourceId
+                findResourceById
             }
         },
         queues: {message}
@@ -77,12 +77,12 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
         const {config, signingKey} = resource
 
-        const {payload, workflowId} = notification
+        const {payload, notificationId} = notification
 
         try {
             const response = await sendExecutionEventRequest(config, {
                     payload,
-                    workflowId,
+                    notificationId,
                     state,
                     subscriber
                 },
@@ -122,7 +122,8 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
             const {
                 data: {
-                    notificationId
+                    notificationId,
+                    tenantId
                 }
             } = job
 
@@ -143,8 +144,8 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
                 const [steps, subscriber, resource] = await Promise.all([
                     trySafe(findAllStepByNotificationId(id)),
-                    trySafe(findSubscriberBySubscriberId(subscriberId)),
-                    trySafe(findResourceByResourceId(resourceId))
+                    trySafe(findSubscriberById(subscriberId)),
+                    trySafe(findResourceById(resourceId))
                 ])
 
                 if (!subscriber) {
@@ -175,6 +176,7 @@ export const createEchoWorker = (options: WorkerOptions) => {
                     const insertStepId = generateStandardId()
 
                     const step = await insertStep({
+                        tenantId,
                         notificationId,
                         stepId: executionOutput.stepId,
                         type: executionOutput.type,
@@ -191,7 +193,7 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
                     await message.add({
                         name: generateStandardId(),
-                        data: {stepId: insertStepId}
+                        data: {stepId: insertStepId, tenantId}
                     })
                 }
 

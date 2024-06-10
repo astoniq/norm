@@ -6,6 +6,7 @@ export const stepEntity: Entity<Step> =
         table: 'steps',
         tableSingular: 'step',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
             status: 'status',
             stepId: 'step_id',

@@ -7,6 +7,7 @@ import {createResourceQueries} from "./resource.js";
 import {createStepQueries} from "./step.js";
 import {createSubscriberReferenceQueries} from "./subscriber-reference.js";
 import {createConnectorQueries} from "./connector.js";
+import {createTenantQueries} from "./tenant.js";
 
 export type Queries = ReturnType<typeof createQueries>
 
@@ -20,9 +21,11 @@ export const createQueries = (pool: CommonQueryMethods) => {
     const steps = createStepQueries(pool)
     const subscriberReferences = createSubscriberReferenceQueries(pool)
     const connectors = createConnectorQueries(pool)
+    const tenants = createTenantQueries(pool)
 
     return {
         subscribers,
+        tenants,
         steps,
         notifications,
         topics,

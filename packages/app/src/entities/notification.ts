@@ -6,8 +6,9 @@ export const notificationEntity: Entity<Notification> =
         table: 'notifications',
         tableSingular: 'notification',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
-            workflowId: 'workflow_id',
+            notificationId: 'notification_id',
             resourceId: 'resource_id',
             subscriberId: 'subscriber_id',
             payload: 'payload',

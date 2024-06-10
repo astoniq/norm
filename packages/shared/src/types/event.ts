@@ -15,7 +15,7 @@ export type TriggerPayload = JsonObject
 
 export interface TriggerEventBase {
     resourceId: string;
-    workflowId: string;
+    notificationId: string;
     payload: TriggerPayload
 }
 

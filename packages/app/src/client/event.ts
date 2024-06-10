@@ -1,14 +1,19 @@
-import {AnonymousRouter, RouterInitArgs} from "./types.js";
+import {ClientRouter, RouterInitArgs} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
 import {triggerEventGuard} from "@astoniq/norm-schema";
 import {generateStandardId} from "../utils/id.js";
 
-export default function eventRoutes<T extends AnonymousRouter>(...args: RouterInitArgs<T>) {
+export default function eventRoutes<T extends ClientRouter>(...args: RouterInitArgs<T>) {
 
     const [
         router,
         {
-            queues: {workflow}
+            queues: {workflow},
+            libraries: {
+                resources: {
+                    getResourceByResourceId
+                }
+            }
         },
     ] = args;
 
@@ -20,11 +25,20 @@ export default function eventRoutes<T extends AnonymousRouter>(...args: RouterIn
         }),
         async (ctx, next) => {
 
-            const {body} = ctx.guard;
+            const {
+                tenant,
+                guard: {body}
+            } = ctx;
+
+            const resource = await getResourceByResourceId(body.resourceId)
 
             await workflow.add({
                 name: generateStandardId(),
-                data: body
+                data: {
+                    event: body,
+                    tenantId: tenant.id,
+                    resourceId: resource.id
+                }
             })
 
             ctx.status = 201;

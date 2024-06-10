@@ -31,7 +31,7 @@ describe('client', () => {
 
     it('should run workflow', async () => {
         const {output} = await echo.executeWorkflow({
-            workflowId: 'in-app-test-something-1',
+            notificationId: 'in-app-test-something-1',
             subscriber: {
                 subscriberId: "1"
             },

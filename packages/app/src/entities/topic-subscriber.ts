@@ -6,9 +6,9 @@ export const topicSubscriberEntity: Entity<TopicSubscriber> =
         table: 'topic_subscribers',
         tableSingular: 'topic_subscriber',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
             topicId: 'topic_id',
-            subscriberId: 'subscriber_id',
-            externalId: 'external_id',
+            subscriberId: 'subscriber_id'
         },
     });

@@ -15,7 +15,7 @@ export type StepOutput = {
 }
 
 export type WorkflowOutput = {
-    workflowId: string;
+    notificationId: string;
     execute: WorkflowExecute<any>;
     options: WorkflowOptions<any>;
     steps: Array<StepOutput>;
@@ -30,7 +30,7 @@ export type DiscoverStepOutput = {
 }
 
 export type DiscoverWorkflowOutput = {
-    workflowId: string;
+    notificationId: string;
     steps: Array<DiscoverStepOutput>;
     payload: object
 }

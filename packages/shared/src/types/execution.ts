@@ -4,7 +4,7 @@ import {JsonObject} from "./json.js";
 
 export interface ExecutionEvent {
     payload: Record<string, unknown>;
-    workflowId: string;
+    notificationId: string;
     state: ExecutionState[];
     subscriber: SubscriberDefine;
 }

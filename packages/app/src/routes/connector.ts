@@ -1,9 +1,14 @@
 import {AnonymousRouter, RouterInitArgs} from "./types.js";
+import koaGuard from "../middlewares/koa-guard.js";
+import {z} from "zod";
 
 export default function connectorRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
 
     router.get(
-        '/tenants/:tenantId/connectors',
+        '/connectors',
+        koaGuard({
+            params: z.object({tenantId: z.string()})
+        }),
         async (_ctx, next) => {
 
             return next()
@@ -11,7 +16,7 @@ export default function connectorRoutes<T extends AnonymousRouter>(...[router]: 
     )
 
     router.post(
-        '/tenants/:tenantId/connectors',
+        '/connectors',
         async (_ctx, next) => {
 
             return next()
@@ -19,7 +24,7 @@ export default function connectorRoutes<T extends AnonymousRouter>(...[router]: 
     )
 
     router.get(
-        '/tenants/:tenantId/connectors/:id',
+        '/connectors/:id',
         async (_ctx, next) => {
 
             return next();
@@ -27,7 +32,7 @@ export default function connectorRoutes<T extends AnonymousRouter>(...[router]: 
     )
 
     router.delete(
-        '/tenants/:tenantId/connectors/:id',
+        '/connectors/:id',
         async (_ctx, next) => {
 
             return next();

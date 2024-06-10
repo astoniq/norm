@@ -1,7 +1,11 @@
 import {CommonQueryMethods, IdentifierSqlToken, sql} from "slonik";
 import {buildSearchSql, SearchOptions} from "./utils.js";
 import {Entity, EntityLike} from "../types/index.js";
-import {countGuard} from "@astoniq/norm-schema";
+import {z} from "zod";
+
+const countGuard = z.object({
+    count: z.number(),
+})
 
 export const buildGetTotalRowCountWithPool =
     <

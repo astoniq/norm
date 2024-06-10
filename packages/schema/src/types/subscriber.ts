@@ -1,10 +1,10 @@
 import {z, ZodType} from "zod";
 import {
-    SubscriberAppCredentials,
+    SubscriberIdCredentials,
     SubscriberDefine,
     SubscriberEmailCredentials,
     SubscriberPayload,
-    SubscriberReferenceAppPayload,
+    SubscriberReferenceIdPayload,
     SubscriberReferenceEmailPayload,
     SubscriberReferencePayload,
     SubscriberReferenceSmsPayload,
@@ -36,21 +36,21 @@ export const subscriberReferenceSmsPayloadGuard = z.object({
     credentials: subscriberSmsCredentialsGuard
 }) satisfies ZodType<SubscriberReferenceSmsPayload>
 
-export const subscriberAppCredentialsGuard: z.ZodType<SubscriberAppCredentials> = z.object({
-    token: z.string()
+export const subscriberAppCredentialsGuard: z.ZodType<SubscriberIdCredentials> = z.object({
+    id: z.string()
 })
 
-export const subscriberReferenceAppPayloadGuard = z.object({
-    target: z.literal(SubscriberTarget.App),
+export const subscriberReferenceIdPayloadGuard = z.object({
+    target: z.literal(SubscriberTarget.Id),
     credentials: subscriberAppCredentialsGuard
-}) satisfies ZodType<SubscriberReferenceAppPayload>
+}) satisfies ZodType<SubscriberReferenceIdPayload>
 
 export const subscriberReferencePayloadGuard: z.ZodType<SubscriberReferencePayload> = z.discriminatedUnion(
     'target',
     [
         subscriberReferenceEmailPayloadGuard,
         subscriberReferenceSmsPayloadGuard,
-        subscriberReferenceAppPayloadGuard
+        subscriberReferenceIdPayloadGuard
     ])
 
 export const subscriberPayloadGuard: z.ZodType<SubscriberPayload> = z.object({

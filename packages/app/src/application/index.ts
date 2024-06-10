@@ -44,12 +44,14 @@ export async function initApp() {
 
     app.use(mount('/api', initApis({
         queues,
-        queries
+        queries,
+        libraries
     })));
 
     app.use(mount('/client', initClient({
         queues,
-        queries
+        queries,
+        libraries
     })));
 
     const server = app.listen(3000);

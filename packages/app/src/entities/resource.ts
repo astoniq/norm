@@ -6,9 +6,11 @@ export const resourceEntity: Entity<Resource> =
         table: 'resources',
         tableSingular: 'resource',
         fields: {
+            tenantId: 'tenant_id',
             id: 'id',
             resourceId: 'resource_id',
             config: 'config',
+            enabled: 'enabled',
             signingKey: 'signing_key'
         },
     })
