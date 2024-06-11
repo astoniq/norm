@@ -11,7 +11,7 @@ export default function resourceRoutes<T extends AnonymousRouter>(...[router, {q
         }
     } = queries
 
-    router.get(
+    router.post(
         '/resources',
         koaGuard({
             body: resourceGuard.omit({id: true, signingKey: true}),
@@ -36,7 +36,7 @@ export default function resourceRoutes<T extends AnonymousRouter>(...[router, {q
         }
     )
 
-    router.post(
+    router.get(
         '/resources',
         async (_ctx, next) => {
 

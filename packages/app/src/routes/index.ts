@@ -2,11 +2,13 @@ import {ApplicationContext} from "../application/types.js";
 import Koa from 'koa';
 import Router from "koa-router";
 import {AnonymousRouter} from "./types.js";
+import resourceRoutes from "./resource.js";
 
-const createRouters = (_application: ApplicationContext) => {
+const createRouters = (application: ApplicationContext) => {
 
     const anonymousRouter: AnonymousRouter = new Router();
 
+    resourceRoutes(anonymousRouter, application)
 
     return [anonymousRouter]
 }
