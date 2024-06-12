@@ -1,19 +1,5 @@
 import {z} from "zod";
 
-export const createSubscriberGuard = z.object({
-    tenantId: z.string().max(21),
-    id: z.string().min(1).max(21),
-    subscriberId: z.string().min(1).max(128),
-    username: z.string().max(128).nullable().optional(),
-    email: z.string().max(128).nullable().optional(),
-    phone: z.string().max(128).nullable().optional(),
-    name: z.string().max(128).nullable().optional(),
-    locale: z.string().max(128).nullable().optional(),
-    avatar: z.string().max(2048).nullable().optional(),
-});
-
-export type CreateSubscriber = z.infer<typeof createSubscriberGuard>;
-
 export const subscriberGuard = z.object({
     tenantId: z.string().max(21),
     id: z.string().min(1).max(21),
@@ -27,3 +13,14 @@ export const subscriberGuard = z.object({
 });
 
 export type Subscriber = z.infer<typeof subscriberGuard>;
+
+export const insertSubscriberGuard = subscriberGuard.partial({
+    username: true,
+    email: true,
+    phone: true,
+    name: true,
+    locale: true,
+    avatar: true
+})
+
+export type InsertSubscriber = z.infer<typeof insertSubscriberGuard>

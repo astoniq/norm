@@ -1,6 +1,6 @@
 import {AnonymousRouter, RouterInitArgs} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
-import {resourceGuard} from "@astoniq/norm-schema";
+import {createResourceRequestGuard, resourceGuard} from "@astoniq/norm-schema";
 import {generateStandardId, generateStandardSecret} from "@astoniq/norm-shared";
 
 export default function resourceRoutes<T extends AnonymousRouter>(...[router, {queries}]: RouterInitArgs<T>) {
@@ -14,7 +14,7 @@ export default function resourceRoutes<T extends AnonymousRouter>(...[router, {q
     router.post(
         '/resources',
         koaGuard({
-            body: resourceGuard.omit({id: true, signingKey: true}),
+            body: createResourceRequestGuard,
             response: resourceGuard,
             status: [201, 400]
         }),
@@ -27,7 +27,8 @@ export default function resourceRoutes<T extends AnonymousRouter>(...[router, {q
             ctx.body = await insertResource({
                 ...body,
                 id: generateStandardId(),
-                signingKey: generateStandardSecret()
+                signingKey: generateStandardSecret(),
+                tenantId: ""
             })
 
             ctx.status = 201;

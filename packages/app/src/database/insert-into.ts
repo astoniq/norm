@@ -6,7 +6,7 @@ import {
     excludeAutoSetFields,
     OmitAutoSetFields
 } from "../utils/sql.js";
-import {Entity, EntityGuard, EntityLike} from "../types/index.js";
+import {Entity, EntityLike} from "../types/index.js";
 import assertThat from "../utils/assert-that.js";
 import {InsertionError} from "../errors/index.js";
 
@@ -29,19 +29,17 @@ type InsertIntoConfigReturning = {
 
 type BuildInsertInto = {
     <T extends EntityLike<T>,
-        CreateEntity extends Partial<T>>
+        P extends Partial<T>>
     (
-        entity: Entity<T>,
-        guard: EntityGuard<T>,
+        entity: Entity<T, P>,
         config?: InsertIntoConfig):
-        (data: OmitAutoSetFields<CreateEntity>) => Promise<void>;
+        (data: OmitAutoSetFields<P>) => Promise<void>;
     <T extends EntityLike<T>,
-        CreateEntity extends Partial<T>>
+        P extends Partial<T>>
     (
-        entity: Entity<T>,
-        guard: EntityGuard<T>,
+        entity: Entity<T, P>,
         config?: InsertIntoConfigReturning):
-        (data: OmitAutoSetFields<CreateEntity>) => Promise<T>;
+        (data: OmitAutoSetFields<P>) => Promise<T>;
 }
 
 const setExcluded = (...fields: IdentifierSqlToken[]) =>
@@ -50,10 +48,9 @@ const setExcluded = (...fields: IdentifierSqlToken[]) =>
 export const buildInsertIntoWithPool =
     (pool: CommonQueryMethods): BuildInsertInto =>
         <T extends EntityLike<T>,
-            CreateEntity extends Partial<T>>
+            P extends Partial<T>>
         (
-            entity: Entity<T>,
-            guard: EntityGuard<T>,
+            entity: Entity<T, P>,
             config?: InsertIntoConfig | InsertIntoConfigReturning) => {
 
             const {fields, table} = convertToIdentifiers(entity);
@@ -61,21 +58,21 @@ export const buildInsertIntoWithPool =
             const onConflict = config?.onConflict;
             const returning = Boolean(config?.returning);
 
-            return async (data: OmitAutoSetFields<CreateEntity>): Promise<T | void> => {
+            return async (data: OmitAutoSetFields<P>): Promise<T | void> => {
                 const insertingKeys = keys.filter((key) => key in data)
                 const query = sql.fragment`
                     insert into ${table} (${sql.join(insertingKeys.map((key) => fields[key]), sql.fragment`, `)})
                     values (${sql.join(insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)), sql.fragment`, `)})
                         ${conditionalSql(onConflict, (config) =>
-                                config.ignore ? sql.fragment`on conflict do nothing` :
-                                        sql.fragment`on conflict (${sql.join(config.fields, sql.fragment`, `)}) do update
+                    config.ignore ? sql.fragment`on conflict do nothing` :
+                        sql.fragment`on conflict (${sql.join(config.fields, sql.fragment`, `)}) do update
                                 set ${setExcluded(...config.setExcludedFields)}`
-                        )} ${conditionalSql(returning, () => sql.fragment`returning *`)}
+                )} ${conditionalSql(returning, () => sql.fragment`returning *`)}
                 `
                 const {
                     rows: [entry]
                 } = returning
-                    ? await pool.query(sql.type(guard)`${query}`)
+                    ? await pool.query(sql.type(entity.guard)`${query}`)
                     : await pool.query(sql.unsafe`${query}`);
 
                 assertThat(!returning || entry, new InsertionError(entity, data));

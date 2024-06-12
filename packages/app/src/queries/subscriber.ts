@@ -9,15 +9,15 @@ const {table, fields} = convertToIdentifiers(subscriberEntity);
 export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
     const findAllSubscribers = buildFindAllEntitiesWithPool(pool)(
-        subscriberEntity, subscriberGuard
+        subscriberEntity,
     )
 
     const insertSubscriber = buildInsertIntoWithPool(pool)(
-        subscriberEntity, subscriberGuard, {returning: true}
+        subscriberEntity, {returning: true}
     )
 
     const updateSubscriber = buildUpdateWhereWithPool(pool)(
-        subscriberEntity, subscriberGuard, true
+        subscriberEntity, true
     )
 
     const hasSubscriberBySubscriberId = async (tenantId: string, subscriberId: string) => {

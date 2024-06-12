@@ -9,7 +9,7 @@ const {table, fields} = convertToIdentifiers(topicSubscriberEntity);
 export const createTopicSubscriberQueries = (pool: CommonQueryMethods) => {
 
     const insertTopicSubscriber = buildInsertIntoWithPool(pool)(
-        topicSubscriberEntity, topicSubscriberGuard, {
+        topicSubscriberEntity, {
             returning: true
         })
 

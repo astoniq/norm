@@ -9,7 +9,8 @@ const {table, fields} = convertToIdentifiers(notificationEntity);
 export const createNotificationQueries = (pool: CommonQueryMethods) => {
 
     const insertNotification = buildInsertIntoWithPool(pool)(
-        notificationEntity, notificationGuard, {returning: true})
+        notificationEntity, {returning: true}
+    )
 
     const findNotificationById = async (id: string) =>
         pool.maybeOne(sql.type(notificationGuard)`
@@ -19,7 +20,8 @@ export const createNotificationQueries = (pool: CommonQueryMethods) => {
         `)
 
     const updateNotification = buildUpdateWhereWithPool(pool)(
-        notificationEntity, notificationGuard, true)
+        notificationEntity, true
+    )
 
     const updateNotificationStatusById = async (
         id: string,

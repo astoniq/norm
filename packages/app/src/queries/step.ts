@@ -17,11 +17,12 @@ export const createStepQueries = (pool: CommonQueryMethods) => {
         `)
 
     const insertStep = buildInsertIntoWithPool(pool)(
-        stepEntity, stepGuard, {returning: true}
+        stepEntity, {returning: true}
     )
 
     const updateStep = buildUpdateWhereWithPool(pool)(
-        stepEntity, stepGuard, true)
+        stepEntity, true
+    )
 
     const updateStepStatusById = async (
         id: string,

@@ -7,7 +7,7 @@ import {Entity, EntityLike} from "../types/index.js";
 
 const {table, fields} = convertToIdentifiers(systemEntity);
 
-export const doesTableExist = async <T extends EntityLike<T>>(pool: CommonQueryMethods, entity: Entity<T>) => {
+export const doesTableExist = async <T extends EntityLike<T>, P extends Partial<T>>(pool: CommonQueryMethods, entity: Entity<T, P>) => {
     const {rows: [data]} = await pool.query(
         sql.type(z.object(
             {reg: z.string().optional()}

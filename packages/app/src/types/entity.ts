@@ -24,9 +24,11 @@ export type UpdateWhereData<
     jsonbMode: 'replace' | 'merge'
 };
 
-export type Entity<T extends EntityLike<T>> = Readonly<{
+export type Entity<T extends EntityLike<T>, I extends Partial<T>> = {
     tableSingular: string;
-} & Table<T>>
+    guard: EntityGuard<T>;
+    insertGuard: EntityGuard<I>;
+} & Table<T>
 
 export type EntityKeys<T extends EntityLike<T>> = Extract<keyof T, string>
 

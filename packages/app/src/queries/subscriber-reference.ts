@@ -9,11 +9,11 @@ const {table, fields} = convertToIdentifiers(subscriberReferenceEntity);
 export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
 
     const findAllSubscriberReferences = buildFindAllEntitiesWithPool(pool)(
-        subscriberReferenceEntity, subscriberReferenceGuard
+        subscriberReferenceEntity,
     )
 
     const insertSubscriberReference = buildInsertIntoWithPool(pool)(
-        subscriberReferenceEntity, subscriberReferenceGuard, {returning: true}
+        subscriberReferenceEntity, {returning: true}
     )
 
     const findSubscriberReferencesBySubscriberId = async (subscriberId: string) => {
@@ -25,7 +25,7 @@ export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
     }
 
     const upsertSubscriberReference = buildInsertIntoWithPool(pool)(
-        subscriberReferenceEntity, subscriberReferenceGuard, {
+        subscriberReferenceEntity, {
             onConflict: {
                 fields: [fields.tenantId, fields.subscriberId, fields.target],
                 setExcludedFields: [fields.credentials]

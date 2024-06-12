@@ -7,3 +7,7 @@ export const tenantGuard = z.object({
 });
 
 export type Tenant = z.infer<typeof tenantGuard>;
+
+export const insertTenantGuard = tenantGuard;
+
+export type InsertTenant = z.infer<typeof insertTenantGuard>

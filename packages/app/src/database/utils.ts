@@ -8,9 +8,10 @@ export type SearchOptions<T extends EntityLike<T>> = {
 }
 
 export const buildSearchSql = <
-    T extends EntityLike<T>
+    T extends EntityLike<T>,
+    P extends Partial<T>,
 >(
-    entity: Entity<T>,
+    entity: Entity<T, P>,
     search?: SearchOptions<T>,
     prefixSql: SqlToken = sql.fragment`where `
 ) => {

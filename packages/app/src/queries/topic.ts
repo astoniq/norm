@@ -8,7 +8,7 @@ const {table, fields} = convertToIdentifiers(topicEntity);
 
 export const createTopicQueries = (pool: CommonQueryMethods) => {
 
-    const insertTopic = buildInsertIntoWithPool(pool)(topicEntity, topicGuard, {
+    const insertTopic = buildInsertIntoWithPool(pool)(topicEntity, {
         returning: true
     })
 

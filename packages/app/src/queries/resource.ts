@@ -9,7 +9,7 @@ const {table, fields} = convertToIdentifiers(resourceEntity);
 export const createResourceQueries = (pool: CommonQueryMethods) => {
 
     const insertResource = buildInsertIntoWithPool(pool)(
-        resourceEntity, resourceGuard, {returning: true}
+        resourceEntity, {returning: true}
     )
 
     const hasResourceById = async (id: string) =>

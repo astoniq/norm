@@ -13,7 +13,7 @@ const addNotificationTableMigrationScript: MigrationScript = {
                 resource_id     varchar(21)  not null,
                 subscriber_id   varchar(21)  not null,
                 status          varchar(128) not null,
-                payload         jsonb,
+                payload         jsonb        not null,
                 primary key (id)
             );
             create index notifications__id on notifications (tenant_id, id);

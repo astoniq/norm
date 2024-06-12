@@ -11,8 +11,9 @@ type ExcludeAutoSetFields<T> = Exclude<T, (typeof autoSetFields)[number]>
 
 export const excludeAutoSetFields =
     <T extends EntityLike<T>,
+        P extends Partial<T>,
         Keys extends EntityKeys<T>
-    >({fields}: Entity<T>) =>
+    >({fields}: Entity<T, P>) =>
         Object.freeze(
             Object.keys(fields).filter(
                 (field: PropertyKey): field is ExcludeAutoSetFields<Keys> => !(field in autoSetFields)))

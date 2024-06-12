@@ -9,8 +9,9 @@ const countGuard = z.object({
 
 export const buildGetTotalRowCountWithPool =
     <
-        T extends EntityLike<T>
-    >(pool: CommonQueryMethods, entity: Entity<T>) => async (search?: SearchOptions<T>) => {
+        T extends EntityLike<T>,
+        P extends Partial<T>,
+    >(pool: CommonQueryMethods, entity: Entity<T, P>) => async (search?: SearchOptions<T>) => {
         const {count} = await pool.one(sql.type(countGuard)`
             select count(*)
             from ${sql.identifier([entity.table])} ${buildSearchSql(entity, search)}

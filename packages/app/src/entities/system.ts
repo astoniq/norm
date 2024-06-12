@@ -1,12 +1,16 @@
 import {Entity} from "../types/index.js";
-import {System} from "@astoniq/norm-schema";
+import {InsertSystem, insertSystemGuard, System, systemGuard} from "@astoniq/norm-schema";
 
-export const systemEntity: Entity<System> =
-    Object.freeze({
-        table: 'systems',
-        tableSingular: 'system',
-        fields: {
-            key: 'key',
-            value: 'value'
-        },
-    })
+export const systemEntity: Entity<
+    System,
+    InsertSystem
+> = {
+    table: 'systems',
+    tableSingular: 'system',
+    fields: {
+        key: 'key',
+        value: 'value'
+    },
+    guard: systemGuard,
+    insertGuard: insertSystemGuard
+}

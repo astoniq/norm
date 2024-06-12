@@ -12,7 +12,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 resource_id varchar(128) not null,
                 signing_key varchar(64)  not null,
                 enabled     boolean      not null default true,
-                config      jsonb,
+                config      jsonb not null,
                 primary key (id),
                 constraint resources__resource_id unique (tenant_id, resource_id)
             );

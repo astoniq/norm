@@ -9,9 +9,9 @@ const {table, fields} = convertToIdentifiers(connectorEntity);
 
 export const createConnectorQueries = (pool: CommonQueryMethods) => {
 
-    const insertConnector = buildInsertIntoWithPool(pool)(connectorEntity, connectorGuard, {
-        returning: true
-    })
+    const insertConnector = buildInsertIntoWithPool(pool)(
+        connectorEntity, {returning: true}
+    )
 
     const findConnectorById = async (id: string) =>
         pool.maybeOne(sql.type(connectorGuard)`

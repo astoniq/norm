@@ -1,17 +1,12 @@
 import {AnonymousRouter, RouterInitArgs} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
-import {createTopicGuard, topicGuard} from "@astoniq/norm-schema";
+import {topicGuard} from "@astoniq/norm-schema";
 import {object, string} from "zod";
 
 export default function topicRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
 
     router.post(
         '/topics',
-        koaGuard({
-            body: createTopicGuard.omit({id: true}),
-            status: [200, 400, 404],
-            response: topicGuard
-        }),
         async (_ctx, next) => {
 
             return next()

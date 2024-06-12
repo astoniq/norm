@@ -1,13 +1,17 @@
-import {Topic} from "@astoniq/norm-schema";
+import {InsertTopic, insertTopicGuard, Topic, topicGuard} from "@astoniq/norm-schema";
 import {Entity} from "../types/index.js";
 
-export const topicEntity: Entity<Topic> =
-    Object.freeze({
-        table: 'topics',
-        tableSingular: 'topic',
-        fields: {
-            tenantId: 'tenant_id',
-            id: 'id',
-            topicId: 'topic_id'
-        },
-    });
+export const topicEntity: Entity<
+    Topic,
+    InsertTopic
+> = {
+    table: 'topics',
+    tableSingular: 'topic',
+    fields: {
+        tenantId: 'tenant_id',
+        id: 'id',
+        topicId: 'topic_id'
+    },
+    guard: topicGuard,
+    insertGuard: insertTopicGuard
+};
