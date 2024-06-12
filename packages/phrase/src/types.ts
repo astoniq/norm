@@ -29,24 +29,15 @@ export interface Errors {
     guard: {
         invalid_input: string;
     },
-    entity: {
+    db: {
         invalid_input: string;
         create_failed: string;
-        db_constraint_violated: string;
+        constraint_violated: string;
         not_exists: string;
         not_exists_with_id: string;
         not_found: string;
         relation_foreign_key_not_found: string;
         unique_integrity_violation: string;
-    },
-    verification_code: {
-        phone_email_empty: string,
-        not_found: string,
-        phone_mismatch: string,
-        email_mismatch: string,
-        code_mismatch: string,
-        expired: string,
-        exceed_max_try: string,
     },
     session: {
         not_found: string,

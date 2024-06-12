@@ -20,7 +20,7 @@ export const buildFindEntityByIdWithPool =
             const isKeyOfEntity = isKeyOf(entity);
 
             // check sure id is key of the entity
-            assertThat(isKeyOfEntity('id'), 'entity.not_exists');
+            assertThat(isKeyOfEntity('id'), 'db.not_exists');
 
             return async (id: string) => {
                 try {
@@ -32,7 +32,7 @@ export const buildFindEntityByIdWithPool =
                 } catch (error: unknown) {
                     if (error instanceof NotFoundError) {
                         throw new RequestError({
-                            code: 'entity.not_exists_with_id',
+                            code: 'db.not_exists_with_id',
                             name: entity.table,
                             id,
                             status: 404
@@ -56,7 +56,7 @@ export const buildFindEntitiesByIdsWithPool =
             const isKeyOfEntity = isKeyOf(entity);
 
             // check sure id is key of the entity
-            assertThat(isKeyOfEntity('id'), 'entity.not_exists');
+            assertThat(isKeyOfEntity('id'), 'db.not_exists');
 
             return async (ids: string[]) =>
                 pool.any(sql.type(guard)`

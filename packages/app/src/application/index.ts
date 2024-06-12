@@ -10,12 +10,18 @@ import {createRedis} from "./redis.js";
 import {createWorkers} from "../workers/index.js";
 import {createLibraries} from "../libraries/index.js";
 import {initClient} from "../client/index.js";
+import koaDbErrorHandler from "../middlewares/koa-db-error-handler.js";
+import initI18n from "../i18n/index.js";
 
 const serverTimeout = 120_000;
 
 export async function initApp() {
 
     const config = loadConfig()
+
+   await Promise.all([
+       initI18n()
+   ])
 
     const pool = await createDbPool(
         config.databaseUrl,
@@ -40,7 +46,8 @@ export async function initApp() {
 
     const app = new Koa()
 
-    app.use(koaErrorHandler())
+    app.use(koaErrorHandler());
+    app.use(koaDbErrorHandler());
 
     app.use(mount('/api', initApis({
         queues,

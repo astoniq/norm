@@ -7,7 +7,7 @@ export class DeletionError extends SlonikError {
         public readonly table?: string,
         public readonly id?: string
     ) {
-        super('Resourse not found');
+        super('Resource not found');
     }
 }
 
