@@ -14,7 +14,7 @@ import {
     UpdateError
 } from "../errors/index.js";
 
-export default function koaDbErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
+export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
     return async (_, next) => {
         try {
             await next();
@@ -46,7 +46,7 @@ export default function koaDbErrorHandler<StateT, ContextT>(): Middleware<StateT
 
             if (error instanceof CheckIntegrityConstraintViolationError) {
                 throw new RequestError({
-                    code: 'db.db_constraint_violated',
+                    code: 'db.constraint_violated',
                     status: 400
                 })
             }

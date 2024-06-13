@@ -25,7 +25,12 @@ export interface Errors {
         invalid_subdomain: string;
         custom_domain_not_found: string;
         should_delete_custom_domains_first: string;
-    }
+    },
+    tenant: {
+        id_header_missing: string,
+        id_not_found: string,
+        forbidden: string,
+    },
     guard: {
         invalid_input: string;
     },
@@ -110,8 +115,80 @@ export interface Errors {
 }
 
 export interface Translation {
-    oidc: {
-        logout_success: string;
+    resources: {
+        page_title: string;
+    },
+    general: {
+        placeholder: string,
+        submit: string,
+        skip: string,
+        next: string,
+        back: string,
+        retry: string,
+        done: string,
+        search: string,
+        search_placeholder: string,
+        clear_result: string,
+        save: string,
+        save_changes: string,
+        saved: string,
+        discard: string,
+        loading: string,
+        redirecting: string,
+        add: string,
+        added: string,
+        cancel: string,
+        confirm: string,
+        check_out: string,
+        create: string,
+        set_up: string,
+        customize: string,
+        enable: string,
+        reminder: string,
+        edit: string,
+        delete: string,
+        deleted: string,
+        more_options: string,
+        close: string,
+        copy: string,
+        copying: string,
+        copied: string,
+        required: string,
+        add_another: string,
+        create_another: string,
+        deletion_confirmation: string,
+        settings_nav: string,
+        unsaved_changes_warning: string,
+        leave_page: string,
+        stay_on_page: string,
+        type_to_search: string,
+        got_it: string,
+        continue: string,
+        page_info: string,
+        learn_more: string,
+        tab_errors: string,
+        skip_for_now: string,
+        remove: string,
+        visit: string,
+        join: string,
+        try_now: string,
+        multiple_form_field: string,
+        demo: string,
+        unnamed: string,
+        view: string,
+        open: string,
+        hide: string,
+        unknown_error: string,
+        select: string,
+        contact_us_action: string,
+        description: string,
+        name: string,
+        add_field: string,
+        create_field: string,
+        edit_field: string,
+        delete_field: string,
+        coming_soon: string,
+        or: string,
     }
 }
 

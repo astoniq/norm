@@ -26,7 +26,7 @@ export const resources: Resources = {
     en
 };
 
-export type I18nKey = NormalizeKeyPaths<Translation>;
+export type NormTranslationCode = NormalizeKeyPaths<Translation>;
 
 export type BuiltInLanguageTag = z.infer<typeof builtInLanguageTagGuard>;
 

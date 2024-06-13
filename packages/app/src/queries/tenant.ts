@@ -7,6 +7,13 @@ const {table, fields} = convertToIdentifiers(tenantEntity);
 
 export const createTenantQueries = (pool: CommonQueryMethods) => {
 
+    const findTenantById = async (id: string) =>
+        pool.maybeOne(sql.type(tenantGuard)`
+            select ${sql.join(Object.values(fields), sql.fragment`,`)}
+            from ${table}
+            where ${fields.id} = ${id}
+        `);
+
     const findTenantByClientKey = async (clientKey: string) =>
         pool.maybeOne(sql.type(tenantGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`,`)}
@@ -15,6 +22,7 @@ export const createTenantQueries = (pool: CommonQueryMethods) => {
         `);
 
     return {
+        findTenantById,
         findTenantByClientKey
     }
 }

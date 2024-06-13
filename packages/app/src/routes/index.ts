@@ -1,16 +1,19 @@
 import {ApplicationContext} from "../application/types.js";
 import Koa from 'koa';
 import Router from "koa-router";
-import {AnonymousRouter} from "./types.js";
+import {TenantRouter} from "./types.js";
 import resourceRoutes from "./resource.js";
+import koaTenant from "../middlewares/koa-tenant.js";
 
 const createRouters = (application: ApplicationContext) => {
 
-    const anonymousRouter: AnonymousRouter = new Router();
+    const tenantRouter: TenantRouter = new Router();
 
-    resourceRoutes(anonymousRouter, application)
+    tenantRouter.use(koaTenant(application.queries))
 
-    return [anonymousRouter]
+    resourceRoutes(tenantRouter, application)
+
+    return [tenantRouter]
 }
 
 export function initApis(application: ApplicationContext): Koa {

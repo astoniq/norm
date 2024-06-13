@@ -61,7 +61,7 @@ export const createEchoWorker = (options: WorkerOptions) => {
             headers: {
                 ...headers,
                 ...conditional(signingKey && {
-                    'x-norm-signature': sign(signingKey, event)
+                    'x-signature': sign(signingKey, event)
                 })
             },
             json: event,

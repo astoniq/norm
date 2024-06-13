@@ -4,6 +4,8 @@ import guard from "./guard.js";
 import auth from "./auth.js";
 import session from "./session.js";
 import user from "./user.js";
+import tenant from "./tenant.js";
+
 import {Errors} from "../../../types.js";
 
 const errors: Errors = {
@@ -12,7 +14,8 @@ const errors: Errors = {
     auth,
     db,
     session,
-    user
+    user,
+    tenant
 };
 
 export default Object.freeze(errors);

@@ -2,25 +2,12 @@ import {IRouterParamContext} from "koa-router";
 import {Tenant} from "@astoniq/norm-schema";
 import {Middleware} from "koa";
 import {Queries} from "../queries/index.js";
-import type {IncomingHttpHeaders} from 'http';
 import assertThat from "../utils/assert-that.js";
 import {RequestError} from "../errors/index.js";
+import {tenantIdHeaderKey} from "@astoniq/norm-schema";
 
 export type WithTenantContext<ContextT extends IRouterParamContext = IRouterParamContext> =
     ContextT & { tenant: Tenant }
-
-const clientKeyIdentifier = 'ClientKey';
-
-export const extractClientKeyFromHeaders = ({authorization}: IncomingHttpHeaders) => {
-
-    assertThat(authorization,
-        new RequestError({code: 'auth.authorization_header_missing', status: 401}))
-
-    assertThat(authorization.startsWith(clientKeyIdentifier),
-        new RequestError({code: 'auth.authorization_token_type_not_supported', status: 401}))
-
-    return authorization.slice(clientKeyIdentifier.length + 1);
-}
 
 export default function koaTenant<
     StateT,
@@ -32,26 +19,19 @@ export default function koaTenant<
 
     return async (ctx, next) => {
 
-        try {
+        const tenantId = ctx.get(tenantIdHeaderKey);
 
-            const clientKey = extractClientKeyFromHeaders(ctx.headers)
+        assertThat(tenantId,
+            new RequestError({code: 'tenant.id_header_missing', status: 400}))
 
-            const tenant = await tenants.findTenantByClientKey(clientKey)
+        const tenant = await tenants.findTenantById(tenantId)
 
-            assertThat(tenant,
-                new RequestError({code: 'auth.unauthorized', status: 401}))
+        assertThat(tenant,
+            new RequestError({code: 'tenant.id_not_found', status: 400}))
 
-            ctx.tenant = tenant;
+        ctx.tenant = tenant;
 
-            return next();
-        } catch (error) {
-            if (error instanceof RequestError) {
-                throw error
-            }
-
-            throw new RequestError({code: 'auth.unauthorized', status: 401}, error)
-        }
-
+        return next();
     }
 }
 

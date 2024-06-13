@@ -3,13 +3,13 @@ import Koa from 'koa';
 import Router from "koa-router";
 import eventRoutes from "./event.js";
 import {ClientRouter} from "./types.js";
-import koaTenant from "../middlewares/koa-tenant.js";
+import koaTenantClient from "../middlewares/koa-tenant-client.js";
 
 const createRouters = (application: ApplicationContext) => {
 
     const clientRouter: ClientRouter = new Router();
 
-    clientRouter.use(koaTenant(application.queries))
+    clientRouter.use(koaTenantClient(application.queries))
 
     eventRoutes(clientRouter, application)
 

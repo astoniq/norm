@@ -1,0 +1,37 @@
+
+.overlay {
+    position: fixed;
+    background: var(--color-overlay);
+    inset: 0;
+    overflow-y: auto;
+    padding: var(--fluid-4) 0;
+    z-index: 102;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0;
+    min-height: 100%;
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    font: var(--font-body-2);
+
+    > :not(:first-child) {
+        margin: var(--fluid-6) 0 0;
+    }
+}
+
+.fullScreen {
+    position: fixed;
+    inset: 0;
+
+    &:focus-visible {
+        outline: none;
+    }
+}

@@ -10,7 +10,7 @@ import {createRedis} from "./redis.js";
 import {createWorkers} from "../workers/index.js";
 import {createLibraries} from "../libraries/index.js";
 import {initClient} from "../client/index.js";
-import koaDbErrorHandler from "../middlewares/koa-db-error-handler.js";
+import koaSlonikErrorHandler from "../middlewares/koa-slonik-error-handler.js";
 import initI18n from "../i18n/index.js";
 
 const serverTimeout = 120_000;
@@ -47,7 +47,7 @@ export async function initApp() {
     const app = new Koa()
 
     app.use(koaErrorHandler());
-    app.use(koaDbErrorHandler());
+    app.use(koaSlonikErrorHandler());
 
     app.use(mount('/api', initApis({
         queues,
