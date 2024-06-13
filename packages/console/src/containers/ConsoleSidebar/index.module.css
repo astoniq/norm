@@ -1,0 +1,6 @@
+
+.sidebar {
+    width: 248px;
+    overflow-y: auto;
+    margin-bottom: var(--fluid-6);
+}

@@ -1,4 +1,12 @@
+import {OverlayScrollbar} from "../../components/OverlayScrollbar";
 
-export function ConsoleSidebar() {
+import styles from './index.module.css';
 
+export function AppSidebar() {
+
+    return (
+        <OverlayScrollbar className={styles.sidebar}>
+            sidebar
+        </OverlayScrollbar>
+    )
 }

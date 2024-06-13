@@ -1,0 +1,13 @@
+
+.app {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.overlayScrollbarWrapper {
+    flex-grow: 1;
+}

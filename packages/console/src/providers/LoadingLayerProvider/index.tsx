@@ -12,7 +12,7 @@ export const LoadingLayerProvider = () => {
     return (
         <>
             <Outlet/>
-            {debouncedLoading && LoadingLayer}
+            {debouncedLoading && <LoadingLayer/>}
         </>
     )
 }
