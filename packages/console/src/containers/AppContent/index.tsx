@@ -7,10 +7,12 @@ export function AppContent() {
 
     return (
         <div className={styles.app}>
-            <OverlayScrollbar>
+            <div className={styles.content}>
                 <AppSidebar/>
-                <Outlet/>
-            </OverlayScrollbar>
+                <OverlayScrollbar>
+                    <Outlet/>
+                </OverlayScrollbar>
+            </div>
         </div>
     )
 }

@@ -1,0 +1,46 @@
+.row {
+    display: flex;
+    align-items: center;
+    margin: var(--fluid-4);
+    padding: var(--fluid-2);
+    color: var(--color-neutral-variant-30);
+    border-radius: var(--fluid-2);
+    text-decoration: none;
+    user-select: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: calc(100% - var(--fluid-4));
+
+    .icon {
+        height: var(--fluid-6);
+        flex: 0 0 var(--fluid-4);
+
+        svg {
+            color: var(--color-neutral-variant-50);
+            width: var(--fluid-20);
+            height: var(--fluid-20);
+        }
+    }
+
+    &:not(.active):hover {
+        background: var(--color-hover-variant);
+    }
+
+    &.active {
+        background: var(--color-surface-5);
+        color: var(--color-text-link);
+
+        .icon svg {
+            color: var(--color-primary-50);
+        }
+    }
+
+    > div + div {
+        margin-left: var(--fluid-4);
+    }
+
+    .title {
+        font: var(--font-label-2);
+    }
+}

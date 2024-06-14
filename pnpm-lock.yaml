@@ -169,6 +169,9 @@ importers:
       i18next-browser-languagedetector:
         specifier: ^7.0.1
         version: 7.2.1
+      just-kebab-case:
+        specifier: ^4.2.0
+        version: 4.2.0
       ky:
         specifier: ^1.2.3
         version: 1.2.4
@@ -3031,6 +3034,10 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
     dev: true
+
+  /just-kebab-case@4.2.0:
+    resolution: {integrity: sha512-p2BdO7o4BI+pMun3J+dhaOfYan5JsZrw9wjshRjkWY9+p+u+kKSMhNWYnot2yHDR9CSahZ9iT3dcqJ+V72qHMw==}
+    dev: false
 
   /keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
