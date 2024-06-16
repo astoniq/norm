@@ -2,8 +2,11 @@ import {z, ZodType} from "zod";
 import {jsonObjectGuard} from "../foundations/index.js";
 import {subscriberDefineGuard} from "./subscriber.js";
 import {
-    TriggerAddressingType, TriggerEvent,
-    TriggerEventBase, TriggerEventBroadcast, TriggerEventMulticast,
+    TriggerAddressingType,
+    TriggerEvent,
+    TriggerEventBase,
+    TriggerEventBroadcast,
+    TriggerEventMulticast,
     TriggerRecipient,
     TriggerRecipientsPayload,
     TriggerRecipientsType,
@@ -14,7 +17,8 @@ import {
 export const triggerEventBaseGuard = z.object({
     resourceId: z.string().min(1),
     notificationId: z.string().min(1),
-    payload: jsonObjectGuard
+    payload: jsonObjectGuard,
+    actor: z.string().array().optional()
 })  satisfies ZodType<TriggerEventBase>
 
 export const triggerRecipientTopicGuard = z.object({

@@ -89,7 +89,11 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
         const {
             data: {
-                event,
+                event: {
+                    payload,
+                    notificationId,
+                    actor = []
+                },
                 subscriber,
                 resourceId,
                 tenantId
@@ -104,14 +108,22 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
                 return;
             }
 
+            const isSkipNotification = actor.find(
+                actor => subscriber.subscriberId === actor);
+
+            if (isSkipNotification) {
+                logger.info(subscriber, `Subscriber is actor. Skipp notification`);
+                return;
+            }
+
             const insertNotificationId = generateStandardId()
 
             const notification = await notifications.insertNotification({
                 id: insertNotificationId,
                 tenantId,
                 resourceId,
-                payload: event.payload,
-                notificationId: event.notificationId,
+                payload,
+                notificationId,
                 subscriberId: subscriberProcessed.id,
                 status: NotificationStatus.Pending
             })

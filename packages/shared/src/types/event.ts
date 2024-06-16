@@ -16,7 +16,8 @@ export type TriggerPayload = JsonObject
 export interface TriggerEventBase {
     resourceId: string;
     notificationId: string;
-    payload: TriggerPayload
+    payload: TriggerPayload;
+    actor?: string[];
 }
 
 export type TriggerRecipientTopic = {
