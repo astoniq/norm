@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 import {NormTranslationCode} from "@astoniq/norm-phrase";
-import {Button, ButtonType} from "../Button";
+import Button, {ButtonType} from "../Button";
 import {ModalLayout, ModalLayoutProps} from "../ModalLayout";
 import ReactModal from "react-modal";
 

@@ -5,8 +5,8 @@
 }
 
 :where(body) {
-    font-family: var(--agnostic-font-family-body);
-    font-size: var(--agnostic-body);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body);
     -webkit-font-smoothing: antialiased
 }
 

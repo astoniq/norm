@@ -1,201 +1,359 @@
 :where(html) {
-    --agnostic-warning-border-accent-modelight: #ecd386;
-    --agnostic-warning-border-modelight: #f0e3b9;
-    --agnostic-warning-light-modelight: #fff5d4;
-    --agnostic-warning-dark-modelight: #634902;
-    --agnostic-secondary-hover-modelight: #bc583d;
-    --agnostic-secondary-modelight: #c94d2b;
-    --agnostic-primary-extra-light-modelight: #f1faff;
-    --agnostic-primary-light-modelight: #dcf1ff;
-    --agnostic-primary-dark-modelight: #063f69;
-    --agnostic-primary-border-modelight: #c1d9e9;
-    --agnostic-primary-hover-modelight: #2087d0;
-    --agnostic-primary-modelight: #197348;
-    --agnostic-light-modelight: #fff;
-    --agnostic-dark-modelight: #202124;
-    --agnostic-gray-dark-modelight: #717171;
-    --agnostic-gray-mid-dark-modelight: #ccc;
-    --agnostic-gray-mid-modelight: #d8d8d8;
-    --agnostic-gray-light-modelight: #e9e9e9;
-    --agnostic-gray-extra-light-modelight: #f8f8f8;
-    --agnostic-error-border-modelight: #eec8c8;
-    --agnostic-error-light-modelight: #ffe0e0;
-    --agnostic-error-dark-modelight: #771414;
-    --agnostic-error-modelight: #e02e2e;
-    --agnostic-action-border-modelight: #c7f0d1;
-    --agnostic-action-light-modelight: #e2ffe9;
-    --agnostic-action-dark-modelight: #0a3414;
-    --agnostic-action-hover-modelight: #3dd262;
-    --agnostic-action-modelight: #2fb751;
-    --agnostic-disabled-color-modelight: var(--agnostic-gray-dark-modelight);
-    --agnostic-disabled-bg-modelight: var(--agnostic-gray-light-modelight)
+    --color-all-0: #000;
+    --color-all-100: #fff;
+    --color-primary-10: #190064;
+    --color-primary-20: #2d009d;
+    --color-primary-30: #4300da;
+    --color-primary-40: #5d34f2;
+    --color-primary-50: #7958ff;
+    --color-primary-60: #947dff;
+    --color-primary-70: #af9eff;
+    --color-primary-80: #cabeff;
+    --color-primary-90: #e6deff;
+    --color-primary-95: #f5eeff;
+    --color-primary-99: #fffbff;
+    --color-secondary-10: #201c00;
+    --color-secondary-20: #373100;
+    --color-secondary-30: #4f4700;
+    --color-secondary-40: #695f00;
+    --color-secondary-50: #847900;
+    --color-secondary-60: #9f930d;
+    --color-secondary-70: #baad2d;
+    --color-secondary-80: #d7c947;
+    --color-secondary-90: #f4e560;
+    --color-secondary-95: #fff480;
+    --color-secondary-99: #fffbf7;
+    --color-tertiary-10: #350041;
+    --color-tertiary-20: #560068;
+    --color-tertiary-30: #7b0093;
+    --color-tertiary-40: #9927af;
+    --color-tertiary-50: #b545ca;
+    --color-tertiary-60: #d361e7;
+    --color-tertiary-70: #f07eff;
+    --color-tertiary-80: #faabff;
+    --color-tertiary-90: #ffd5ff;
+    --color-tertiary-95: #ffeafe;
+    --color-tertiary-99: #fcfcfc;
+    --color-error-10: #410001;
+    --color-error-20: #680003;
+    --color-error-30: #930006;
+    --color-error-40: #ba1b1b;
+    --color-error-50: #dd3730;
+    --color-error-60: #ff5449;
+    --color-error-70: #ff897a;
+    --color-error-80: #ffb4a9;
+    --color-error-90: #ffdad4;
+    --color-error-95: #ffede9;
+    --color-error-99: #fcfcfc;
+    --color-neutral-10: #191c1d;
+    --color-neutral-20: #2d3132;
+    --color-neutral-30: #444748;
+    --color-neutral-40: #5c5f60;
+    --color-neutral-50: #747778;
+    --color-neutral-60: #8e9192;
+    --color-neutral-70: #a9acac;
+    --color-neutral-80: #c4c7c7;
+    --color-neutral-90: #e0e3e3;
+    --color-neutral-95: #eff1f1;
+    --color-neutral-99: #f7f8f8;
+    --color-neutral-variant-10: #1b1b22;
+    --color-neutral-variant-20: #302f38;
+    --color-neutral-variant-30: #47464e;
+    --color-neutral-variant-40: #5f5d67;
+    --color-neutral-variant-50: #78767f;
+    --color-neutral-variant-60: #928f9a;
+    --color-neutral-variant-70: #adaab4;
+    --color-neutral-variant-80: #c9c5d0;
+    --color-neutral-variant-90: #e5e1ec;
+    --color-neutral-variant-95: #f3effa;
+    --color-neutral-variant-99: #fffbff;
+    --color-success-10: #002106;
+    --color-success-20: #00390b;
+    --color-success-30: #005314;
+    --color-success-40: #116d26;
+    --color-success-50: #32873d;
+    --color-success-60: #4ea254;
+    --color-success-70: #68be6c;
+    --color-success-80: #83da85;
+    --color-success-90: #9fe79f;
+    --color-success-95: #bdefbd;
+    --color-success-99: #ebf9eb;
+    --color-alert-10: #2b1700;
+    --color-alert-20: #472a00;
+    --color-alert-30: #663e00;
+    --color-alert-40: #865300;
+    --color-alert-50: #a76900;
+    --color-alert-60: #ca8000;
+    --color-alert-70: #eb9918;
+    --color-alert-80: #ffb95a;
+    --color-alert-90: #ffddb5;
+    --color-alert-95: #ffeedc;
+    --color-alert-99: #fff5eb;
 }
 
 :where(html) {
-    --agnostic-warning-border-accent-modedark: #ecd386;
-    --agnostic-warning-border-modedark: #f0e3b9;
-    --agnostic-warning-light-modedark: #fff5d4;
-    --agnostic-warning-dark-modedark: #634902;
-    --agnostic-secondary-hover-modedark: #bc583d;
-    --agnostic-secondary-modedark: #c94d2b;
-    --agnostic-primary-extra-light-modedark: #f1faff;
-    --agnostic-primary-light-modedark: #dcf1ff;
-    --agnostic-primary-dark-modedark: #063f69;
-    --agnostic-primary-border-modedark: #c1d9e9;
-    --agnostic-primary-hover-modedark: #2087d0;
-    --agnostic-primary-modedark: #197348;
-    --agnostic-light-modedark: #fff;
-    --agnostic-dark-modedark: #202124;
-    --agnostic-gray-dark-modedark: #717171;
-    --agnostic-gray-mid-dark-modedark: #ccc;
-    --agnostic-gray-mid-modedark: #d8d8d8;
-    --agnostic-gray-light-modedark: #e9e9e9;
-    --agnostic-gray-extra-light-modedark: #f8f8f8;
-    --agnostic-error-border-modedark: #eec8c8;
-    --agnostic-error-light-modedark: #ffe0e0;
-    --agnostic-error-dark-modedark: #771414;
-    --agnostic-error-modedark: #e02e2e;
-    --agnostic-action-border-modedark: #c7f0d1;
-    --agnostic-action-light-modedark: #e2ffe9;
-    --agnostic-action-dark-modedark: #0a3414;
-    --agnostic-action-hover-modedark: #3dd262;
-    --agnostic-action-modedark: #2fb751;
-    --agnostic-disabled-color-modedark: var(--agnostic-gray-dark-modelight);
-    --agnostic-disabled-bg-modedark: var(--agnostic-gray-light-modelight)
+    --color-warning-border-accent-modelight: #ecd386;
+    --color-warning-border-modelight: #f0e3b9;
+    --color-warning-light-modelight: #fff5d4;
+    --color-warning-dark-modelight: #634902;
+
+    --color-error-extra-light-modelight: var(--color-error-80);
+    --color-error-light-modelight: var(--color-error-60);
+    --color-error-modelight: var(--color-error-40);
+    --color-error-dark-modelight: var(--color-error-20);
+    --color-error-hover-modelight: var(--color-error-50);
+    --color-error-pressed-modelight: var(--color-error-30);
+    --color-error-on-modelight: var(--color-error-10);
+
+    --color-primary-extra-light-modelight: var(--color-primary-80);
+    --color-primary-light-modelight: var(--color-primary-60);
+    --color-primary-modelight: var(--color-primary-40);
+    --color-primary-dark-modelight: var(--color-primary-20);
+    --color-primary-hover-modelight: var(--color-primary-50);
+    --color-primary-pressed-modelight: var(--color-primary-30);
+    --color-primary-on-modelight: var(--color-primary-10);
+
+    --color-secondary-extra-light-modelight: var(--color-secondary-80);
+    --color-secondary-light-modelight: var(--color-secondary-60);
+    --color-secondary-modelight: var(--color-secondary-40);
+    --color-secondary-dark-modelight: var(--color-secondary-20);
+    --color-secondary-hover-modelight: var(--color-secondary-50);
+    --color-secondary-pressed-modelight: var(--color-secondary-30);
+    --color-secondary-on-modelight: var(--color-error-10);
+
+
+    --color-light-modelight: #fff;
+    --color-dark-modelight: #202124;
+    --color-gray-dark-modelight: #717171;
+    --color-gray-mid-dark-modelight: #ccc;
+    --color-gray-mid-modelight: #d8d8d8;
+    --color-gray-light-modelight: #e9e9e9;
+    --color-gray-extra-light-modelight: #f8f8f8;
+    --color-action-border-modelight: #c7f0d1;
+    --color-action-light-modelight: #e2ffe9;
+    --color-action-dark-modelight: #0a3414;
+    --color-action-hover-modelight: #3dd262;
+    --color-action-modelight: #2fb751;
+
+    --color-text-modelight: var(--color-neutral-10);
+    --color-text-link-modelight: var(--color-primary-40);
+    --color-text-secondary-modelight: var(--color-neutral-50);
+    --color-placeholder-modelight: var(--color-neutral-70);
+    --color-border-modelight: var(--color-neutral-80);
+    --color-divider-modelight: var(--color-neutral-90);
+    --color-disabled-modelight: var(--color-neutral-80);
+
+    --color-layer-modelight: var(--color-neutral-95);
+    --color-layer-float-modelight: var(--color-all-100);
+    --color-layer-light-modelight: var(--color-neutral-99);
+
+    --color-inverse-surface-modelight: var(--color-neutral-20);
+    --color-inverse-on-surface-modelight: var(--color-neutral-95);
+    --color-inverse-primary-modelight: var(--color-primary-50);
+}
+
+:where(html) {
+    --color-hover: #191c1d14;
+    --color-pressed: #191c1d1f;
+    --color-focused: #191c1d29;
+    --color-hover-variant: #5d34f214;
+    --color-pressed-variant: #5d34f21f;
+    --color-focused-variant: #5d34f229;
+    --color-skeleton-shimmer-rgb: 255, 255, 255;
+}
+
+:where(html) {
+    --color-warning-border-accent-modedark: #ecd386;
+    --color-warning-border-modedark: #f0e3b9;
+    --color-warning-light-modedark: #fff5d4;
+    --color-warning-dark-modedark: #634902;
+    --color-secondary-hover-modedark: #bc583d;
+    --color-secondary-modedark: #c94d2b;
+    --color-primary-extra-light-modedark: #f1faff;
+    --color-primary-light-modedark: #dcf1ff;
+    --color-primary-dark-modedark: #063f69;
+    --color-primary-border-modedark: #c1d9e9;
+    --color-primary-hover-modedark: #2087d0;
+    --color-primary-modedark: #197348;
+    --color-light-modedark: #fff;
+    --color-dark-modedark: #202124;
+    --color-gray-dark-modedark: #717171;
+    --color-gray-mid-dark-modedark: #ccc;
+    --color-gray-mid-modedark: #d8d8d8;
+    --color-gray-light-modedark: #e9e9e9;
+    --color-gray-extra-light-modedark: #f8f8f8;
+    --color-error-border-modedark: #eec8c8;
+    --color-error-light-modedark: #ffe0e0;
+    --color-error-dark-modedark: #771414;
+    --color-error-modedark: #e02e2e;
+    --color-action-border-modedark: #c7f0d1;
+    --color-action-light-modedark: #e2ffe9;
+    --color-action-dark-modedark: #0a3414;
+    --color-action-hover-modedark: #3dd262;
+    --color-action-modedark: #2fb751;
+    --color-disabled-color-modedark: var(--color-gray-dark-modelight);
+    --color-disabled-bg-modedark: var(--color-gray-light-modelight)
 }
 
 :root {
     color-scheme: light;
-    --agnostic-warning-border-accent: var(--agnostic-warning-border-accent-modelight);
-    --agnostic-warning-border: var(--agnostic-warning-border-modelight);
-    --agnostic-warning-light: var(--agnostic-warning-light-modelight);
-    --agnostic-warning-dark: var(--agnostic-warning-dark-modelight);
-    --agnostic-secondary-hover: var(--agnostic-secondary-hover-modelight);
-    --agnostic-secondary: var(--agnostic-secondary-modelight);
-    --agnostic-primary-light: var(--agnostic-primary-light-modelight);
-    --agnostic-primary-dark: var(--agnostic-primary-dark-modelight);
-    --agnostic-primary-border: var(--agnostic-primary-border-modelight);
-    --agnostic-primary-hover: var(--agnostic-primary-hover-modelight);
-    --agnostic-primary: var(--agnostic-primary-modelight);
-    --agnostic-light: var(--agnostic-light-modelight);
-    --agnostic-dark: var(--agnostic-dark-modelight);
-    --agnostic-gray-dark: var(--agnostic-gray-dark-modelight);
-    --agnostic-gray-mid-dark: var(--agnostic-gray-mid-dark-modelight);
-    --agnostic-gray-mid: var(--agnostic-gray-mid-modelight);
-    --agnostic-gray-light: var(--agnostic-gray-light-modelight);
-    --agnostic-gray-extra-light: var(--agnostic-gray-extra-light-modelight);
-    --agnostic-error: var(--agnostic-error-modelight);
-    --agnostic-error-light: var(--agnostic-error-light-modelight);
-    --agnostic-error-dark: var(--agnostic-error-dark-modelight);
-    --agnostic-error-border: var(--agnostic-error-border-modelight);
-    --agnostic-disabled-color: var(--agnostic-gray-dark-modelight);
-    --agnostic-disabled-bg: var(--agnostic-gray-light-modelight);
-    --agnostic-action-border: var(--agnostic-action-border-modelight);
-    --agnostic-action-light: var(--agnostic-action-light-modelight);
-    --agnostic-action-dark: var(--agnostic-action-dark-modelight);
-    --agnostic-action-hover: var(--agnostic-action-hover-modelight);
-    --agnostic-action: var(--agnostic-action-modelight)
+    --color-warning-border-accent: var(--color-warning-border-accent-modelight);
+    --color-warning-border: var(--color-warning-border-modelight);
+    --color-warning-light: var(--color-warning-light-modelight);
+    --color-warning-dark: var(--color-warning-dark-modelight);
+
+    --color-error-light: var(--color-error-light-modelight);
+    --color-error-dark: var(--color-error-dark-modelight);
+    --color-error-pressed: var(--color-error-pressed-modelight);
+    --color-error-hover: var(--color-error-hover-modelight);
+    --color-error-on: var(--color-error-on-modelight);
+    --color-error: var(--color-error-modelight);
+
+    --color-primary-light: var(--color-primary-light-modelight);
+    --color-primary-dark: var(--color-primary-dark-modelight);
+    --color-primary-pressed: var(--color-primary-pressed-modelight);
+    --color-primary-hover: var(--color-primary-hover-modelight);
+    --color-primary-on: var(--color-primary-on-modelight);
+    --color-primary: var(--color-primary-modelight);
+
+    --color-secondary-light: var(--color-secondary-light-modelight);
+    --color-secondary-dark: var(--color-secondary-dark-modelight);
+    --color-secondary-pressed: var(--color-secondary-pressed-modelight);
+    --color-secondary-hover: var(--color-secondary-hover-modelight);
+    --color-secondary-on: var(--color-secondary-on-modelight);
+    --color-secondary: var(--color-secondary-modelight);
+
+    --color-light: var(--color-light-modelight);
+    --color-dark: var(--color-dark-modelight);
+    --color-gray-dark: var(--color-gray-dark-modelight);
+    --color-gray-mid-dark: var(--color-gray-mid-dark-modelight);
+    --color-gray-mid: var(--color-gray-mid-modelight);
+    --color-gray-light: var(--color-gray-light-modelight);
+    --color-gray-extra-light: var(--color-gray-extra-light-modelight);
+    --color-disabled-color: var(--color-gray-dark-modelight);
+    --color-disabled-bg: var(--color-gray-light-modelight);
+    --color-action-border: var(--color-action-border-modelight);
+    --color-action-light: var(--color-action-light-modelight);
+    --color-action-dark: var(--color-action-dark-modelight);
+    --color-action-hover: var(--color-action-hover-modelight);
+    --color-action: var(--color-action-modelight);
+
+    --color-text: var(--color-text-modelight);
+    --color-text-link: var(--color-text-link-modelight);
+    --color-text-secondary: var(--color-text-secondary-modelight);
+    --color-placeholder: var(--color-placeholder-modelight);
+    --color-border: var(--color-border-modelight);
+    --color-divider: var(--color-divider-modelight);
+    --color-disabled: var(--color-disabled-modelight);
+
+    --color-layer: var(--color-layer-modelight);
+    --color-layer-float: var(--color-layer-float-modelight);
+    --color-layer-light: var(--color-layer-light-modelight);
+
+    --color-inverse-surface: var(--color-inverse-surface-modelight);
+    --color-inverse-on-surface: var(--color-inverse-on-surface-modelight);
+    --color-inverse-primary: var(--color-inverse-primary-modelight);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         color-scheme: dark;
-        --agnostic-warning-border-accent: var(--agnostic-warning-border-accent-modedark);
-        --agnostic-warning-border: var(--agnostic-warning-border-modedark);
-        --agnostic-warning-light: var(--agnostic-warning-light-modedark);
-        --agnostic-warning-dark: var(--agnostic-warning-dark-modedark);
-        --agnostic-secondary-hover: var(--agnostic-secondary-hover-modedark);
-        --agnostic-secondary: var(--agnostic-secondary-modedark);
-        --agnostic-primary-light: var(--agnostic-primary-light-modedark);
-        --agnostic-primary-dark: var(--agnostic-primary-dark-modedark);
-        --agnostic-primary-border: var(--agnostic-primary-border-modedark);
-        --agnostic-primary-hover: var(--agnostic-primary-hover-modedark);
-        --agnostic-primary: var(--agnostic-primary-modedark);
-        --agnostic-light: var(--agnostic-light-modedark);
-        --agnostic-dark: var(--agnostic-dark-modedark);
-        --agnostic-gray-dark: var(--agnostic-gray-dark-modedark);
-        --agnostic-gray-mid-dark: var(--agnostic-gray-mid-dark-modedark);
-        --agnostic-gray-mid: var(--agnostic-gray-mid-modedark);
-        --agnostic-gray-light: var(--agnostic-gray-light-modedark);
-        --agnostic-gray-extra-light: var(--agnostic-gray-extra-light-modedark);
-        --agnostic-error: var(--agnostic-error-modedark);
-        --agnostic-error-light: var(--agnostic-error-light-modedark);
-        --agnostic-error-dark: var(--agnostic-error-dark-modedark);
-        --agnostic-error-border: var(--agnostic-error-border-modedark);
-        --agnostic-disabled-color: var(--agnostic-gray-dark-modedark);
-        --agnostic-disabled-bg: var(--agnostic-gray-light-modedark);
-        --agnostic-action-border: var(--agnostic-action-border-modedark);
-        --agnostic-action-light: var(--agnostic-action-light-modedark);
-        --agnostic-action-dark: var(--agnostic-action-dark-modedark);
-        --agnostic-action-hover: var(--agnostic-action-hover-modedark);
-        --agnostic-action: var(--agnostic-action-modedark)
+        --color-warning-border-accent: var(--color-warning-border-accent-modedark);
+        --color-warning-border: var(--color-warning-border-modedark);
+        --color-warning-light: var(--color-warning-light-modedark);
+        --color-warning-dark: var(--color-warning-dark-modedark);
+        --color-secondary-hover: var(--color-secondary-hover-modedark);
+        --color-secondary: var(--color-secondary-modedark);
+        --color-primary-light: var(--color-primary-light-modedark);
+        --color-primary-dark: var(--color-primary-dark-modedark);
+        --color-primary-border: var(--color-primary-border-modedark);
+        --color-primary-hover: var(--color-primary-hover-modedark);
+        --color-primary: var(--color-primary-modedark);
+        --color-light: var(--color-light-modedark);
+        --color-dark: var(--color-dark-modedark);
+        --color-gray-dark: var(--color-gray-dark-modedark);
+        --color-gray-mid-dark: var(--color-gray-mid-dark-modedark);
+        --color-gray-mid: var(--color-gray-mid-modedark);
+        --color-gray-light: var(--color-gray-light-modedark);
+        --color-gray-extra-light: var(--color-gray-extra-light-modedark);
+        --color-error: var(--color-error-modedark);
+        --color-error-light: var(--color-error-light-modedark);
+        --color-error-dark: var(--color-error-dark-modedark);
+        --color-error-border: var(--color-error-border-modedark);
+        --color-disabled-color: var(--color-gray-dark-modedark);
+        --color-disabled-bg: var(--color-gray-light-modedark);
+        --color-action-border: var(--color-action-border-modedark);
+        --color-action-light: var(--color-action-light-modedark);
+        --color-action-dark: var(--color-action-dark-modedark);
+        --color-action-hover: var(--color-action-hover-modedark);
+        --color-action: var(--color-action-modedark)
     }
 }
 
 [color-scheme="light"] {
     color-scheme: light;
-    --agnostic-warning-border-accent: var(--agnostic-warning-border-accent-modelight);
-    --agnostic-warning-border: var(--agnostic-warning-border-modelight);
-    --agnostic-warning-light: var(--agnostic-warning-light-modelight);
-    --agnostic-warning-dark: var(--agnostic-warning-dark-modelight);
-    --agnostic-secondary-hover: var(--agnostic-secondary-hover-modelight);
-    --agnostic-secondary: var(--agnostic-secondary-modelight);
-    --agnostic-primary-light: var(--agnostic-primary-light-modelight);
-    --agnostic-primary-dark: var(--agnostic-primary-dark-modelight);
-    --agnostic-primary-border: var(--agnostic-primary-border-modelight);
-    --agnostic-primary-hover: var(--agnostic-primary-hover-modelight);
-    --agnostic-primary: var(--agnostic-primary-modelight);
-    --agnostic-light: var(--agnostic-light-modelight);
-    --agnostic-dark: var(--agnostic-dark-modelight);
-    --agnostic-gray-dark: var(--agnostic-gray-dark-modelight);
-    --agnostic-gray-mid-dark: var(--agnostic-gray-mid-dark-modelight);
-    --agnostic-gray-mid: var(--agnostic-gray-mid-modelight);
-    --agnostic-gray-light: var(--agnostic-gray-light-modelight);
-    --agnostic-gray-extra-light: var(--agnostic-gray-extra-light-modelight);
-    --agnostic-error: var(--agnostic-error-modelight);
-    --agnostic-error-light: var(--agnostic-error-light-modelight);
-    --agnostic-error-dark: var(--agnostic-error-dark-modelight);
-    --agnostic-error-border: var(--agnostic-error-border-modelight);
-    --agnostic-disabled-color: var(--agnostic-gray-dark-modelight);
-    --agnostic-disabled-bg: var(--agnostic-gray-light-modelight);
-    --agnostic-action-border: var(--agnostic-action-border-modelight);
-    --agnostic-action-light: var(--agnostic-action-light-modelight);
-    --agnostic-action-dark: var(--agnostic-action-dark-modelight);
-    --agnostic-action-hover: var(--agnostic-action-hover-modelight);
-    --agnostic-action: var(--agnostic-action-modelight)
+    --color-warning-border-accent: var(--color-warning-border-accent-modelight);
+    --color-warning-border: var(--color-warning-border-modelight);
+    --color-warning-light: var(--color-warning-light-modelight);
+    --color-warning-dark: var(--color-warning-dark-modelight);
+    --color-secondary-hover: var(--color-secondary-hover-modelight);
+    --color-secondary: var(--color-secondary-modelight);
+    --color-primary-light: var(--color-primary-light-modelight);
+    --color-primary-dark: var(--color-primary-dark-modelight);
+    --color-primary-border: var(--color-primary-border-modelight);
+    --color-primary-hover: var(--color-primary-hover-modelight);
+    --color-primary: var(--color-primary-modelight);
+    --color-light: var(--color-light-modelight);
+    --color-dark: var(--color-dark-modelight);
+    --color-gray-dark: var(--color-gray-dark-modelight);
+    --color-gray-mid-dark: var(--color-gray-mid-dark-modelight);
+    --color-gray-mid: var(--color-gray-mid-modelight);
+    --color-gray-light: var(--color-gray-light-modelight);
+    --color-gray-extra-light: var(--color-gray-extra-light-modelight);
+    --color-error: var(--color-error-modelight);
+    --color-error-light: var(--color-error-light-modelight);
+    --color-error-dark: var(--color-error-dark-modelight);
+    --color-error-border: var(--color-error-border-modelight);
+    --color-disabled-color: var(--color-gray-dark-modelight);
+    --color-disabled-bg: var(--color-gray-light-modelight);
+    --color-action-border: var(--color-action-border-modelight);
+    --color-action-light: var(--color-action-light-modelight);
+    --color-action-dark: var(--color-action-dark-modelight);
+    --color-action-hover: var(--color-action-hover-modelight);
+    --color-action: var(--color-action-modelight)
 }
 
 [color-scheme="dark"] {
     color-scheme: dark;
-    --agnostic-warning-border-accent: var(--agnostic-warning-border-accent-modedark);
-    --agnostic-warning-border: var(--agnostic-warning-border-modedark);
-    --agnostic-warning-light: var(--agnostic-warning-light-modedark);
-    --agnostic-warning-dark: var(--agnostic-warning-dark-modedark);
-    --agnostic-secondary-hover: var(--agnostic-secondary-hover-modedark);
-    --agnostic-secondary: var(--agnostic-secondary-modedark);
-    --agnostic-primary-light: var(--agnostic-primary-light-modedark);
-    --agnostic-primary-dark: var(--agnostic-primary-dark-modedark);
-    --agnostic-primary-border: var(--agnostic-primary-border-modedark);
-    --agnostic-primary-hover: var(--agnostic-primary-hover-modedark);
-    --agnostic-primary: var(--agnostic-primary-modedark);
-    --agnostic-light: var(--agnostic-light-modedark);
-    --agnostic-dark: var(--agnostic-dark-modedark);
-    --agnostic-gray-dark: var(--agnostic-gray-dark-modedark);
-    --agnostic-gray-mid-dark: var(--agnostic-gray-mid-dark-modedark);
-    --agnostic-gray-mid: var(--agnostic-gray-mid-modedark);
-    --agnostic-gray-light: var(--agnostic-gray-light-modedark);
-    --agnostic-gray-extra-light: var(--agnostic-gray-extra-light-modedark);
-    --agnostic-error: var(--agnostic-error-modedark);
-    --agnostic-error-light: var(--agnostic-error-light-modedark);
-    --agnostic-error-dark: var(--agnostic-error-dark-modedark);
-    --agnostic-error-border: var(--agnostic-error-border-modedark);
-    --agnostic-disabled-color: var(--agnostic-gray-dark-modedark);
-    --agnostic-disabled-bg: var(--agnostic-gray-light-modedark);
-    --agnostic-action-border: var(--agnostic-action-border-modedark);
-    --agnostic-action-light: var(--agnostic-action-light-modedark);
-    --agnostic-action-dark: var(--agnostic-action-dark-modedark);
-    --agnostic-action-hover: var(--agnostic-action-hover-modedark);
-    --agnostic-action: var(--agnostic-action-modedark)
+    --color-warning-border-accent: var(--color-warning-border-accent-modedark);
+    --color-warning-border: var(--color-warning-border-modedark);
+    --color-warning-light: var(--color-warning-light-modedark);
+    --color-warning-dark: var(--color-warning-dark-modedark);
+    --color-secondary-hover: var(--color-secondary-hover-modedark);
+    --color-secondary: var(--color-secondary-modedark);
+    --color-primary-light: var(--color-primary-light-modedark);
+    --color-primary-dark: var(--color-primary-dark-modedark);
+    --color-primary-border: var(--color-primary-border-modedark);
+    --color-primary-hover: var(--color-primary-hover-modedark);
+    --color-primary: var(--color-primary-modedark);
+    --color-light: var(--color-light-modedark);
+    --color-dark: var(--color-dark-modedark);
+    --color-gray-dark: var(--color-gray-dark-modedark);
+    --color-gray-mid-dark: var(--color-gray-mid-dark-modedark);
+    --color-gray-mid: var(--color-gray-mid-modedark);
+    --color-gray-light: var(--color-gray-light-modedark);
+    --color-gray-extra-light: var(--color-gray-extra-light-modedark);
+    --color-error: var(--color-error-modedark);
+    --color-error-light: var(--color-error-light-modedark);
+    --color-error-dark: var(--color-error-dark-modedark);
+    --color-error-border: var(--color-error-border-modedark);
+    --color-disabled-color: var(--color-gray-dark-modedark);
+    --color-disabled-bg: var(--color-gray-light-modedark);
+    --color-action-border: var(--color-action-border-modedark);
+    --color-action-light: var(--color-action-light-modedark);
+    --color-action-dark: var(--color-action-dark-modedark);
+    --color-action-hover: var(--color-action-hover-modedark);
+    --color-action: var(--color-action-modedark)
 }
 
 :where(html) {
@@ -233,31 +391,26 @@
 }
 
 :where(html) {
-    --agnostic-small: 0.875rem;
-    --agnostic-body: 1rem;
-    --agnostic-h6: 0.75rem;
-    --agnostic-h5: 1.125rem;
-    --agnostic-h4: 1.5rem;
-    --agnostic-h3: 2.25rem;
-    --agnostic-h2: 3rem;
-    --agnostic-h1: 4rem;
-    --agnostic-font-color: var(--agnostic-dark);
-    --agnostic-font-weight-bold: 500;
-    --agnostic-font-weight-light: 300;
-    --agnostic-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --agnostic-font-family-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-    --agnostic-font-family-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif
+    --font-size-small: 0.875rem;
+    --font-size-body: 1rem;
+    --font-size-h6: 0.75rem;
+    --font-size-h5: 1.125rem;
+    --font-size-h4: 1.5rem;
+    --font-size-h3: 2.25rem;
+    --font-size-h2: 3rem;
+    --font-color: var(--agnostic-dark);
+    --font-weight-bold: 500;
+    --font-weight-body: 400;
+    --font-weight-light: 300;
+    --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-family-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-family-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif
 }
 
 :where(html) {
     --agnostic-timing-slow: 450ms;
     --agnostic-timing-medium: 300ms;
     --agnostic-timing-fast: 200ms
-}
-
-:where(html) {
-    --agnostic-white: #fff;
-    --agnostic-black: #202124;
 }
 
 :root {

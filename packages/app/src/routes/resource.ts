@@ -46,7 +46,20 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
 
     router.get(
         '/resources',
-        async (_ctx, next) => {
+        async (ctx, next) => {
+
+            ctx.body = [{
+                id: 1,
+                name: 'test1'
+            },
+                {
+                    id: 2,
+                    name: 'test2'
+                },
+                {
+                    id: 3,
+                    name: 'test3'
+                }]
 
             return next()
         }

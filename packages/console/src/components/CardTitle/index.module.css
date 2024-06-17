@@ -8,25 +8,29 @@
         color: var(--color-text);
         display: flex;
         align-items: center;
-        gap: var(--fluid-2);
+        gap: var(--fluid-8);
     }
 
     .titleEllipsis {
+        white-space: nowrap;
         text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .subtitle {
-        margin-top:  var(--fluid-2);
+        margin-top:  var(--fluid-4);
         color: var(--color-text-secondary);
     }
 
     &.large {
         .title {
-            font: var(--font-title-1);
+            font-size: var(--font-size-h4);
+            font-weight: var(--font-weight-bold);
         }
 
         .subtitle {
-            font: var(--font-body-2);
+            font-size: var(--font-size-small);
+            font-weight: var(--font-weight-body);
         }
     }
 

@@ -1,31 +1,29 @@
 import {BrowserRouter} from "react-router-dom";
 import {PageContextProvider} from "./providers/PageContextProvider";
 import {AppConfirmModalProvider} from "./providers/AppConfirmModalProvider";
-import {TenantProvider} from "./providers/TenantProvider";
-import {Helmet} from "react-helmet";
 import {mainTitle} from "./constants";
 import Toast from "./components/Toast";
 import ErrorBoundary from "./containers/ErrorBoundary";
 import {AppRoutes} from "./containers/AppRoutes";
+import {Helmet, HelmetProvider} from "react-helmet-async";
 
 import './styles/undescore.css'
-
 
 function App() {
 
     return (
         <BrowserRouter>
-            <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle}/>
-            <Toast/>
-            <ErrorBoundary>
-                <PageContextProvider>
-                    <AppConfirmModalProvider>
-                        <TenantProvider>
+            <HelmetProvider>
+                <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle}/>
+                <Toast/>
+                <ErrorBoundary>
+                    <PageContextProvider>
+                        <AppConfirmModalProvider>
                             <AppRoutes/>
-                        </TenantProvider>
-                    </AppConfirmModalProvider>
-                </PageContextProvider>
-            </ErrorBoundary>
+                        </AppConfirmModalProvider>
+                    </PageContextProvider>
+                </ErrorBoundary>
+            </HelmetProvider>
         </BrowserRouter>
     )
 }

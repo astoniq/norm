@@ -25,16 +25,16 @@ export function CardTitle(
         <div className={classNames(styles.container, styles[size], className)}>
             <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
                 <DynamicT forKey={title}/>
-                {Boolean(subtitle) && (
-                    <div className={styles.subtitle}>
-                        {subtitle && (
-                            <span>
+            </div>
+            {Boolean(subtitle) && (
+                <div className={styles.subtitle}>
+                    {subtitle && (
+                        <span>
                                 <DynamicT forKey={subtitle}/>
                             </span>
-                        )}
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

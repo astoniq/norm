@@ -9,19 +9,12 @@ import {conditionalArray} from "@astoniq/essentials";
 import {tenantIdHeaderKey} from '@astoniq/norm-schema'
 import {TenantContext} from "../providers/TenantProvider";
 
-export type RequestErrorMetadata = Record<string, unknown> & {
-    code: NormErrorCode;
-    status?: number;
-    expose?: boolean;
-};
-
 export type RequestErrorBody<T = unknown> = {
     message: string;
     data: T;
     code: NormErrorCode;
     details?: string;
 };
-
 
 export class RequestError extends Error {
     constructor(
@@ -49,12 +42,11 @@ const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: NormErrorCode[])
             const fallbackErrorMessage = t('errors.unknown_server_error');
 
             try {
-                const data = await response.json<RequestErrorBody>();
+                const data: RequestErrorBody = await response.clone().json();
 
                 if (toastDisabledErrorCodes?.includes(data.code)) {
                     return;
                 }
-
                 toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
             } catch {
                 toast.error(fallbackErrorMessage);
@@ -111,7 +103,7 @@ export const useStaticApi = ({
 
 export const useTenantApi = (props: Omit<StaticApiProps, 'headers' | 'prefixUrl'> = {}) => {
 
-    const {currentTenantId} = useContext(TenantContext)
+    const currentTenantId = useContext(TenantContext)
 
     const headers = useMemo(
         () => ({
