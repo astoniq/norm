@@ -1,0 +1,8 @@
+
+.ring {
+    animation: rotating 1s ease-in-out infinite;
+}
+
+.daisy {
+    animation: rotating 1s steps(12, end) infinite;
+}

@@ -17,7 +17,7 @@ export function TableError({
                                columns
                            }: TableErrorProps) {
 
-    const {t} = useTranslation(undefined, {keyPrefix: 'console'})
+    const {t} = useTranslation()
 
     return (
         <tr>

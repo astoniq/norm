@@ -1,4 +1,4 @@
-import {LocalePhrase} from "../../types.js";
+import {LocalePhrase} from "../../types/index.js";
 import errors from "./errors/index.js";
 import translation from "./translation/index.js";
 

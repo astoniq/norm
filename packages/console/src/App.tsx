@@ -8,6 +8,9 @@ import {AppRoutes} from "./containers/AppRoutes";
 import {Helmet, HelmetProvider} from "react-helmet-async";
 
 import './styles/undescore.css'
+import {initI18n} from "./i18n";
+
+void initI18n();
 
 function App() {
 

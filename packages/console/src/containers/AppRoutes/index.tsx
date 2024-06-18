@@ -5,7 +5,6 @@ import {Auth} from "../../pages/Auth";
 import {AppContent} from "../AppContent";
 import {Tenants} from "../../pages/Tenants";
 import {TenantContent} from "../TenantContent";
-import {Dashboard} from "../../pages/Dashboard";
 
 export function AppRoutes() {
     return (
@@ -16,9 +15,7 @@ export function AppRoutes() {
                     <Route element={<AppContent/>}>
                         <Route path="tenants">
                             <Route index={true} element={<Tenants/>}/>
-                            <Route path=":tenantId" element={<TenantContent/>}>
-                                <Route index={true} element={<Dashboard/>}/>
-                            </Route>
+                            <Route path=":tenantId/*" element={<TenantContent/>}/>
                         </Route>
                     </Route>
                 </Route>

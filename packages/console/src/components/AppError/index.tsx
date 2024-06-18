@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function AppError({ title, errorCode, errorMessage,children }: Props) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'console' });
+    const { t } = useTranslation();
 
     return (
         <div className={styles.container}>

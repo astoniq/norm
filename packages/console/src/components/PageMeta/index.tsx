@@ -6,7 +6,7 @@ export type PageMetaProps = {
 }
 
 export function PageMeta({titleKey}: PageMetaProps) {
-    const {t} = useTranslation(undefined, {keyPrefix: 'console'});
+    const {t} = useTranslation();
     const title = t(titleKey)
     return <Helmet title={title}></Helmet>
 }

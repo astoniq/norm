@@ -35,7 +35,7 @@ const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: NormErrorCode[])
 
     const {show} = useConfirmModal()
 
-    const {t} = useTranslation(undefined, {keyPrefix: 'console'});
+    const {t} = useTranslation();
 
     const handleError = useCallback(
         async (response: KyResponse) => {
@@ -65,7 +65,7 @@ export const useStaticApi = ({
                                  headers = {}
                              }: StaticApiProps): KyInstance => {
 
-    const {i18n} = useTranslation(undefined, {keyPrefix: 'console'})
+    const {i18n} = useTranslation()
 
     // Disable global error handling if `hideErrorToast` is true.
     const disableGlobalErrorHandling = hideErrorToast === true

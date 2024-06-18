@@ -27,7 +27,7 @@ export function Pagination({
                                onChange
                            }: PaginationProps) {
 
-    const {t} = useTranslation(undefined, {keyPrefix: 'console'})
+    const {t} = useTranslation()
 
     const cachedTotalCount = useCacheValue(totalCount) ?? 0;
 

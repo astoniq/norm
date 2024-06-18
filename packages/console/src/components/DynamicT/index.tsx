@@ -7,7 +7,8 @@ type Props = {
 }
 
 export function DynamicT({forKey, interpolation}: Props) {
-    const {t} = useTranslation(undefined, {keyPrefix: 'console'});
+
+    const {t} = useTranslation();
 
     return <>{t(forKey, interpolation ?? {})}</>;
 }

@@ -1,0 +1,47 @@
+
+.field {
+    &:not(:first-child) {
+        margin-top: var(--fluid-6);
+    }
+}
+
+.headline {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--fluid-2);
+
+    &.withLargeSpacing {
+        margin-bottom: var(--fluid-2);
+    }
+
+    .title {
+        font: var(--font-label-2);
+        color: var(--color-text);
+
+        .multiple {
+            margin-left: var(--fluid-2);
+            font: var(--font-body-2);
+            color: var(--color-text-secondary);
+        }
+    }
+
+    .toggleTipButton {
+        margin-left: var(--fluid-2);
+    }
+
+    .required {
+        font: var(--font-body-2);
+        color: var(--color-text-secondary);
+    }
+}
+
+.description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    margin-top: var(--fluid-2);
+
+    &.top {
+        margin-top: 0;
+        margin-bottom: var(--fluid-2);
+    }
+}

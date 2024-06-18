@@ -21,6 +21,8 @@ html {
 
 :where(input,button,select,optgroup,textarea) {
     margin: 0;
+    border: none;
+    outline: none;
     font-family: inherit;
     font-size: inherit;
     color: inherit;

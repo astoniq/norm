@@ -34,7 +34,9 @@ export function ModalLayout(
                     <CardTitle isWordWrapEnabled={true} {...cardTitleProps}/>
                 </div>
                 {onClose && (
-                    <IconButton onClick={onClose}>X</IconButton>
+                    <IconButton onClick={() => {
+                        onClose()
+                    }}>X</IconButton>
                 )}
             </div>
             <div className={className}>{children}</div>
