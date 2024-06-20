@@ -1,8 +1,8 @@
-import {CommonQueryMethods, sql} from "slonik";
+import {CommonQueryMethods, sql,} from "slonik";
 import {resourceEntity} from "../entities/index.js";
-import {convertToIdentifiers} from "../utils/sql.js";
+import { convertToIdentifiers} from "../utils/sql.js";
 import {resourceGuard} from "@astoniq/norm-schema";
-import {buildInsertIntoWithPool} from "../database/index.js";
+import {buildGetTotalRowCountWithPool, buildInsertIntoWithPool, expandFields} from "../database/index.js";
 
 const {table, fields} = convertToIdentifiers(resourceEntity);
 
@@ -12,16 +12,23 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
         resourceEntity, {returning: true}
     )
 
-    const hasResourceById = async (id: string) =>
+    const getTotalCountResources = buildGetTotalRowCountWithPool(pool, resourceEntity)
+
+    const findTotalCountResources = (tenantId: string) => getTotalCountResources(
+        sql.fragment`${fields.tenantId}=${tenantId}`
+    )
+
+    const hasResourceById = async (tenantId: string, id: string) =>
         pool.exists(sql.type(resourceGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`,`)}
+            select ${expandFields(fields)}
             from ${table}
-            where ${fields.id} = ${id}
+            where ${fields.tenantId} = ${tenantId}
+              and ${fields.id} = ${id}
         `)
 
     const findResourceById = async (id: string) => {
         return pool.maybeOne(sql.type(resourceGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            select ${expandFields(fields)}
             from ${table}
             where ${fields.id} = ${id}
         `)
@@ -29,7 +36,7 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
 
     const findResourceByResourceId = async (resourceId: string) => {
         return pool.maybeOne(sql.type(resourceGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            select ${expandFields(fields)}
             from ${table}
             where ${fields.resourceId} = ${resourceId}
         `)
@@ -37,6 +44,7 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
 
     return {
         insertResource,
+        findTotalCountResources,
         findResourceByResourceId,
         findResourceById,
         hasResourceById

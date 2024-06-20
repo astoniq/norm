@@ -52,7 +52,7 @@ export const convertToPrimitiveOrSql = (
     throw new Error(`Cannot convert ${key} to primitive`);
 }
 
-type FiledIdentifiers<T> = {
+export type FiledIdentifiers<T> = {
     [key in keyof T]: IdentifierSqlToken
 }
 

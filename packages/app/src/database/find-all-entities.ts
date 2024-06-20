@@ -1,7 +1,7 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {Entity, EntityKeys, EntityLike} from "../types/index.js";
 import {conditionalSql, convertToIdentifiers, manyRows} from "../utils/sql.js";
-import {buildSearchSql, expandFields, SearchOptions} from "./utils.js";
+import {expandFields} from "./utils.js";
 
 export const buildFindAllEntitiesWithPool =
     (pool: CommonQueryMethods) => <
@@ -23,7 +23,7 @@ export const buildFindAllEntitiesWithPool =
             search?: SearchOptions<T>
         ) => manyRows(
             pool.query(sql.type(entity.guard)`
-                select ${expandFields(entity)}
+                select ${expandFields(fields)}
                 from ${table} ${buildSearchSql(entity, search)} ${conditionalSql(orderBy, (orderBy) => {
                     const orderBySql = orderBy.map(({order, field}) =>
                             order === 'desc' ? sql.fragment`${fields[field]} desc` : sql.fragment`${fields[field]} asc`
