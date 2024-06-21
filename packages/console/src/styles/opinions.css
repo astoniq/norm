@@ -11,31 +11,31 @@
 }
 
 :where(h1) {
-    font-size: var(--agnostic-h1);
-    font-weight: var(--agnostic-font-weight-bold);
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-bold);
 }
 
 :where(h2) {
-    font-size: var(--agnostic-h2);
-    font-weight: var(--agnostic-font-weight-bold);
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-bold);
 }
 
 :where(h3) {
-    font-size: var(--agnostic-h3);
-    font-weight: var(--agnostic-font-weight-bold);
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-bold);
 }
 
 :where(h4) {
-    font-size: var(--agnostic-h4);
-    font-weight: var(--agnostic-font-weight-bold);
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-bold);
 }
 
 :where(h5) {
-    font-size: var(--agnostic-h5);
-    font-weight: var(--agnostic-font-weight-bold);
+    font-size: var(--font-size-h5);
+    font-weight: var(--font-weight-bold);
 }
 
 :where(h6) {
-    font-size: var(--agnostic-h6);
-    font-weight: var(--agnostic-font-weight-bold);
+    font-size: var(--font-size-h6);
+    font-weight: var(--font-weight-bold);
 }

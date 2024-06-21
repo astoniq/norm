@@ -9,6 +9,9 @@ import {Helmet, HelmetProvider} from "react-helmet-async";
 
 import 'overlayscrollbars/overlayscrollbars.css';
 import './styles/undescore.css'
+
+import '@fontsource/roboto-mono';
+
 import {initI18n} from "./i18n";
 
 void initI18n();

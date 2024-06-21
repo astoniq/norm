@@ -398,13 +398,13 @@
     --font-size-h4: 1.5rem;
     --font-size-h3: 2.25rem;
     --font-size-h2: 3rem;
-    --font-color: var(--agnostic-dark);
+    --font-size-h1: 4rem;
     --font-weight-bold: 500;
     --font-weight-body: 400;
     --font-weight-light: 300;
     --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     --font-family-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-    --font-family-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif
+    --font-family-body:  system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif
 }
 
 :where(html) {

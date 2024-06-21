@@ -30,13 +30,29 @@ export function ProjectContent() {
                 <div className={styles.wrapper}>
                     <div>{projectId}</div>
                     <TabNav className={styles.tabs}>
+                        <TabNavItem isActive={match('/dashboard')}
+                                    to={getTo('dashboard')}>
+                            Dashboard
+                        </TabNavItem>
+                        <TabNavItem isActive={match('/notifications')}
+                                    to={getTo('notifications')}>
+                            Notifications
+                        </TabNavItem>
                         <TabNavItem isActive={match('/resources')}
                                     to={getTo('resources')}>
-                            resources
+                            Resources
+                        </TabNavItem>
+                        <TabNavItem isActive={match('/topics')}
+                                    to={getTo('topics')}>
+                            Topics
+                        </TabNavItem>
+                        <TabNavItem isActive={match('/subscribers')}
+                                    to={getTo('subscribers')}>
+                            Subscribers
                         </TabNavItem>
                         <TabNavItem isActive={match('/settings')}
                                     to={getTo('settings')}>
-                            settings
+                            Settings
                         </TabNavItem>
                     </TabNav>
                 </div>

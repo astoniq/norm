@@ -37,7 +37,7 @@
         & thead {
             & tr {
                 & th {
-                    font: var(--font-label-2);
+                    font-weight: var(--font-weight-bold);
                     color: var(--color-text);
                     border-bottom: unset;
                     padding: var(--fluid-4);

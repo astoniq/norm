@@ -3,25 +3,21 @@ import {TFuncKey} from "i18next";
 import {Optional} from "@astoniq/essentials";
 import {BarGraphIcon} from "../../icons/BarGraphIcon.tsx";
 
-export type SidebarItem = {
+export type AppItem = {
     Icon: FC;
     title: TFuncKey;
     isHidden?: boolean
 }
 
-const findFirstItem = (items: SidebarItem[]): Optional<SidebarItem> => {
+const findFirstItem = (items: AppItem[]): Optional<AppItem> => {
     return items.find((item) => !item.isHidden)
 };
 
-export const useSidebarMenuItems = (): {
-    items: SidebarItem[],
-    firstItem: Optional<SidebarItem>
+export const useAppMenuItems = (): {
+    items: AppItem[],
+    firstItem: Optional<AppItem>
 } => {
-    const allItems: SidebarItem[] = [
-        {
-            title: 'dashboard',
-            Icon: BarGraphIcon
-        },
+    const allItems: AppItem[] = [
         {
             title: 'projects',
             Icon: BarGraphIcon

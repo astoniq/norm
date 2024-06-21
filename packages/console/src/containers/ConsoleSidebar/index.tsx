@@ -1,14 +1,28 @@
 import styles from './index.module.css';
-import {useSidebarMenuItems} from "./hook.tsx";
-import {useMatch, useNavigate} from "react-router-dom";
+import {useAppMenuItems} from "./hook.tsx";
+import {matchPath, useLocation, useNavigate} from "react-router-dom";
 import kebabCase from "just-kebab-case";
 import {Logo} from "../../components/Logo";
 import {TopbarItem} from "../../components/TopbarItem";
+import {useCallback} from "react";
+import {joinPath} from "@astoniq/essentials";
 
 export function AppTopbar() {
 
-    const {items} = useSidebarMenuItems();
-    const match = (title: string) => Boolean(useMatch('/' + kebabCase(title)))
+    const {items} = useAppMenuItems();
+
+    const location = useLocation()
+
+    const match = useCallback(
+        (pathname: string, exact = false) => {
+            return (
+                matchPath(joinPath( kebabCase(pathname), exact ? '' : '*'), location.pathname) !==
+                null
+            );
+        },
+        [location.pathname]
+    );
+
 
     const navigate = useNavigate();
 
