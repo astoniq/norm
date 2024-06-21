@@ -1,0 +1,1 @@
+export const projectIdHeaderKey = 'x-project-id';

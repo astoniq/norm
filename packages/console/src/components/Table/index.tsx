@@ -65,7 +65,7 @@ export function Table<
         return result + (colSpan ?? 1)
     }, 0);
 
-    const hasData = rowGroups.some(({data}) => data?.length);
+    const hasData = rowGroups.some(({items}) => items?.length);
     const hasError = !isLoading && !hasData && errorMessage;
     const isEmpty = !isLoading && !hasData && !errorMessage;
     const isLoaded = !isLoading && hasData;
@@ -117,7 +117,7 @@ export function Table<
                             <TableEmpty columns={columns.length}>{placeholder}</TableEmpty>
                         )}
                         {isLoaded &&
-                            rowGroups.map(({key, label, labelRowClassName, labelClassName, data}) => (
+                            rowGroups.map(({key, label, labelRowClassName, labelClassName, items}) => (
                                 <Fragment key={key}>
                                     {label && (
                                         <tr className={labelRowClassName}>
@@ -126,7 +126,7 @@ export function Table<
                                             </td>
                                         </tr>
                                     )}
-                                    {data?.map((row, rowIndex) => {
+                                    {items?.map((row, rowIndex) => {
                                         const rowClickable = isRowClickable(row);
 
                                         const onClick = conditional(

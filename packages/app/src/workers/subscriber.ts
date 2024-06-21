@@ -18,40 +18,40 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
     } = options
 
     const createSubscriber = async (
-        tenantId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+        projectId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
 
         return subscribers.insertSubscriber({
             ...subscriberDefine,
             id: generateStandardId(),
-            tenantId,
+            projectId,
         })
     }
 
     const updateSubscriber = async (
-        tenantId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+        projectId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
 
         return subscribers.updateSubscriber({
             set: subscriberDefine,
-            where: {subscriberId: subscriberDefine.subscriberId, tenantId},
+            where: {subscriberId: subscriberDefine.subscriberId, projectId},
             jsonbMode: "merge"
         })
     }
 
     const getSubscriber = async (
-        tenantId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
+        projectId: string, subscriberDefine: SubscriberDefine): Promise<Subscriber> => {
 
-        const subscriber = await subscribers.hasSubscriberBySubscriberId(
-            tenantId, subscriberDefine.subscriberId)
+        const subscriber = await subscribers.hasProjectSubscriberBySubscriberId(
+            projectId, subscriberDefine.subscriberId)
 
         if (subscriber) {
-            return updateSubscriber(tenantId, subscriberDefine)
+            return updateSubscriber(projectId, subscriberDefine)
         }
 
-        return createSubscriber(tenantId, subscriberDefine)
+        return createSubscriber(projectId, subscriberDefine)
     }
 
     const updateSubscriberReferences = async (
-        tenantId: string, subscriber: Subscriber, subscriberDefine: SubscriberDefine) => {
+        projectId: string, subscriber: Subscriber, subscriberDefine: SubscriberDefine) => {
 
         const {references} = subscriberDefine;
 
@@ -63,7 +63,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
             await subscriberReferences.upsertSubscriberReference({
                 id: generateStandardId(),
-                tenantId,
+                projectId,
                 subscriberId: subscriber.id,
                 target: reference.target,
                 credentials: reference.credentials
@@ -72,15 +72,15 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
     }
 
     const processSubscriber = async (
-        tenantId: string, subscriberDefine: SubscriberDefine) => {
+        projectId: string, subscriberDefine: SubscriberDefine) => {
 
-        const subscriber = await getSubscriber(tenantId, subscriberDefine)
+        const subscriber = await getSubscriber(projectId, subscriberDefine)
 
         if (subscriber === null) {
             return undefined
         }
 
-        await updateSubscriberReferences(tenantId, subscriber, subscriberDefine);
+        await updateSubscriberReferences(projectId, subscriber, subscriberDefine);
 
         return subscriber
     }
@@ -96,12 +96,12 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
                 },
                 subscriber,
                 resourceId,
-                tenantId
+                projectId
             }
         } = job
 
         try {
-            const subscriberProcessed = await processSubscriber(tenantId, subscriber)
+            const subscriberProcessed = await processSubscriber(projectId, subscriber)
 
             if (!subscriberProcessed) {
                 logger.warn(subscriber, `Subscriber was not processed`);
@@ -120,7 +120,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
 
             const notification = await notifications.insertNotification({
                 id: insertNotificationId,
-                tenantId,
+                projectId,
                 resourceId,
                 payload,
                 notificationId,
@@ -136,7 +136,7 @@ export const createSubscriberWorker = (options: WorkerOptions) => {
             await echo.add({
                 name: generateStandardId(),
                 data: {
-                    tenantId: tenantId,
+                    projectId: projectId,
                     notificationId: insertNotificationId
                 }
             })

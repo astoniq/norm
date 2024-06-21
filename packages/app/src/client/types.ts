@@ -1,9 +1,9 @@
 import Router from "koa-router";
 import {ExtendableContext} from "koa";
 import {ApplicationContext} from "../application/types.js";
-import {WithTenantClientContext} from "../middlewares/koa-tenant-client.js";
+import {WithProjectClientContext} from "../middlewares/koa-project-client.js";
 
-export type ClientRouter = Router<unknown, ExtendableContext & WithTenantClientContext>;
+export type ClientRouter = Router<unknown, ExtendableContext & WithProjectClientContext>;
 
 type RouterInit<T> = (router: T, application: ApplicationContext) => void;
 

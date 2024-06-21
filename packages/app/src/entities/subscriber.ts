@@ -8,7 +8,7 @@ export const subscriberEntity: Entity<
     table: 'subscribers',
     tableSingular: 'system',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         subscriberId: 'subscriber_id',
         name: 'name',

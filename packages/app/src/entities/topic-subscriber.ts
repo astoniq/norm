@@ -13,7 +13,7 @@ export const topicSubscriberEntity: Entity<
     table: 'topic_subscribers',
     tableSingular: 'topic_subscriber',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         topicId: 'topic_id',
         subscriberId: 'subscriber_id'

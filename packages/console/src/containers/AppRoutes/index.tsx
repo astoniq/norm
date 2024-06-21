@@ -3,8 +3,8 @@ import {LoadingLayerProvider} from "../../providers/LoadingLayerProvider";
 import {AppLayout} from "../AppLayout";
 import {Auth} from "../../pages/Auth";
 import {AppContent} from "../AppContent";
-import {Tenants} from "../../pages/Tenants";
-import {TenantContent} from "../TenantContent";
+import {Projects} from "../../pages/Projects";
+import {ProjectContent} from "../ProjectContent";
 
 export function AppRoutes() {
     return (
@@ -13,9 +13,9 @@ export function AppRoutes() {
                 <Route element={<AppLayout/>}>
                     <Route path="auth" element={<Auth/>}/>
                     <Route element={<AppContent/>}>
-                        <Route path="tenants">
-                            <Route index={true} element={<Tenants/>}/>
-                            <Route path=":tenantId/*" element={<TenantContent/>}/>
+                        <Route path="projects">
+                            <Route index={true} element={<Projects/>}/>
+                            <Route path=":projectId/*" element={<ProjectContent/>}/>
                         </Route>
                     </Route>
                 </Route>

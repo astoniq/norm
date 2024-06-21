@@ -9,48 +9,50 @@ const {table, fields} = convertToIdentifiers(stepEntity);
 
 export const createStepQueries = (pool: CommonQueryMethods) => {
 
-    const findAllStepByNotificationId = async (notificationId: string) =>
+    const insertStep = buildInsertIntoWithPool(pool, stepEntity, {
+        returning: true
+    })
+
+    const updateStep = buildUpdateWhereWithPool(pool, stepEntity, true)
+
+    const findAllProjectStepByNotificationId = async (projectId: string, notificationId: string) =>
         pool.any(sql.type(stepGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`,`)}
             from ${table}
-            where ${fields.notificationId} = ${notificationId}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.notificationId} = ${notificationId}
         `)
 
-    const insertStep = buildInsertIntoWithPool(pool)(
-        stepEntity, {returning: true}
-    )
-
-    const updateStep = buildUpdateWhereWithPool(pool)(
-        stepEntity, true
-    )
-
-    const updateStepStatusById = async (
+    const updateProjectStepStatusById = async (
+        projectId: string,
         id: string,
         status: string
     ) => updateStep({
-        set: {status}, where: {id}, jsonbMode: 'replace'
+        set: {status}, where: {id, projectId}, jsonbMode: 'replace'
     });
 
-    const updateStepResultById = async (
+    const updateProjectStepResultById = async (
+        projectId: string,
         id: string,
         status: string,
         result: JsonObject
     ) => updateStep({
-        set: {status, result}, where: {id}, jsonbMode: 'replace'
+        set: {status, result}, where: {id, projectId}, jsonbMode: 'replace'
     });
 
-    const findStepById = async (id: string) =>
+    const findProjectStepById = async (projectId: string, id: string) =>
         pool.maybeOne(sql.type(stepGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
-            where ${fields.id} = ${id}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
         `)
 
     return {
-        findAllStepByNotificationId,
-        updateStepResultById,
-        updateStepStatusById,
-        findStepById,
+        findAllProjectStepByNotificationId,
+        updateProjectStepStatusById,
+        updateProjectStepResultById,
+        findProjectStepById,
         insertStep
     }
 }

@@ -10,7 +10,7 @@ export enum JobTopic {
 }
 
 export const baseJobGuard = z.object({
-    tenantId: z.string().min(1).max(21)
+    projectId: z.string().min(1).max(21)
 })
 
 export type BaseJob = z.infer<typeof baseJobGuard>

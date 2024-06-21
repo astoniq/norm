@@ -2,7 +2,7 @@ import {z} from "zod";
 import {subscriberReferencePayloadGuard} from "../types/index.js";
 
 export const subscriberReferenceGuard = z.object({
-    tenantId: z.string().max(21),
+    projectId: z.string().max(21),
     id: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(21),
 }).and(subscriberReferencePayloadGuard);

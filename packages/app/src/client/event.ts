@@ -11,7 +11,7 @@ export default function eventRoutes<T extends ClientRouter>(...args: RouterInitA
             queues: {workflow},
             libraries: {
                 resources: {
-                    getResourceByResourceId
+                    getProjectResourceByResourceId
                 }
             }
         },
@@ -26,17 +26,18 @@ export default function eventRoutes<T extends ClientRouter>(...args: RouterInitA
         async (ctx, next) => {
 
             const {
-                tenant,
+                project,
                 guard: {body}
             } = ctx;
 
-            const resource = await getResourceByResourceId(body.resourceId)
+            const resource = await getProjectResourceByResourceId(
+                project.id, body.resourceId)
 
             await workflow.add({
                 name: generateStandardId(),
                 data: {
                     event: body,
-                    tenantId: tenant.id,
+                    projectId: project.id,
                     resourceId: resource.id
                 }
             })

@@ -8,51 +8,60 @@ const {table, fields} = convertToIdentifiers(subscriberEntity);
 
 export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
-    const findAllSubscribers = buildFindAllEntitiesWithPool(pool)(
-        subscriberEntity,
+    const findAllSubscribers = buildFindAllEntitiesWithPool(pool, subscriberEntity)
+
+    const insertSubscriber = buildInsertIntoWithPool(pool, subscriberEntity, {
+        returning: true
+    })
+
+    const buildProjectConditionSql = (projectId: string) => sql.fragment`${fields.projectId}=${projectId}`
+
+    const updateSubscriber = buildUpdateWhereWithPool(pool, subscriberEntity, true)
+
+    const findAllProjectSubscribers = (projectId: string, limit?: number, offset?: number) => findAllSubscribers(
+        {
+            limit: limit,
+            offset: offset,
+            conditionSql: buildProjectConditionSql(projectId)
+        }
     )
 
-    const insertSubscriber = buildInsertIntoWithPool(pool)(
-        subscriberEntity, {returning: true}
-    )
-
-    const updateSubscriber = buildUpdateWhereWithPool(pool)(
-        subscriberEntity, true
-    )
-
-    const hasSubscriberBySubscriberId = async (tenantId: string, subscriberId: string) => {
+    const hasProjectSubscriberBySubscriberId = async (projectId: string, subscriberId: string) => {
         return pool.exists(sql.type(subscriberGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
             where ${fields.subscriberId} = ${subscriberId}
-              and ${fields.tenantId} = ${tenantId}
+              and ${fields.projectId} = ${projectId}
         `)
     }
 
-    const findSubscriberBySubscriberIds = async (ids: string[]) => {
+    const findProjectSubscriberBySubscriberIds = async (projectId: string, ids: string[]) => {
         return ids.length > 0
             ? pool.any(sql.type(subscriberGuard)`
                     select ${sql.join(Object.values(fields), sql.fragment`, `)}
                     from ${table}
                     where ${fields.subscriberId} in (${sql.join(ids, sql.fragment`, `)})
+                      and ${fields.projectId} = ${projectId}
             `)
             : [];
     }
 
-    const findSubscriberById = async (id: string) => {
+    const findProjectSubscriberById = async (projectId: string, id: string) => {
         return pool.maybeOne(sql.type(subscriberGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
             where ${fields.id} = ${id}
+              and ${fields.projectId} = ${projectId}
         `)
     }
 
     return {
-        findSubscriberBySubscriberIds,
-        hasSubscriberBySubscriberId,
-        findSubscriberById,
+        hasProjectSubscriberBySubscriberId,
+        findProjectSubscriberBySubscriberIds,
+        findProjectSubscriberById,
         updateSubscriber,
         insertSubscriber,
-        findAllSubscribers
+        findAllSubscribers,
+        findAllProjectSubscribers
     }
 }

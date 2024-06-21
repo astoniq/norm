@@ -6,17 +6,17 @@ const addResourceTableMigrationScript: MigrationScript = {
         await pool.query(sql.unsafe`
             create table subscriber_references
             (
-                tenant_id     varchar(21)  not null
-                    references tenants (id) on update cascade on delete cascade,
+                project_id    varchar(21)  not null
+                    references projects (id) on update cascade on delete cascade,
                 id            varchar(21)  not null,
                 subscriber_id varchar(128) not null,
                 target        varchar(128) not null,
-                credentials   jsonb not null,
+                credentials   jsonb        not null,
                 primary key (id),
                 constraint subscriber_references__subscriber_id_target
-                    unique (tenant_id, subscriber_id, target)
+                    unique (project_id, subscriber_id, target)
             );
-            create index subscriber_references__id on subscriber_references (tenant_id, id);
+            create index subscriber_references__id on subscriber_references (project_id, id);
         `)
     },
     down: async (pool) => {

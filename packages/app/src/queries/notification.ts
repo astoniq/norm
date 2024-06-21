@@ -8,32 +8,32 @@ const {table, fields} = convertToIdentifiers(notificationEntity);
 
 export const createNotificationQueries = (pool: CommonQueryMethods) => {
 
-    const insertNotification = buildInsertIntoWithPool(pool)(
-        notificationEntity, {returning: true}
-    )
+    const insertNotification = buildInsertIntoWithPool(pool, notificationEntity, {
+        returning: true
+    })
 
-    const findNotificationById = async (id: string) =>
+    const findProjectNotificationById = async (projectId: string, id: string) =>
         pool.maybeOne(sql.type(notificationGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
-            where ${fields.id} = ${id}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
         `)
 
-    const updateNotification = buildUpdateWhereWithPool(pool)(
-        notificationEntity, true
-    )
+    const updateNotification = buildUpdateWhereWithPool(pool, notificationEntity, true)
 
-    const updateNotificationStatusById = async (
+    const updateProjectNotificationStatusById = async (
+        projectId: string,
         id: string,
         status: string
     ) => updateNotification({
-        set: {status}, where: {id}, jsonbMode: 'replace'
+        set: {status}, where: {id, projectId}, jsonbMode: 'replace'
     });
 
     return {
-        updateNotificationStatusById,
+        findProjectNotificationById,
         updateNotification,
-        findNotificationById,
+        updateProjectNotificationStatusById,
         insertNotification
     }
 }

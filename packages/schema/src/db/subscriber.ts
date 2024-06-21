@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 export const subscriberGuard = z.object({
-    tenantId: z.string().max(21),
+    projectId: z.string().max(21),
     id: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(128),
     username: z.string().min(1).max(128).nullable(),

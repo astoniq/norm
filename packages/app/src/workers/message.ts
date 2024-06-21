@@ -13,7 +13,7 @@ import {connectors} from "@astoniq/norm-connectors";
 import {generateStandardId} from "../utils/id.js";
 
 type SendMessageOptions = {
-    tenantId: string;
+    projectId: string;
     step: Step,
     notification: Notification,
     subscriber: Subscriber
@@ -26,21 +26,21 @@ export const createMessageWorker = (options: WorkerOptions) => {
         queues: {echo},
         queries: {
             steps: {
-                updateStepStatusById,
-                findStepById,
-                updateStepResultById
+                updateProjectStepStatusById,
+                findProjectStepById,
+                updateProjectStepResultById
             },
             notifications: {
-                findNotificationById
+                findProjectNotificationById
             },
             subscribers: {
-                findSubscriberById,
+                findProjectSubscriberById,
             },
             subscriberReferences: {
-                findSubscriberReferencesBySubscriberId
+                findProjectSubscriberReferencesBySubscriberId
             },
             connectors: {
-                findConnectorsByType
+                findProjectConnectorsByType
             }
         },
     } = options
@@ -50,15 +50,17 @@ export const createMessageWorker = (options: WorkerOptions) => {
         const {
             step,
             notification,
-            tenantId,
+            projectId,
             subscriber
         } = options
 
         try {
 
-            const databaseConnectors = await findConnectorsByType(step.type);
+            const databaseConnectors = await findProjectConnectorsByType(
+                projectId, step.type);
 
-            const subscriberReferences = await findSubscriberReferencesBySubscriberId(subscriber.id)
+            const subscriberReferences = await findProjectSubscriberReferencesBySubscriberId(
+                projectId, subscriber.id)
 
             let successSendMessage = false
             let resultSendMessage = {}
@@ -121,34 +123,35 @@ export const createMessageWorker = (options: WorkerOptions) => {
             }
 
             if (successSendMessage) {
-                await updateStepResultById(step.id, StepStatus.Completed, resultSendMessage)
+                await updateProjectStepResultById(
+                    projectId, step.id, StepStatus.Completed, resultSendMessage)
 
                 await echo.add({
                     name: generateStandardId(),
-                    data: {notificationId: notification.id, tenantId}
+                    data: {notificationId: notification.id, projectId}
                 })
             } else {
                 logger.info(`Error send message`)
-                await updateStepStatusById(step.id, StepStatus.Failed)
+                await updateProjectStepStatusById(projectId, step.id, StepStatus.Failed)
             }
         } catch (error) {
             logger.error(error)
         }
     }
 
-    const sendMessageByStep = async (tenantId: string, step: Step) => {
+    const sendMessageByStep = async (projectId: string, step: Step) => {
 
         try {
-            await updateStepStatusById(step.id, StepStatus.Running)
+            await updateProjectStepStatusById(projectId, step.id, StepStatus.Running)
 
-            const notification = await findNotificationById(step.notificationId)
+            const notification = await findProjectNotificationById(projectId, step.notificationId)
 
             if (!notification) {
                 logger.error('Notification not found');
                 return;
             }
 
-            const subscriber = await findSubscriberById(notification.subscriberId)
+            const subscriber = await findProjectSubscriberById(projectId, notification.subscriberId)
 
             if (!subscriber) {
                 logger.error('Subscriber not found');
@@ -156,14 +159,14 @@ export const createMessageWorker = (options: WorkerOptions) => {
             }
 
             return sendMessageConnectors({
-                tenantId,
+                projectId,
                 step,
                 notification,
                 subscriber,
             })
 
         } catch (error) {
-            await updateStepStatusById(step.id, StepStatus.Failed)
+            await updateProjectStepStatusById(projectId, step.id, StepStatus.Failed)
         }
     }
 
@@ -172,19 +175,19 @@ export const createMessageWorker = (options: WorkerOptions) => {
             const {
                 data: {
                     stepId,
-                    tenantId
+                    projectId
                 }
             } = job
 
             try {
-                const step = await findStepById(stepId)
+                const step = await findProjectStepById(projectId, stepId)
 
                 if (!step) {
                     logger.error(`Step ${stepId} not found. Skip step`);
                     return;
                 }
 
-                return sendMessageByStep(tenantId, step)
+                return sendMessageByStep(projectId, step)
 
             } catch (error) {
                 logger.error(error, 'Sending message hash thrown an error')

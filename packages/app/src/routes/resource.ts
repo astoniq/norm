@@ -1,13 +1,20 @@
 import {RouterInitArgs, TenantRouter} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
-import {createResourceGuard, resourceGuard} from "@astoniq/norm-schema";
+import {
+    createResourceGuard,
+    paginationGuard,
+    resourceGuard,
+    resourcePaginationResponseGuard,
+} from "@astoniq/norm-schema";
 import {generateStandardId, generateStandardSecret} from "@astoniq/norm-shared";
 
 export default function resourceRoutes<T extends TenantRouter>(...[router, {queries}]: RouterInitArgs<T>) {
 
     const {
         resources: {
-            insertResource
+            insertResource,
+            getTotalCountProjectResources,
+            findAllProjectResources,
         }
     } = queries
 
@@ -21,7 +28,7 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
         async (ctx, next) => {
 
             const {
-                tenant,
+                project,
                 guard: {
                     body: {
                         resourceId,
@@ -33,7 +40,7 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
             ctx.body = await insertResource({
                 id: generateStandardId(),
                 signingKey: generateStandardSecret(),
-                tenantId: tenant.id,
+                projectId: project.id,
                 resourceId,
                 config
             })
@@ -46,20 +53,35 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
 
     router.get(
         '/resources',
+        koaGuard({
+            response: resourcePaginationResponseGuard,
+            query: paginationGuard,
+            status: [200, 400]
+        }),
         async (ctx, next) => {
 
-            ctx.body = [{
-                id: 1,
-                name: 'test1'
-            },
-                {
-                    id: 2,
-                    name: 'test2'
-                },
-                {
-                    id: 3,
-                    name: 'test3'
-                }]
+            const {
+                project: {id},
+                guard: {
+                    query: {
+                        pageSize,
+                        offset,
+                        page
+                    }
+                }
+            } = ctx
+
+            const [totalCount, items] = await Promise.all([
+                getTotalCountProjectResources(id),
+                findAllProjectResources(id, pageSize, offset)
+            ])
+
+            ctx.body = {
+                page,
+                pageSize,
+                totalCount,
+                items
+            }
 
             return next()
         }

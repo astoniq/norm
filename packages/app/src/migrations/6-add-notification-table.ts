@@ -6,8 +6,8 @@ const addNotificationTableMigrationScript: MigrationScript = {
         await pool.query(sql.unsafe`
             create table notifications
             (
-                tenant_id       varchar(21)  not null
-                    references tenants (id) on update cascade on delete cascade,
+                project_id      varchar(21)  not null
+                    references projects (id) on update cascade on delete cascade,
                 id              varchar(21)  not null,
                 notification_id varchar(128) not null,
                 resource_id     varchar(21)  not null,
@@ -16,7 +16,7 @@ const addNotificationTableMigrationScript: MigrationScript = {
                 payload         jsonb        not null,
                 primary key (id)
             );
-            create index notifications__id on notifications (tenant_id, id);
+            create index notifications__id on notifications (project_id, id);
         `)
     },
     down: async (pool) => {

@@ -5,7 +5,7 @@ import {BarGraphIcon} from "../../icons/BarGraphIcon.tsx";
 
 export type SidebarItem = {
     Icon: FC;
-    title: TFuncKey<'translation, console.tabs'>;
+    title: TFuncKey;
     isHidden?: boolean
 }
 
@@ -27,7 +27,7 @@ export const useSidebarMenuItems = (): {
             Icon: BarGraphIcon
         },
         {
-            title: 'members',
+            title: 'users',
             Icon: BarGraphIcon
         },
         {

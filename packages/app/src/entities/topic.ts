@@ -8,7 +8,7 @@ export const topicEntity: Entity<
     table: 'topics',
     tableSingular: 'topic',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         topicId: 'topic_id'
     },

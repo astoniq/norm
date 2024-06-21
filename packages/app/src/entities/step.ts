@@ -8,7 +8,7 @@ export const stepEntity: Entity<
     table: 'steps',
     tableSingular: 'step',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         status: 'status',
         stepId: 'step_id',

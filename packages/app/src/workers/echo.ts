@@ -30,17 +30,17 @@ export const createEchoWorker = (options: WorkerOptions) => {
         redis,
         queries: {
             notifications: {
-                updateNotificationStatusById
+                updateProjectNotificationStatusById
             },
             steps: {
-                findAllStepByNotificationId,
+                findAllProjectStepByNotificationId,
                 insertStep
             },
             subscribers: {
-                findSubscriberById
+                findProjectSubscriberById
             },
             resources: {
-                findResourceById
+                findProjectResourceById
             }
         },
         queues: {message}
@@ -123,13 +123,13 @@ export const createEchoWorker = (options: WorkerOptions) => {
             const {
                 data: {
                     notificationId,
-                    tenantId
+                    projectId
                 }
             } = job
 
             try {
-                const notification = await updateNotificationStatusById(
-                    notificationId, NotificationStatus.Running)
+                const notification = await updateProjectNotificationStatusById(
+                    projectId, notificationId, NotificationStatus.Running)
 
                 if (!notification) {
                     logger.error('Notification not found');
@@ -143,20 +143,26 @@ export const createEchoWorker = (options: WorkerOptions) => {
                 } = notification
 
                 const [steps, subscriber, resource] = await Promise.all([
-                    trySafe(findAllStepByNotificationId(id)),
-                    trySafe(findSubscriberById(subscriberId)),
-                    trySafe(findResourceById(resourceId))
+                    trySafe(findAllProjectStepByNotificationId(projectId, id)),
+                    trySafe(findProjectSubscriberById(projectId, subscriberId)),
+                    trySafe(findProjectResourceById(projectId, resourceId))
                 ])
 
                 if (!subscriber) {
                     logger.info(`Subscriber ${subscriberId} not found`);
-                    await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+
+                    await updateProjectNotificationStatusById(
+                        projectId, notificationId, NotificationStatus.Failed)
+
                     return;
                 }
 
                 if (!resource) {
                     logger.info(`Resource ${resourceId} not found`);
-                    await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+
+                    await updateProjectNotificationStatusById(
+                        projectId, notificationId, NotificationStatus.Failed)
+
                     return;
                 }
 
@@ -170,13 +176,14 @@ export const createEchoWorker = (options: WorkerOptions) => {
                 })
 
                 if (executionOutput.status) {
-                    await updateNotificationStatusById(notificationId, NotificationStatus.Completed)
+                    await updateProjectNotificationStatusById(
+                        projectId, notificationId, NotificationStatus.Completed)
                 } else {
 
                     const insertStepId = generateStandardId()
 
                     const step = await insertStep({
-                        tenantId,
+                        projectId,
                         notificationId,
                         stepId: executionOutput.stepId,
                         type: executionOutput.type,
@@ -187,19 +194,23 @@ export const createEchoWorker = (options: WorkerOptions) => {
 
                     if (!step) {
                         logger.error('Step could not be created');
-                        await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+
+                        await updateProjectNotificationStatusById(
+                            projectId, notificationId, NotificationStatus.Failed)
+
                         return;
                     }
 
                     await message.add({
                         name: generateStandardId(),
-                        data: {stepId: insertStepId, tenantId}
+                        data: {stepId: insertStepId, projectId}
                     })
                 }
 
             } catch (error) {
                 logger.info(error)
-                await updateNotificationStatusById(notificationId, NotificationStatus.Failed)
+                await updateProjectNotificationStatusById(
+                    projectId, notificationId, NotificationStatus.Failed)
             }
         },
         {

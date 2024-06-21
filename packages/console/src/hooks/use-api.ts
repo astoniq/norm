@@ -6,8 +6,8 @@ import {useCallback, useContext, useMemo} from "react";
 import {toast} from 'react-hot-toast';
 import {requestTimeout} from "../constants";
 import {conditionalArray} from "@astoniq/essentials";
-import {tenantIdHeaderKey} from '@astoniq/norm-schema'
-import {TenantContext} from "../providers/TenantProvider";
+import {projectIdHeaderKey} from '@astoniq/norm-schema'
+import {ProjectContext} from "../providers/ProjectProvider";
 
 export type RequestErrorBody<T = unknown> = {
     message: string;
@@ -101,14 +101,14 @@ export const useStaticApi = ({
     )
 }
 
-export const useTenantApi = (props: Omit<StaticApiProps, 'headers' | 'prefixUrl'> = {}) => {
+export const useProjectApi = (props: Omit<StaticApiProps, 'headers' | 'prefixUrl'> = {}) => {
 
-    const currentTenantId = useContext(TenantContext)
+    const currentProjectId = useContext(ProjectContext)
 
     const headers = useMemo(
         () => ({
-            [tenantIdHeaderKey]: currentTenantId
-        }), [currentTenantId]
+            [projectIdHeaderKey]: currentProjectId
+        }), [currentProjectId]
     )
 
     return useStaticApi({...props, headers})

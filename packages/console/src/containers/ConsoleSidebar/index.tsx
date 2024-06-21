@@ -1,28 +1,32 @@
-import {OverlayScrollbar} from "../../components/OverlayScrollbar";
-
 import styles from './index.module.css';
 import {useSidebarMenuItems} from "./hook.tsx";
-import {SidebarItem} from "./components/Item";
-import {useMatch} from "react-router-dom";
+import {useMatch, useNavigate} from "react-router-dom";
 import kebabCase from "just-kebab-case";
+import {Logo} from "../../components/Logo";
+import {TopbarItem} from "../../components/TopbarItem";
 
-export function AppSidebar() {
+export function AppTopbar() {
 
     const {items} = useSidebarMenuItems();
     const match = (title: string) => Boolean(useMatch('/' + kebabCase(title)))
 
+    const navigate = useNavigate();
+
     return (
-        <OverlayScrollbar className={styles.sidebar}>
-            {items.map(({title, Icon, isHidden}) =>
-                    !isHidden && (
-                        <SidebarItem
-                            key={title}
-                            titleKey={title}
-                            icon={<Icon/>}
-                            isActive={match(title)}
-                        />
-                    )
-            )}
-        </OverlayScrollbar>
+        <div className={styles.topbar}>
+            <Logo className={styles.logo} onClick={() => navigate('/')}/>
+            <div className={styles.menu}>
+                {items.map(({title, Icon, isHidden}) =>
+                        !isHidden && (
+                            <TopbarItem
+                                key={title}
+                                titleKey={title}
+                                icon={<Icon/>}
+                                isActive={match(title)}
+                            />
+                        )
+                )}
+            </div>
+        </div>
     )
 }

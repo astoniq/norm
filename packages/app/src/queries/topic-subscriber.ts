@@ -8,17 +8,19 @@ const {table, fields} = convertToIdentifiers(topicSubscriberEntity);
 
 export const createTopicSubscriberQueries = (pool: CommonQueryMethods) => {
 
-    const insertTopicSubscriber = buildInsertIntoWithPool(pool)(
+    const insertTopicSubscriber = buildInsertIntoWithPool(pool,
         topicSubscriberEntity, {
             returning: true
         })
 
-    const findTopicSubscribersByTopicIds = async (topicsIds: string[], excludeSubscriberIds: string[]) => {
+    const findProjectTopicSubscribersByTopicIds = async (
+        projectId: string, topicsIds: string[], excludeSubscriberIds: string[]) => {
         return topicsIds.length > 0
             ? pool.any(sql.type(topicSubscriberGuard)`
                     select ${sql.join(Object.values(fields), sql.fragment`, `)}
                     from ${table}
-                    where ${fields.topicId} in (${sql.join(topicsIds, sql.fragment`, `)})
+                    where ${fields.projectId} = ${projectId}
+                      and ${fields.topicId} in (${sql.join(topicsIds, sql.fragment`, `)})
                         ${conditionalArraySql(excludeSubscriberIds, value =>
                                 sql.fragment`and ${fields.subscriberId} not in (${sql.join(value, sql.fragment`, `)})`)}
             `)
@@ -26,7 +28,7 @@ export const createTopicSubscriberQueries = (pool: CommonQueryMethods) => {
     }
 
     return {
-        findTopicSubscribersByTopicIds,
+        findProjectTopicSubscribersByTopicIds,
         insertTopicSubscriber
     }
 }

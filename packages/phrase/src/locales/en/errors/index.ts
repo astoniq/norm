@@ -1,5 +1,5 @@
 import db from "./db.js";
-import tenant from "./tenant.js";
+import project from "./project.js";
 import auth from "./auth.js";
 import guard from "./guard.js";
 
@@ -9,7 +9,7 @@ const errors: Errors = {
     db,
     auth,
     guard,
-    tenant
+    project
 };
 
 export default Object.freeze(errors);

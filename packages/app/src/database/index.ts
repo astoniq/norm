@@ -1,5 +1,4 @@
 export * from './delete-by-id.js'
-export * from './utils.js'
 export * from './find-all-entities.js'
 export * from './find-entity-by-id.js'
 export * from './row-count.js'

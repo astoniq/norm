@@ -3,13 +3,13 @@ import Koa from 'koa';
 import Router from "koa-router";
 import {TenantRouter} from "./types.js";
 import resourceRoutes from "./resource.js";
-import koaTenant from "../middlewares/koa-tenant.js";
+import koaProject from "../middlewares/koa-project.js";
 
 const createRouters = (application: ApplicationContext) => {
 
     const tenantRouter: TenantRouter = new Router();
 
-    tenantRouter.use(koaTenant(application.queries))
+    tenantRouter.use(koaProject(application.queries))
 
     resourceRoutes(tenantRouter, application)
 

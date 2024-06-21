@@ -1,44 +1,71 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {resourceEntity} from "../entities/index.js";
-import {convertToIdentifiers} from "../utils/sql.js";
+import {convertToIdentifiers, expandFields} from "../utils/sql.js";
 import {resourceGuard} from "@astoniq/norm-schema";
-import {buildInsertIntoWithPool} from "../database/index.js";
+import {
+    buildFindAllEntitiesWithPool,
+    buildGetTotalRowCountWithPool,
+    buildInsertIntoWithPool,
+} from "../database/index.js";
 
 const {table, fields} = convertToIdentifiers(resourceEntity);
 
 export const createResourceQueries = (pool: CommonQueryMethods) => {
 
-    const insertResource = buildInsertIntoWithPool(pool)(
-        resourceEntity, {returning: true}
+    const insertResource = buildInsertIntoWithPool(pool, resourceEntity, {
+        returning: true
+    })
+
+    const getTotalCountResources = buildGetTotalRowCountWithPool(pool, resourceEntity)
+
+    const findAllResources = buildFindAllEntitiesWithPool(pool, resourceEntity)
+
+    const buildProjectConditionSql = (projectId: string) => sql.fragment`${fields.projectId}=${projectId}`
+
+    const findAllProjectResources = (projectId: string, limit?: number, offset?: number) => findAllResources(
+        {
+            limit: limit,
+            offset: offset,
+            conditionSql: buildProjectConditionSql(projectId)
+        }
     )
 
-    const hasResourceById = async (id: string) =>
+    const getTotalCountProjectResources = (projectId: string) => getTotalCountResources(
+        buildProjectConditionSql(projectId)
+    )
+
+    const hasProjectResourceById = async (projectId: string, id: string) =>
         pool.exists(sql.type(resourceGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`,`)}
+            select ${expandFields(fields)}
             from ${table}
-            where ${fields.id} = ${id}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
         `)
 
-    const findResourceById = async (id: string) => {
+    const findProjectResourceById = async (projectId: string, id: string) => {
         return pool.maybeOne(sql.type(resourceGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            select ${expandFields(fields)}
             from ${table}
-            where ${fields.id} = ${id}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
         `)
     }
 
-    const findResourceByResourceId = async (resourceId: string) => {
+    const findProjectResourceByResourceId = async (projectId: string, resourceId: string) => {
         return pool.maybeOne(sql.type(resourceGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            select ${expandFields(fields)}
             from ${table}
-            where ${fields.resourceId} = ${resourceId}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.resourceId} = ${resourceId}
         `)
     }
 
     return {
         insertResource,
-        findResourceByResourceId,
-        findResourceById,
-        hasResourceById
+        findAllProjectResources,
+        getTotalCountProjectResources,
+        hasProjectResourceById,
+        findProjectResourceById,
+        findProjectResourceByResourceId
     }
 }

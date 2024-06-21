@@ -39,8 +39,8 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
         recipient.type === TriggerRecipientsType.Topic;
 
 
-    const getTopicsByTopicIds = async (topicIds: Set<string>) => {
-        return topics.findTopicsByTopicIds(Array.from(topicIds))
+    const getTopicsByTopicIds = async (projectId: string, topicIds: Set<string>) => {
+        return topics.findProjectTopicsByTopicIds(projectId, Array.from(topicIds))
     }
 
     const splitByRecipientType = (mappedRecipients: TriggerRecipient[]): {
@@ -109,7 +109,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
     }
 
     const sendToProcessSubscriber = async (
-        tenantId: string,
+        projectId: string,
         resourceId: string,
         event: TriggerEvent,
         subscribers: SubscriberDefine[],
@@ -120,7 +120,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
         }
 
         const jobs = mapSubscribersToSubscriberJobs(
-            tenantId,
+            projectId,
             resourceId,
             subscriberSource,
             subscribers,
@@ -131,7 +131,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
     }
 
     const mapSubscribersToSubscriberJobs = (
-        tenantId: string,
+        projectId: string,
         resourceId: string,
         subscriberSource: SubscriberSource,
         subscribers: SubscriberDefine[],
@@ -142,7 +142,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
                 name: generateStandardId(),
                 data: {
                     event,
-                    tenantId,
+                    projectId,
                     resourceId,
                     subscriber,
                     subscriberSource,
@@ -170,7 +170,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
     }
 
     const triggerMulticastEvent = async (
-        tenantId: string, resourceId: string, event: TriggerEventMulticast) => {
+        projectId: string, resourceId: string, event: TriggerEventMulticast) => {
 
         const {
             to: recipients,
@@ -189,7 +189,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
         if (subscribersToProcess.length > 0) {
             await sendToProcessSubscriber(
-                tenantId,
+                projectId,
                 resourceId,
                 event,
                 subscribersToProcess,
@@ -197,7 +197,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
             )
         }
 
-        const availableTopics = await getTopicsByTopicIds(singleTopics);
+        const availableTopics = await getTopicsByTopicIds(projectId, singleTopics);
 
         validateTopicsExist(availableTopics, singleTopics);
 
@@ -209,13 +209,13 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
         let subscribersList: SubscriberDefine[] = [];
 
         const excludeSubscribers = await subscribers
-            .findSubscriberBySubscriberIds(singleSubscriberIds)
+            .findProjectSubscriberBySubscriberIds(projectId, singleSubscriberIds)
 
         const excludeSubscriberIds = excludeSubscribers
             .map(subscriber => subscriber.id);
 
         const topicSubscribersGenerator = await topicSubscribers
-            .findTopicSubscribersByTopicIds(topicsIds, excludeSubscriberIds)
+            .findProjectTopicSubscribersByTopicIds(projectId, topicsIds, excludeSubscriberIds)
 
         for (const topicSubscriber of topicSubscribersGenerator) {
 
@@ -223,7 +223,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
             if (subscribersList.length === subscriberTopicBatchSize) {
                 await sendToProcessSubscriber(
-                    tenantId, resourceId, event, subscribersList, SubscriberSource.Topic)
+                    projectId, resourceId, event, subscribersList, SubscriberSource.Topic)
 
                 subscribersList = []
             }
@@ -231,15 +231,15 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
         if (subscribersList.length > 0) {
             await sendToProcessSubscriber(
-                tenantId, resourceId, event, subscribersList, SubscriberSource.Topic)
+                projectId, resourceId, event, subscribersList, SubscriberSource.Topic)
         }
     }
 
     const triggerBroadcastEvent = async (
-        tenantId: string, resourceId: string, event: TriggerEventBroadcast) => {
+        projectId: string, resourceId: string, event: TriggerEventBroadcast) => {
 
         let subscribersList: SubscriberDefine[] = [];
-        const availableSubscribers = await subscribers.findAllSubscribers()
+        const availableSubscribers = await subscribers.findAllProjectSubscribers(projectId)
 
         for (const subscriber of availableSubscribers) {
 
@@ -247,7 +247,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
             if (subscribersList.length === subscriberBatchSize) {
                 await sendToProcessSubscriber(
-                    tenantId, resourceId, event, subscribersList, SubscriberSource.Broadcast)
+                    projectId, resourceId, event, subscribersList, SubscriberSource.Broadcast)
 
                 subscribersList = []
             }
@@ -255,26 +255,26 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
 
         if (subscribersList.length > 0) {
             await sendToProcessSubscriber(
-                tenantId, resourceId, event, subscribersList, SubscriberSource.Broadcast)
+                projectId, resourceId, event, subscribersList, SubscriberSource.Broadcast)
         }
     }
 
     return new Worker<WorkflowJob>(JobTopic.Workflow, async (job) => {
 
         const {
-            data: {event, tenantId, resourceId}
+            data: {event, projectId, resourceId}
         } = job
 
         try {
             switch (event.type) {
                 case TriggerAddressingType.Multicast: {
-                    return triggerMulticastEvent(tenantId, resourceId, event)
+                    return triggerMulticastEvent(projectId, resourceId, event)
                 }
                 case TriggerAddressingType.Broadcast: {
-                    return triggerBroadcastEvent(tenantId, resourceId, event)
+                    return triggerBroadcastEvent(projectId, resourceId, event)
                 }
                 default: {
-                    return triggerMulticastEvent(tenantId, resourceId, event)
+                    return triggerMulticastEvent(projectId, resourceId, event)
                 }
             }
         } catch (error) {

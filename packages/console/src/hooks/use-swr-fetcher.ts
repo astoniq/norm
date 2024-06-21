@@ -16,23 +16,8 @@ export const useSwrFetcher: UseSwrFetcherHook = <T>(api: KyInstance) => {
     return useCallback<Fetcher<T | WithTotalNumber<T>>>(
         async (resource: string) => {
             try {
-                const response = await api.get(resource);
-
-                const data = await response.json<T>();
-
-                if (resource.includes('?')) {
-                    const parameters = new URLSearchParams(resource.split('?')[1]);
-
-                    if (parameters.get('page') && parameters.get('page_size')) {
-                        const number = response.headers.get('Total-Number') ?? 0;
-
-                        return [data, Number(number)];
-                    }
-                }
-                return data;
-
+                return api.get(resource).json<T>();
             } catch (error) {
-                console.log(error)
                 if (error instanceof HTTPError) {
                     const {response} = error;
                     throw new RequestError(response.status, await response.clone().json());

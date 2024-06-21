@@ -8,35 +8,32 @@ const {table, fields} = convertToIdentifiers(subscriberReferenceEntity);
 
 export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
 
-    const findAllSubscriberReferences = buildFindAllEntitiesWithPool(pool)(
-        subscriberReferenceEntity,
-    )
+    const findAllSubscriberReferences = buildFindAllEntitiesWithPool(pool, subscriberReferenceEntity)
 
-    const insertSubscriberReference = buildInsertIntoWithPool(pool)(
-        subscriberReferenceEntity, {returning: true}
-    )
+    const insertSubscriberReference = buildInsertIntoWithPool(pool, subscriberReferenceEntity, {
+        returning: true
+    })
 
-    const findSubscriberReferencesBySubscriberId = async (subscriberId: string) => {
+    const upsertSubscriberReference = buildInsertIntoWithPool(pool, subscriberReferenceEntity, {
+        onConflict: {
+            fields: [fields.projectId, fields.subscriberId, fields.target],
+            setExcludedFields: [fields.credentials]
+        }
+    })
+
+    const findProjectSubscriberReferencesBySubscriberId = async (projectId: string, subscriberId: string) => {
         return pool.any(sql.type(subscriberReferenceGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
             from ${table}
             where ${fields.subscriberId} = ${subscriberId}
+              and ${fields.projectId} = ${projectId}
         `)
     }
-
-    const upsertSubscriberReference = buildInsertIntoWithPool(pool)(
-        subscriberReferenceEntity, {
-            onConflict: {
-                fields: [fields.tenantId, fields.subscriberId, fields.target],
-                setExcludedFields: [fields.credentials]
-            }
-        }
-    )
 
     return {
         upsertSubscriberReference,
         findAllSubscriberReferences,
         insertSubscriberReference,
-        findSubscriberReferencesBySubscriberId
+        findProjectSubscriberReferencesBySubscriberId
     }
 }

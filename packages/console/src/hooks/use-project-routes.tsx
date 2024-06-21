@@ -3,7 +3,7 @@ import {conditionalArray} from "@astoniq/essentials";
 import {RouteObject} from "react-router-dom";
 import {Resources} from "../pages/Resources";
 
-export const useTenantRoutes = () => {
+export const useProjectRoutes = () => {
 
     return useMemo(
         () => conditionalArray<RouteObject | RouteObject[]>(

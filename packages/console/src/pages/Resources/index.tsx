@@ -1,22 +1,29 @@
-import {useTenantApi} from "../../hooks/use-api.ts";
+import {RequestError, useProjectApi} from "../../hooks/use-api.ts";
 import {useSwrOptions} from "../../hooks/use-swr-options.ts";
 import useSWR from "swr";
 import {ListPage} from "../../components/ListPage";
-import {useTenantPathname} from "../../hooks/use-tenant-pathname.ts";
+import {useProjectPathname} from "../../hooks/use-project-pathname.ts";
 import {CreateResourceModal} from "./CreateResourceModal";
 import {useLocation} from "react-router-dom";
 import {toast} from "react-hot-toast";
 import {useTranslation} from "react-i18next";
+import {useSearchParameters} from "../../hooks/use-search-parameters.ts";
+import {buildUrl} from "../../utils";
+import {defaultPaginationPageSize, ResourcePaginationResponse} from "@astoniq/norm-schema";
+import {ItemPreview} from "../../components/ItemPreview";
 
 const apiPathname = 'resources'
 const resourcesPathname = '/resources';
 const createResourcePathname = `${resourcesPathname}/create`;
+const buildDetailsPathname = (id: string) => `${resourcesPathname}/${id}`;
+
+const pageSize = defaultPaginationPageSize;
 
 export const Resources = () => {
 
-    const api = useTenantApi();
+    const api = useProjectApi();
 
-    const {navigate, match} = useTenantPathname();
+    const {navigate, match} = useProjectPathname();
 
     const swrOptions = useSwrOptions(api);
 
@@ -26,9 +33,20 @@ export const Resources = () => {
 
     const {search} = useLocation();
 
-    const {data, error} = useSWR(apiPathname, swrOptions)
+    const [{page}, updateSearchParameters] = useSearchParameters({
+        page: 1,
+    })
+
+    const url = buildUrl(apiPathname, {
+        page: String(page),
+        page_size: String(pageSize)
+    })
+
+    const {data, error, mutate} = useSWR<ResourcePaginationResponse, RequestError>(url, swrOptions)
 
     const isLoading = !data && !error
+
+    const {items = [], totalCount} = data ?? {}
 
     return (
         <ListPage
@@ -42,27 +60,41 @@ export const Resources = () => {
             }}
 
             table={{
-                rowGroups: [{key: 'resources', data}],
+                rowGroups: [{key: 'resources', items}],
                 rowIndexKey: 'id',
                 isLoading: isLoading,
                 errorMessage: error?.message,
                 columns: [
                     {
-                        title: '',
-                        dataIndex: 'roles',
+                        title: t('resources.resource_id'),
+                        dataIndex: 'resource_id',
                         colSpan: 12,
-                        render: ({name}) => (
-                            <div>{name}</div>
+                        render: ({id, resourceId}) => (
+                            <ItemPreview title={resourceId}
+                                         to={buildDetailsPathname(id)}/>
                         )
                     }
-                ]
+                ],
+                pagination: {
+                    page,
+                    totalCount,
+                    pageSize,
+                    onChange: (page) => {
+                        updateSearchParameters({page})
+                    }
+                },
+                onRetry: async () => mutate(undefined, true)
             }}
+
             widgets={
                 isCreating && (
                     <CreateResourceModal
                         onClose={(createdResource) => {
                             if (createdResource) {
+                                void mutate()
                                 toast.success(t('resources.resource_created'))
+                                navigate(buildDetailsPathname(createdResource.id), {replace: true});
+                                return;
                             }
 
                             navigate({pathname: resourcesPathname, search})

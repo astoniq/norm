@@ -1,14 +1,14 @@
 import styles from './index.module.css';
 import {Outlet} from "react-router-dom";
 import {OverlayScrollbar} from "../../components/OverlayScrollbar";
-import {AppSidebar} from "../ConsoleSidebar";
+import {AppTopbar} from "../ConsoleSidebar";
 
 export function AppContent() {
 
     return (
         <div className={styles.app}>
+            <AppTopbar/>
             <div className={styles.content}>
-                <AppSidebar/>
                 <OverlayScrollbar className={styles.overlayScrollbarWrapper}>
                     <Outlet/>
                 </OverlayScrollbar>

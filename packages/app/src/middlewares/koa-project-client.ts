@@ -1,13 +1,13 @@
 import {IRouterParamContext} from "koa-router";
-import {Tenant} from "@astoniq/norm-schema";
+import {Project} from "@astoniq/norm-schema";
 import {Middleware} from "koa";
 import {Queries} from "../queries/index.js";
 import type {IncomingHttpHeaders} from 'http';
 import assertThat from "../utils/assert-that.js";
 import {RequestError} from "../errors/index.js";
 
-export type WithTenantClientContext<ContextT extends IRouterParamContext = IRouterParamContext> =
-    ContextT & { tenant: Tenant }
+export type WithProjectClientContext<ContextT extends IRouterParamContext = IRouterParamContext> =
+    ContextT & { project: Project }
 
 const clientKeyIdentifier = 'ClientKey';
 
@@ -22,13 +22,13 @@ export const extractClientKeyFromHeaders = ({authorization}: IncomingHttpHeaders
     return authorization.slice(clientKeyIdentifier.length + 1);
 }
 
-export default function koaTenantClient<
+export default function koaProjectClient<
     StateT,
     ContextT extends IRouterParamContext,
     ResponseBodyT
 >({
-      tenants
-  }: Queries): Middleware<StateT, WithTenantClientContext<ContextT>, ResponseBodyT> {
+      projects
+  }: Queries): Middleware<StateT, WithProjectClientContext<ContextT>, ResponseBodyT> {
 
     return async (ctx, next) => {
 
@@ -36,12 +36,12 @@ export default function koaTenantClient<
 
             const clientKey = extractClientKeyFromHeaders(ctx.headers)
 
-            const tenant = await tenants.findTenantByClientKey(clientKey)
+            const project = await projects.findProjectByClientKey(clientKey)
 
-            assertThat(tenant,
+            assertThat(project,
                 new RequestError({code: 'auth.unauthorized', status: 401}))
 
-            ctx.tenant = tenant;
+            ctx.project = project;
 
             return next();
         } catch (error) {

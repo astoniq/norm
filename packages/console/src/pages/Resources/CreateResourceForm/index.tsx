@@ -6,7 +6,7 @@ import {Footer} from "./Footer.tsx";
 import {useForm} from "react-hook-form";
 import {CreateResource, Resource} from "@astoniq/norm-schema";
 import {trySubmitSafe} from "../../../utils/form.ts";
-import {useTenantApi} from "../../../hooks/use-api.ts";
+import {useProjectApi} from "../../../hooks/use-api.ts";
 
 
 export type CreateResourceFormProps = {
@@ -22,7 +22,7 @@ export function CreateResourceForm({onClose}: CreateResourceFormProps) {
 
     const {t} = useTranslation()
 
-    const api = useTenantApi()
+    const api = useProjectApi()
 
     const {
         handleSubmit,

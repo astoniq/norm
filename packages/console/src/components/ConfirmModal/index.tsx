@@ -29,7 +29,7 @@ export function ConfirmModal(
         className,
         title = 'general.reminder',
         subtitle,
-        confirmButtonType = 'danger',
+        confirmButtonType = 'error',
         confirmButtonText = 'general.confirm',
         cancelButtonText = 'general.cancel',
         isOpen,

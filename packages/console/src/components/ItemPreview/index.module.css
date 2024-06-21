@@ -1,0 +1,59 @@
+
+.item {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+    > svg {
+        flex-shrink: 0;
+    }
+
+    > div:not(:first-child) {
+        margin-left: var(--fluid-6);
+    }
+
+    .content {
+        padding-right: var(--fluid-4);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+
+        margin-top: var(--fluid-6);
+
+        > div:not(:last-child) {
+            margin-right: var(--fluid-2);
+        }
+
+        .meta {
+            overflow: hidden;
+
+            .title {
+                display: block;
+                text-decoration: none;
+
+                &.withLink {
+                    color: var(--color-text-link);
+                }
+            }
+
+            .subtitle {
+                color: var(--color-text-secondary);
+            }
+        }
+    }
+
+    &.compact {
+        .content {
+            margin-top: unset;
+
+            .meta {
+                display: flex;
+                align-items: baseline;
+
+                .title {
+                    margin-right: var(--fluid-4);
+                }
+            }
+        }
+    }
+}

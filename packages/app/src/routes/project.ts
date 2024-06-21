@@ -1,9 +1,9 @@
 import {AnonymousRouter, RouterInitArgs} from "./types.js";
 
-export default function tenantRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
+export default function projectRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
 
     router.get(
-        '/tenants',
+        '/projects',
         async (_ctx, next) => {
 
             return next()

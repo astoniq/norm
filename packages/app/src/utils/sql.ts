@@ -1,4 +1,4 @@
-import type {IdentifierSqlToken, QueryResult, SqlToken} from "slonik";
+import type {FragmentSqlToken, IdentifierSqlToken, QueryResult, SqlToken} from "slonik";
 import {sql} from "slonik";
 import {Falsy, notFalsy} from "@astoniq/essentials";
 import {Entity, EntityKeys, EntityLike, EntityValue, EntityValuePrimitive, Table} from "../types/index.js";
@@ -52,7 +52,7 @@ export const convertToPrimitiveOrSql = (
     throw new Error(`Cannot convert ${key} to primitive`);
 }
 
-type FiledIdentifiers<T> = {
+export type FiledIdentifiers<T> = {
     [key in keyof T]: IdentifierSqlToken
 }
 
@@ -76,6 +76,19 @@ export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>)
 export const conditionalArraySql = <T>(value: T[],
                                        buildSql: (value: Exclude<T[], Falsy>) => SqlToken) =>
     (value.length > 0 ? buildSql(value) : sql.fragment``)
+
+export const buildConditionSql = (
+    conditionSql?: FragmentSqlToken,
+    prefixSql: SqlToken = sql.fragment`where `
+) => {
+    return conditionalSql(conditionSql, (conditionSql) => {
+        return sql.fragment`${prefixSql}(${conditionSql})`
+    })
+}
+
+export const expandFields = <T extends EntityLike<T>>(fields: FiledIdentifiers<T>) => {
+    return sql.join(Object.values(fields), sql.fragment`, `)
+}
 
 export const convertToTimestamp = (time = new Date()) =>
     sql.fragment`to_timestamp(${time.valueOf() / 1000})`;

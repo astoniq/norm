@@ -6,8 +6,8 @@ const addResourceTableMigrationScript: MigrationScript = {
         await pool.query(sql.unsafe`
             create table steps
             (
-                tenant_id     varchar(21)  not null
-                    references tenants (id) on update cascade on delete cascade,
+                project_id      varchar(21)  not null
+                    references projects (id) on update cascade on delete cascade,
                 id              varchar(21)  not null,
                 notification_id varchar(21)  not null,
                 step_id         varchar(128) not null,
@@ -17,7 +17,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 result          jsonb        not null default '{}'::jsonb,
                 primary key (id)
             );
-            create index steps__id on steps (tenant_id, id);
+            create index steps__id on steps (project_id, id);
         `)
     },
     down: async (pool) => {

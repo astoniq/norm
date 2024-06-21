@@ -1,7 +1,7 @@
 import {GeneralTranslation} from "./general.js";
 import {ResourceTranslation} from "./resources.js";
 import {DbErrors} from "./db.js";
-import {TenantErrors} from "./tenant.js";
+import {ProjectErrors} from "./project.js";
 import {AuthErrors} from "./auth.js";
 import {GuardErrors} from "./guard.js";
 
@@ -13,7 +13,7 @@ export type Translation = {
 
 export type Errors = {
     db: DbErrors,
-    tenant: TenantErrors,
+    project: ProjectErrors,
     auth: AuthErrors,
     guard: GuardErrors
 }

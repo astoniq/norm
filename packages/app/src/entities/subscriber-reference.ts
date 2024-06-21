@@ -13,7 +13,7 @@ export const subscriberReferenceEntity: Entity<
     table: 'subscriber_references',
     tableSingular: 'subscriber_reference',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         subscriberId: 'subscriber_id',
         credentials: 'credentials',

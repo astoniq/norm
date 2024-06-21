@@ -1,9 +1,9 @@
 import {matchPath, NavigateFunction, NavigateOptions, To, useHref, useLocation, useNavigate} from "react-router-dom";
 import {useCallback, useContext, useMemo} from "react";
-import {TenantContext} from "../providers/TenantProvider";
+import {ProjectContext} from "../providers/ProjectProvider";
 import {appendPath, joinPath} from "@astoniq/essentials";
 
-export type TenantPathname = {
+export type ProjectPathname = {
     match: (pathname: string, exact?: boolean) => boolean;
     getPathname: (pathname: string) => string;
     getTo: (to: To) => To;
@@ -11,11 +11,11 @@ export type TenantPathname = {
     getUrl: (pathname: string) => URL;
 }
 
-export function useTenantPathname(): TenantPathname {
+export function useProjectPathname(): ProjectPathname {
 
     const location = useLocation()
 
-    const currentTenantId = useContext(TenantContext);
+    const currentProjectId = useContext(ProjectContext);
 
     const navigate = useNavigate();
     const href = useHref('/');
@@ -30,7 +30,7 @@ export function useTenantPathname(): TenantPathname {
             }
 
             return (
-                matchPath(joinPath('tenants', ':tenantId', pathname, exact ? '' : '*'), location.pathname) !== null
+                matchPath(joinPath('projects', ':projectId', pathname, exact ? '' : '*'), location.pathname) !== null
             );
         },
         [location.pathname]
@@ -38,13 +38,13 @@ export function useTenantPathname(): TenantPathname {
 
     const getPathname = useCallback(
         (pathname: string) => {
-            if (pathname.startsWith('/') && !pathname.startsWith(`/${currentTenantId}`)) {
-                return joinPath('tenants', currentTenantId, pathname);
+            if (pathname.startsWith('/') && !pathname.startsWith(`/${currentProjectId}`)) {
+                return joinPath('projects', currentProjectId, pathname);
             }
             // Directly return the pathname if it's a relative pathname
             return pathname;
         },
-        [currentTenantId]
+        [currentProjectId]
     );
 
     const getTo = useCallback(
@@ -58,8 +58,8 @@ export function useTenantPathname(): TenantPathname {
     );
 
     const getUrl = useCallback(
-        (pathname = '/') => appendPath(new URL(window.location.origin), href, currentTenantId, pathname),
-        [href, currentTenantId]
+        (pathname = '/') => appendPath(new URL(window.location.origin), href, currentProjectId, pathname),
+        [href, currentProjectId]
     );
 
     return useMemo(

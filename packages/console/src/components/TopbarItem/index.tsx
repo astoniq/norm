@@ -10,14 +10,12 @@ import styles from './index.module.css';
 
 type Props = {
     readonly icon?: ReactNode;
-    readonly titleKey: TFuncKey<'translation', 'admin_console.tabs'>;
+    readonly titleKey: TFuncKey<'translation'>;
     readonly isActive?: boolean;
 };
 
-export function SidebarItem({ icon, titleKey, isActive = false }: Props) {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'admin_console.tabs',
-    });
+export function TopbarItem({ icon, titleKey, isActive = false }: Props) {
+    const { t } = useTranslation();
 
     const content = useMemo(
         () => (

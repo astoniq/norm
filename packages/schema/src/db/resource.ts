@@ -2,7 +2,7 @@ import {z} from "zod";
 import {resourceConfigGuard} from "../types/index.js";
 
 export const resourceGuard = z.object({
-    tenantId: z.string().max(21),
+    projectId: z.string().max(21),
     id: z.string().min(1).max(21),
     resourceId: z.string().max(128),
     signingKey: z.string().max(64),

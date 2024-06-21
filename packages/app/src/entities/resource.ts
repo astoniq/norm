@@ -8,7 +8,7 @@ export const resourceEntity: Entity<
     table: 'resources',
     tableSingular: 'resource',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         resourceId: 'resource_id',
         config: 'config',

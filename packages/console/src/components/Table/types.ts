@@ -14,5 +14,5 @@ export type RowGroup<TFieldValues extends FieldValues = FieldValues> = {
     label?: ReactNode;
     labelRowClassName?: string;
     labelClassName?: string;
-    data?: TFieldValues[]
+    items?: TFieldValues[]
 }

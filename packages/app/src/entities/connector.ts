@@ -8,7 +8,7 @@ export const connectorEntity: Entity<
     table: 'connectors',
     tableSingular: 'connector',
     fields: {
-        tenantId: 'tenant_id',
+        projectId: 'project_id',
         id: 'id',
         config: 'config',
         type: 'type',
