@@ -7,6 +7,7 @@ import ErrorBoundary from "./containers/ErrorBoundary";
 import {AppRoutes} from "./containers/AppRoutes";
 import {Helmet, HelmetProvider} from "react-helmet-async";
 
+import 'overlayscrollbars/overlayscrollbars.css';
 import './styles/undescore.css'
 import {initI18n} from "./i18n";
 

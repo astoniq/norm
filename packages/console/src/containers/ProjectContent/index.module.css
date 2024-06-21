@@ -1,0 +1,30 @@
+
+.container {
+
+    background-color: var(--color-neutral-99);
+    display: flex;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    .wrapper {
+        margin-top: var(--fluid-24);
+        width: 1536px;
+    }
+
+    .tabs {
+        margin-top: var(--fluid-6);
+    }
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.contentWrapper {
+    margin-top: var(--fluid-24);
+    width: 1536px;
+}

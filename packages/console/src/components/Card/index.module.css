@@ -1,6 +1,6 @@
 
 .card {
-    background: var(--color-layer-1);
+    background: var(--color-layer-float);
     border-radius: var(--fluid-4);
     padding: var(--fluid-6);
 }

@@ -3,8 +3,6 @@ import type { ReactNode } from 'react';
 import type { To } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import {useProjectPathname} from "../../hooks/use-project-pathname.ts";
-
 import styles from './index.module.css';
 
 type Props = {
@@ -18,7 +16,6 @@ type Props = {
 };
 
 export function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix, toTarget }: Props) {
-    const { getTo } = useProjectPathname();
 
     return (
         <div className={classNames(styles.item, styles[size])}>
@@ -28,7 +25,7 @@ export function ItemPreview({ title, subtitle, icon, to, size = 'default', suffi
                     {to && (
                         <Link
                             className={classNames(styles.title, styles.withLink)}
-                            to={getTo(to)}
+                            to={to}
                             target={toTarget}
                             onClick={(event) => {
                                 event.stopPropagation();

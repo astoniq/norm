@@ -15,7 +15,7 @@ import {ItemPreview} from "../../components/ItemPreview";
 const apiPathname = 'resources'
 const resourcesPathname = '/resources';
 const createResourcePathname = `${resourcesPathname}/create`;
-const buildDetailsPathname = (id: string) => `${resourcesPathname}/${id}`;
+
 
 const pageSize = defaultPaginationPageSize;
 
@@ -41,6 +41,10 @@ export const Resources = () => {
         page: String(page),
         page_size: String(pageSize)
     })
+
+    const { getTo } = useProjectPathname();
+
+    const buildDetailsPathname = (id: string) => getTo(`${resourcesPathname}/${id}`);
 
     const {data, error, mutate} = useSWR<ResourcePaginationResponse, RequestError>(url, swrOptions)
 

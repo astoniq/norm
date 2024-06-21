@@ -4,9 +4,8 @@
     flex-direction: column;
     width: calc(100% - var(--fluid-12));
     min-width: 352px;
-    padding: var(--fluid-6);
+    padding: var(--fluid-24);
     margin: 0 var(--fluid-6);
-    box-shadow: var(--shadow-3);
     overflow: hidden;
 
     .header {

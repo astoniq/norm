@@ -4,6 +4,7 @@
     overflow-y: auto;
     padding: var(--fluid-4) 0;
     z-index: 101;
+    background: #0000004d;
 }
 
 .content {
