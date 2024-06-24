@@ -19,6 +19,10 @@ export const useAppMenuItems = (): {
 } => {
     const allItems: AppItem[] = [
         {
+            title: 'home',
+            Icon: BarGraphIcon
+        },
+        {
             title: 'projects',
             Icon: BarGraphIcon
         },

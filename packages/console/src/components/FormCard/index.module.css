@@ -1,0 +1,14 @@
+
+.title {
+    color: var(--color-neutral-variant-60);
+    display: flex;
+    align-items: center;
+    gap: var(--fluid-2);
+    word-break: break-word;
+}
+
+.description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    white-space: pre-line;
+}

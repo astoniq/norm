@@ -76,7 +76,6 @@ export function CreateResourceForm({onClose}: CreateResourceFormProps) {
                 </FormField>
                 <FormField isRequired={true} title={'resources.resource_url'}>
                     <TextInput
-                        autoFocus={true}
                         {...register('url', {
                             required: true
                         })}

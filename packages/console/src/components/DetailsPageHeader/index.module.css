@@ -1,0 +1,55 @@
+
+.header {
+    flex: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--fluid-6) var(--fluid-8);
+    gap:var(--fluid-6);
+
+    .copyId {
+        flex: 1;
+    }
+
+    .operations {
+        display: flex;
+        align-items: center;
+        gap: var(--fluid-4);
+
+        svg {
+            color: var(--color-text-secondary);
+        }
+    }
+
+    .metadata {
+        flex: 1;
+        overflow: hidden;
+
+        .name {
+            font: var(--font-title-1);
+            color: var(--color-text);
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            gap: var(--fluid-2);
+
+            .text {
+                font: var(--font-label-2);
+                color: var(--color-text-secondary);
+            }
+
+            .verticalBar {
+                height: 12px;
+            }
+        }
+    }
+}
+
+.icon {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+}

@@ -10,7 +10,9 @@ export function AppContent() {
             <AppTopbar/>
             <div className={styles.content}>
                 <OverlayScrollbar className={styles.overlayScrollbarWrapper}>
-                    <Outlet/>
+                    <div className={styles.main}>
+                        <Outlet/>
+                    </div>
                 </OverlayScrollbar>
             </div>
         </div>

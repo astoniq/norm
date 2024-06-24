@@ -4,11 +4,13 @@ import {DbErrors} from "./db.js";
 import {ProjectErrors} from "./project.js";
 import {AuthErrors} from "./auth.js";
 import {GuardErrors} from "./guard.js";
+import {ResourceDetailsTranslation} from "./resource-details.js";
 
 
 export type Translation = {
     general: GeneralTranslation,
-    resources: ResourceTranslation
+    resources: ResourceTranslation,
+    resource_details: ResourceDetailsTranslation
 }
 
 export type Errors = {

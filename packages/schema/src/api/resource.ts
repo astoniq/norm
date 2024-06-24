@@ -9,6 +9,13 @@ export const createResourceGuard = resourceGuard.pick({
 
 export type CreateResource = z.infer<typeof createResourceGuard>;
 
+export const patchResourceGuard = resourceGuard.pick({
+    resourceId: true,
+    config: true
+})
+
+export type PatchResource = z.infer<typeof patchResourceGuard>
+
 export const resourceResponseGuard = resourceGuard;
 
 export type ResourceResponse = z.infer<typeof resourceResponseGuard>;

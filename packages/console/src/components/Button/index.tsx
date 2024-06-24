@@ -43,7 +43,7 @@ export type ButtonProps = TitleButtonProps | IconButtonProps | RawButtonProps;
 function Button(
     {
         htmlType = 'button',
-        type = 'primary',
+        type = 'default',
         size = 'medium',
         isLoading = false,
         loadingDelay = 500,

@@ -1,0 +1,39 @@
+
+.responsiveWrapper {
+    --gutter-width: 12;
+    --column-width: calc((100% - 23 * var(--gutter-width)) / 24);
+
+    width: 100%;
+    container-type: inline-size;
+
+    .container {
+        width: 100%;
+        padding: var(--fluid-4) var(--fluid-8);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .introduction {
+        width: calc(var(--column-width) * 7 + var(--gutter-width) * 6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--fluid-2);
+    }
+
+    .form {
+        width: calc(var(--column-width) * 16 + var(--gutter-width) * 15);
+    }
+
+    @container (max-width: 600px) {
+        .container {
+            flex-direction: column;
+            justify-content: unset;
+            gap: var(--fluid-4);
+        }
+
+        .introduction,
+        .form {
+            width: 100%;
+        }
+    }
+}

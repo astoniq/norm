@@ -4,9 +4,10 @@ import {
     createResourceGuard,
     paginationGuard,
     resourceGuard,
-    resourcePaginationResponseGuard,
+    resourcePaginationResponseGuard, resourceResponseGuard,
 } from "@astoniq/norm-schema";
 import {generateStandardId, generateStandardSecret} from "@astoniq/norm-shared";
+import {z} from "zod";
 
 export default function resourceRoutes<T extends TenantRouter>(...[router, {queries}]: RouterInitArgs<T>) {
 
@@ -15,6 +16,7 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
             insertResource,
             getTotalCountProjectResources,
             findAllProjectResources,
+            findProjectResourceById
         }
     } = queries
 
@@ -61,7 +63,7 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
         async (ctx, next) => {
 
             const {
-                project: {id},
+                project,
                 guard: {
                     query: {
                         pageSize,
@@ -72,8 +74,8 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
             } = ctx
 
             const [totalCount, items] = await Promise.all([
-                getTotalCountProjectResources(id),
-                findAllProjectResources(id, pageSize, offset)
+                getTotalCountProjectResources(project.id),
+                findAllProjectResources(project.id, pageSize, offset)
             ])
 
             ctx.body = {
@@ -89,7 +91,23 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
 
     router.get(
         '/resources/:id',
-        async (_ctx, next) => {
+        koaGuard({
+            params: z.object({id: z.string()}),
+            response: resourceResponseGuard,
+            status: [200, 404]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            ctx.body = await findProjectResourceById(project.id, id)
 
             return next();
         }

@@ -1,0 +1,19 @@
+
+.container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--fluid-8);
+    gap: var(--fluid-4);
+
+    &.withSubmitActionBar {
+        margin-bottom: 60px;
+    }
+
+    .fields {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--fluid-4);
+    }
+}
