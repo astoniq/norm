@@ -2,7 +2,7 @@ import {RouterInitArgs, TenantRouter} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
 import {
     createResourceGuard,
-    paginationGuard,
+    paginationGuard, patchResourceGuard,
     resourceGuard,
     resourcePaginationResponseGuard, resourceResponseGuard,
 } from "@astoniq/norm-schema";
@@ -17,7 +17,8 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
             getTotalCountProjectResources,
             findAllProjectResources,
             findProjectResourceById,
-            deleteProjectResourceById
+            deleteProjectResourceById,
+            updateProjectResourceById
         }
     } = queries
 
@@ -109,6 +110,32 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
             } = ctx
 
             ctx.body = await findProjectResourceById(project.id, id)
+
+            return next();
+        }
+    )
+
+    router.patch(
+        '/resources/:id',
+        koaGuard({
+            params: z.object({id: z.string()}),
+            body: patchResourceGuard,
+            response: resourceResponseGuard,
+            status: [200, 404]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    body,
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            ctx.body = await updateProjectResourceById(project.id, id, body)
 
             return next();
         }

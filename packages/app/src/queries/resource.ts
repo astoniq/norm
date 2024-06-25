@@ -1,11 +1,11 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {resourceEntity} from "../entities/index.js";
-import {convertToIdentifiers, expandFields} from "../utils/sql.js";
-import {resourceGuard} from "@astoniq/norm-schema";
+import {convertToIdentifiers, expandFields, OmitAutoSetFields} from "../utils/sql.js";
+import {Resource, resourceGuard} from "@astoniq/norm-schema";
 import {
     buildFindAllEntitiesWithPool,
     buildGetTotalRowCountWithPool,
-    buildInsertIntoWithPool,
+    buildInsertIntoWithPool, buildUpdateWhereWithPool,
 } from "../database/index.js";
 import {DeletionError} from "../errors/index.js";
 
@@ -16,6 +16,8 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
     const insertResource = buildInsertIntoWithPool(pool, resourceEntity, {
         returning: true
     })
+
+    const updateResource = buildUpdateWhereWithPool(pool, resourceEntity, true)
 
     const getTotalCountResources = buildGetTotalRowCountWithPool(pool, resourceEntity)
 
@@ -74,11 +76,19 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
         }
     };
 
+    const updateProjectResourceById = async (
+        projectId: string,
+        id: string,
+        set: Partial<OmitAutoSetFields<Resource>>,
+        jsonbMode: 'replace' | 'merge' = 'merge'
+    ) => updateResource({set, where: {projectId, id}, jsonbMode})
+
     return {
         insertResource,
         findAllProjectResources,
         deleteProjectResourceById,
         getTotalCountProjectResources,
+        updateProjectResourceById,
         hasProjectResourceById,
         findProjectResourceById,
         findProjectResourceByResourceId

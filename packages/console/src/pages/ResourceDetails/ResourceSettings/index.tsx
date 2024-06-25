@@ -7,10 +7,14 @@ import {FormCard} from "../../../components/FormCard";
 import {FormField} from "../../../components/FormField";
 import TextInput from "../../../components/TextInput";
 import {useTranslation} from "react-i18next";
+import {trySubmitSafe} from "../../../utils/form.ts";
+import {useProjectApi} from "../../../hooks/use-api.ts";
+import {toast} from "react-hot-toast";
+import {ResourceResponse} from "@astoniq/norm-schema";
 
 export function ResourceSettings() {
 
-    const {resource, isDeleting, onResourceUpdated} = useOutletContext<ResourceDetailsOutletContext>()
+    const {resource, onResourceUpdated} = useOutletContext<ResourceDetailsOutletContext>()
 
     const {t} = useTranslation()
 
@@ -20,6 +24,8 @@ export function ResourceSettings() {
         defaultValues: resourceFormData
     })
 
+    const api = useProjectApi()
+
     const {
         handleSubmit,
         reset,
@@ -27,13 +33,24 @@ export function ResourceSettings() {
         formState: {isSubmitting, isDirty, errors}
     } = formMethods
 
+    const onSubmit = handleSubmit(
+        trySubmitSafe(async (formData) => {
+            const updatedResource = await api
+                .patch(`resources/${resource.id}`,
+                    {json: resourceDetailsParser.toRemoteModel(formData)})
+                .json<ResourceResponse>();
+            reset(resourceDetailsParser.toLocalForm(updatedResource));
+            onResourceUpdated(updatedResource);
+            toast.success(t('general.saved'));
+        })
+    );
 
     return (
         <DetailsForm
-        isDirty={isDirty}
-        isSubmitting={isSubmitting}
-        onSubmit={ async  () => {}}
-        onDiscard={reset}
+            isDirty={isDirty}
+            isSubmitting={isSubmitting}
+            onSubmit={onSubmit}
+            onDiscard={reset}
         >
             <FormProvider {...formMethods}>
                 <FormCard title={'resource_details.settings.settings'}
