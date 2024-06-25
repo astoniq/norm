@@ -38,7 +38,7 @@ export function useProjectPathname(): ProjectPathname {
 
     const getPathname = useCallback(
         (pathname: string) => {
-            if (pathname.startsWith('/') && !pathname.startsWith(`/${currentProjectId}`)) {
+            if (pathname.startsWith('/')) {
                 return joinPath('projects', currentProjectId, pathname);
             }
             // Directly return the pathname if it's a relative pathname

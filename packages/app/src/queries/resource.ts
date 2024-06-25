@@ -7,6 +7,7 @@ import {
     buildGetTotalRowCountWithPool,
     buildInsertIntoWithPool,
 } from "../database/index.js";
+import {DeletionError} from "../errors/index.js";
 
 const {table, fields} = convertToIdentifiers(resourceEntity);
 
@@ -60,9 +61,23 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
         `)
     }
 
+    const deleteProjectResourceById = async (projectId: string, id: string) => {
+        const {rowCount} = await pool.query(sql.unsafe`
+            delete
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
+        `);
+
+        if (rowCount < 1) {
+            throw new DeletionError(resourceEntity.table, id);
+        }
+    };
+
     return {
         insertResource,
         findAllProjectResources,
+        deleteProjectResourceById,
         getTotalCountProjectResources,
         hasProjectResourceById,
         findProjectResourceById,

@@ -147,6 +147,25 @@
         }
     }
 
+    &.error {
+        background: var(--color-error);
+        color: var(--color-primary-on);
+
+        &:disabled {
+            background: var(--color-inverse-on-surface);
+            color: var(--color-neutral-70);
+        }
+
+
+        &:active {
+            background: var(--color-secondary-pressed);
+        }
+
+        &:not(:disabled):not(:active):hover {
+            background: var(--color-secondary-hover);
+        }
+    }
+
     &.outline {
         background-color: inherit;
         border-color: var(--color-text-link);

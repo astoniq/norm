@@ -16,7 +16,8 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
             insertResource,
             getTotalCountProjectResources,
             findAllProjectResources,
-            findProjectResourceById
+            findProjectResourceById,
+            deleteProjectResourceById
         }
     } = queries
 
@@ -115,7 +116,24 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
 
     router.delete(
         '/resources/:id',
-        async (_ctx, next) => {
+        koaGuard({
+            params: z.object({id: z.string()}),
+            status: [204, 404]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            await deleteProjectResourceById(project.id, id)
+
+            ctx.status = 204;
 
             return next();
         }

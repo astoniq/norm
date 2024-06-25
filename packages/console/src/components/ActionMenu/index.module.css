@@ -1,0 +1,13 @@
+
+.content {
+    padding: var(--fluid-2);
+    min-width: 200px;
+}
+
+.dropdownTitle {
+    padding: var(--fluid-4);
+}
+
+.actionMenuButton {
+    display: inline-block;
+}

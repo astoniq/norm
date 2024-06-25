@@ -44,7 +44,7 @@ export const Resources = () => {
 
     const { getTo } = useProjectPathname();
 
-    const buildDetailsPathname = (id: string) => getTo(`${resourcesPathname}/${id}`);
+    const buildDetailsPathname = (id: string) => `${resourcesPathname}/${id}`;
 
     const {data, error, mutate} = useSWR<ResourcePaginationResponse, RequestError>(url, swrOptions)
 
@@ -75,7 +75,7 @@ export const Resources = () => {
                         colSpan: 12,
                         render: ({id, resourceId}) => (
                             <ItemPreview title={resourceId}
-                                         to={buildDetailsPathname(id)}/>
+                                         to={getTo(buildDetailsPathname(id))}/>
                         )
                     }
                 ],

@@ -8,19 +8,20 @@ import styles from './index.module.css'
 import classNames from "classnames";
 
 export type ConfirmModalProps = {
-    readonly children: ReactNode;
-    readonly className?: string;
-    readonly title?: NormTranslationCode
-    readonly subtitle?: NormTranslationCode,
-    readonly confirmButtonType?: ButtonType;
-    readonly confirmButtonText?: NormTranslationCode,
-    readonly cancelButtonText?: NormTranslationCode,
-    readonly isOpen: boolean;
-    readonly isConfirmButtonDisabled?: boolean;
-    readonly isCancelButtonVisible?: boolean;
-    readonly size?: ModalLayoutProps['size'];
-    readonly onCancel?: () => void;
-    readonly onConfirm?: () => void;
+    children: ReactNode;
+    className?: string;
+    title?: NormTranslationCode
+    subtitle?: NormTranslationCode,
+    confirmButtonType?: ButtonType;
+    confirmButtonText?: NormTranslationCode,
+    cancelButtonText?: NormTranslationCode,
+    isOpen: boolean;
+    isConfirmButtonDisabled?: boolean;
+    isLoading?: boolean;
+    isCancelButtonVisible?: boolean;
+    size?: ModalLayoutProps['size'];
+    onCancel?: () => void;
+    onConfirm?: () => void;
 }
 
 export function ConfirmModal(
@@ -35,6 +36,7 @@ export function ConfirmModal(
         isOpen,
         isConfirmButtonDisabled = false,
         isCancelButtonVisible = true,
+        isLoading = false,
         size,
         onCancel,
         onConfirm
@@ -59,6 +61,7 @@ export function ConfirmModal(
                             <Button type={confirmButtonType}
                                     title={confirmButtonText}
                                     disabled={isConfirmButtonDisabled}
+                                    isLoading={isLoading}
                                     onClick={onConfirm}/>
                         )}
                     </>
