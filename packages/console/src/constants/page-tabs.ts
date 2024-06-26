@@ -1,4 +1,6 @@
 
 export enum ResourceDetailsTabs {
-    Settings = 'settings'
+    Settings = 'settings',
+    Workflows = 'workflows',
+    Security = 'security',
 }

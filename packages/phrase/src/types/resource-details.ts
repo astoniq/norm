@@ -7,11 +7,15 @@ export type ResourceDetailsTranslation = {
         string,
     deleted: string,
     settings_tab: string,
+    workflows_tab: string,
+    security_tab: string,
     settings: {
         settings: string,
         settings_description:
             string,
         name: string,
+        form_title: string,
+        form_subtitle: string,
         endpoint_url: string,
         signing_key: string,
         signing_key_tip:

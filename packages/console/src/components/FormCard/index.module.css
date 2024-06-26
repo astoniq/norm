@@ -1,8 +1,8 @@
 
 .title {
-    color: var(--color-neutral-variant-60);
     display: flex;
     align-items: center;
+    font-weight: var(--font-weight-bold);
     gap: var(--fluid-2);
     word-break: break-word;
 }

@@ -11,6 +11,7 @@ import {trySubmitSafe} from "../../../utils/form.ts";
 import {useProjectApi} from "../../../hooks/use-api.ts";
 import {toast} from "react-hot-toast";
 import {ResourceResponse} from "@astoniq/norm-schema";
+import {DetailsPageContent} from "../../../components/DetailsPageContent";
 
 export function ResourceSettings() {
 
@@ -46,37 +47,42 @@ export function ResourceSettings() {
     );
 
     return (
-        <DetailsForm
-            isDirty={isDirty}
-            isSubmitting={isSubmitting}
-            onSubmit={onSubmit}
-            onDiscard={reset}
+        <DetailsPageContent
+            title={'resource_details.settings.settings'}
+            description={'resource_details.settings.settings_description'}
         >
-            <FormProvider {...formMethods}>
-                <FormCard title={'resource_details.settings.settings'}
-                          description={'resource_details.settings.settings_description'}>
-                    <FormField isRequired={true} title={'resources.resource_id'}>
-                        <TextInput
-                            autoFocus={true}
-                            {...register('resourceId', {
-                                required: true
-                            })}
-                            placeholder={t('resources.resource_id_placeholder')}
-                            error={errors.resourceId?.message}
-                        />
-                    </FormField>
-                    <FormField isRequired={true} title={'resources.resource_url'}>
-                        <TextInput
-                            {...register('url', {
-                                required: true
-                            })}
-                            placeholder={t('resources.resource_url_placeholder')}
-                            error={errors.resourceId?.message}
-                        />
-                    </FormField>
-                </FormCard>
-            </FormProvider>
-        </DetailsForm>
+            <DetailsForm
+                isDirty={isDirty}
+                isSubmitting={isSubmitting}
+                onSubmit={onSubmit}
+                onDiscard={reset}
+            >
+                <FormProvider {...formMethods}>
+                    <FormCard title={'resource_details.settings.form_title'}
+                              description={'resource_details.settings.form_subtitle'}>
+                        <FormField isRequired={true} title={'resources.resource_id'}>
+                            <TextInput
+                                {...register('resourceId', {
+                                    required: true
+                                })}
+                                placeholder={t('resources.resource_id_placeholder')}
+                                error={errors.resourceId?.message}
+                            />
+                        </FormField>
+                        <FormField isRequired={true} title={'resources.resource_url'}>
+                            <TextInput
+                                {...register('url', {
+                                    required: true
+                                })}
+                                placeholder={t('resources.resource_url_placeholder')}
+                                error={errors.resourceId?.message}
+                            />
+                        </FormField>
+                    </FormCard>
+                </FormProvider>
+            </DetailsForm>
+        </DetailsPageContent>
+
     )
 
 }

@@ -62,7 +62,9 @@ export const Resources = () => {
                 title: 'resources.create',
                 onClick: () => navigate({pathname: createResourcePathname, search})
             }}
-
+            pageMeta={{
+                titleKey: 'resources.page_title'
+            }}
             table={{
                 rowGroups: [{key: 'resources', items}],
                 rowIndexKey: 'id',

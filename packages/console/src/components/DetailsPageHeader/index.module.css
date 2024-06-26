@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--fluid-6) var(--fluid-8);
-    gap:var(--fluid-6);
+    gap:var(--fluid-18);
 
     .copyId {
         flex: 1;
@@ -26,7 +26,8 @@
         overflow: hidden;
 
         .name {
-            font: var(--font-title-1);
+            font-size: var(--font-size-h5);
+            font-weight:500;
             color: var(--color-text);
         }
 
@@ -34,11 +35,10 @@
             display: flex;
             align-items: center;
             white-space: nowrap;
-            gap: var(--fluid-2);
+            gap: var(--fluid-8);
 
             .text {
-                font: var(--font-label-2);
-                color: var(--color-text-secondary);
+                font: var(--font-size-small);
             }
 
             .verticalBar {

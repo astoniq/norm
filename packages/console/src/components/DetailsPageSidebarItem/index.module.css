@@ -1,0 +1,35 @@
+
+.row {
+    display: flex;
+    align-items: center;
+    margin: var(--fluid-2) 0;
+    padding: var(--fluid-8)  var(--fluid-12);
+    color: var(--color-neutral-10);
+    border-radius: var(--fluid-6);
+    text-decoration: none;
+    user-select: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+
+    &:not(.active):hover {
+        background: var(--color-neutral-99);
+    }
+
+    &.active {
+        background: var(--color-neutral-95);
+        font-weight: var(--font-weight-bold);
+
+        .icon svg {
+            color: var(--color-primary-50);
+        }
+    }
+
+    > div + div {
+        margin-left: var(--fluid-2);
+    }
+
+    .title {
+
+    }
+}

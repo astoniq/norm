@@ -10,6 +10,7 @@ import {BackIcon} from "../../icons/BackIcon.tsx";
 import {DynamicT} from "../DynamicT";
 import {DetailsPageSkeleton} from "../DetailsPageSkeleton";
 import {RequestDataError} from "../RequestDataError";
+import {PageMeta, PageMetaProps} from "../PageMeta";
 
 export type DetailsPageProps = {
     backLink: To;
@@ -19,11 +20,13 @@ export type DetailsPageProps = {
     onRetry?: () => void;
     children: ReactNode;
     className?: string;
+    pageMeta?: PageMetaProps;
 }
 
 export function DetailsPage(
     {
         backLink,
+        pageMeta,
         backLinkTitle,
         isLoading,
         error,
@@ -33,8 +36,9 @@ export function DetailsPage(
     }: DetailsPageProps
 ) {
     return (
-        <div className={classNames(styles.container, className)}>
-            <TextLink to={backLink} icon={<BackIcon/>} className={styles.backLink}>
+        <div className={classNames(styles.page, className)}>
+            {pageMeta && <PageMeta {...pageMeta}/>}
+            <TextLink mode={'ripple'} to={backLink} icon={<BackIcon/>} className={styles.backLink}>
                 <DynamicT forKey={backLinkTitle}/>
             </TextLink>
             {isLoading ? (

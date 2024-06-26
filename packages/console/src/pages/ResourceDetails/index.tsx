@@ -5,19 +5,20 @@ import {ResourceResponse} from "@astoniq/norm-schema";
 import {RequestError, useProjectApi} from "../../hooks/use-api.ts";
 import {useSwrOptions} from "../../hooks/use-swr-options.ts";
 import {Outlet, useLocation, useParams} from "react-router-dom";
-import {PageMeta} from "../../components/PageMeta";
-import {DetailsPageHeader} from "../../components/DetailsPageHeader";
 import {ResourceDetailsOutletContext} from "./types.ts";
 import {useEffect, useState} from "react";
 import {ConfirmModal} from "../../components/ConfirmModal";
 import {useTranslation} from "react-i18next";
 import {DeleteIcon} from "../../icons/DeleteIcon.tsx";
 import {toast} from "react-hot-toast";
+import {DetailsPageIcon} from "../../components/DetailsPageIcon";
+import {DetailsPageContainer} from "../../components/DetailsPageContainer";
+import {ResourceDetailsTabs} from "../../constants";
 
 
 export function ResourceDetails() {
 
-    const {getTo, navigate} = useProjectPathname();
+    const {getTo, navigate, match} = useProjectPathname();
 
     const api = useProjectApi();
 
@@ -63,46 +64,73 @@ export function ResourceDetails() {
             isLoading={isLoading}
             error={error}
             onRetry={mutate}
+            pageMeta={{
+                titleKey: 'resource_details.page_title'
+            }}
         >
-            <PageMeta titleKey={'resource_details.page_title'}/>
             {data && (
-                <>
-                <DetailsPageHeader title={data.resourceId}
-                actionMenuItems={[
-                    {
-                        title: 'general.delete',
-                        icon: <DeleteIcon/>,
-                        type: 'danger',
-                        onClick: () => {
-                            setIsDeleteFormOpen(true)
-                        }
-                    }
-                ]}
-                />
-                    <ConfirmModal
-                        isOpen={isDeleteFormOpen}
-                        isLoading={isDeleting}
-                        confirmButtonText="general.delete"
-                        onCancel={() => {
-                            setIsDeleteFormOpen(false);
+                <DetailsPageContainer
+                    header={
+                        {
+                            title: data.resourceId,
+                            identifier: {name: 'Resource ID', value: data.id},
+                            icon: <DetailsPageIcon name={data.resourceId} size={'xlarge'}/>,
+                            actionMenuItems: [
+                                {
+                                    title: 'general.delete',
+                                    icon: <DeleteIcon/>,
+                                    type: 'danger',
+                                    onClick: () => {
+                                        setIsDeleteFormOpen(true)
+                                    }
+                                }
+                            ]
                         }}
-                        onConfirm={onDelete}
-                    >
-                        {t('resource_details.delete_description')}
-                    </ConfirmModal>
-                    <Outlet
-                    context={{
-                        resource: data,
-                        isDeleting,
-                        onResourceUpdated: (resource) => {
-                            if (resource) {
-                                void mutate(resource)
-                            }
-                            void mutate()
-                        }
-                    } satisfies ResourceDetailsOutletContext}
-                    />
-                </>
+                    sidebar={{
+                        match,
+                        getTo,
+                        items: [
+                            {
+                                title: t('resource_details.workflows_tab'),
+                                link: `/resources/${data.id}/${ResourceDetailsTabs.Workflows}`,
+                            },
+                            {
+                                title: t('resource_details.security_tab'),
+                                link: `/resources/${data.id}/${ResourceDetailsTabs.Security}`,
+                            },
+                            {
+                                title: t('resource_details.settings_tab'),
+                                link: `/resources/${data.id}/${ResourceDetailsTabs.Settings}`,
+                            },
+                        ]
+                    }}
+                    content={
+                        <Outlet
+                            context={{
+                                resource: data,
+                                isDeleting,
+                                onResourceUpdated: (resource) => {
+                                    if (resource) {
+                                        void mutate(resource)
+                                    }
+                                    void mutate()
+                                }
+                            } satisfies ResourceDetailsOutletContext}
+                        />
+                    }
+                    widgets={
+                        <ConfirmModal
+                            isOpen={isDeleteFormOpen}
+                            isLoading={isDeleting}
+                            confirmButtonText="general.delete"
+                            onCancel={() => {
+                                setIsDeleteFormOpen(false);
+                            }}
+                            onConfirm={onDelete}
+                        >
+                            {t('resource_details.delete_description')}
+                        </ConfirmModal>
+                    }/>
             )}
         </DetailsPage>
     )

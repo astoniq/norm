@@ -7,6 +7,7 @@ import styles from './index.module.css'
 export type TextLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & Partial<LinkProps> & {
     icon?: ReactNode;
     isTrailingIcon?: boolean;
+    mode?: 'content' | 'ripple'
     targetBlank?: boolean | 'noopener'
 };
 
@@ -17,6 +18,7 @@ export function TextLink(
         icon,
         isTrailingIcon = false,
         className,
+        mode = 'content',
         targetBlank,
         ...rest
     }: TextLinkProps
@@ -25,7 +27,7 @@ export function TextLink(
     const props = useMemo(
         () => ({
             ...rest,
-            className: classNames(styles.link, isTrailingIcon && styles.trailingIcon, className),
+            className: classNames(styles.link, styles[mode], isTrailingIcon && styles.trailingIcon, className),
             ...(Boolean(targetBlank) && {
                 rel: typeof targetBlank === 'string' ? targetBlank : 'noopener norefererr',
                 target: '_blank'

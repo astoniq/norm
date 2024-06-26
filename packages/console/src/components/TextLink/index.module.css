@@ -1,11 +1,12 @@
 .link {
     display: inline-flex;
+    align-items: center;
     max-width: fit-content;
     text-decoration: none;
     user-select: none;
     border-color: transparent;
     font: var(--font-body-2);
-    color: var(--color-text-link);
+
     gap: var(--fluid-2);
     cursor: pointer;
 
@@ -31,4 +32,23 @@
         display: inline-block;
         vertical-align: baseline;
     }
+
+
+    &.content {
+        color: var(--color-text-link);
+    }
+
+    &.ripple {
+        color: var(--color-neutral-10);
+        padding: var(--fluid-8) var(--fluid-12);
+        border-radius: 6px;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: none;
+            background-color: var(--color-neutral-95);;
+        }
+
+    }
+
 }

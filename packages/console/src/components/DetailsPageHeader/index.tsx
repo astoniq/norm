@@ -8,6 +8,7 @@ import {ActionMenu, ActionMenuItem} from "../ActionMenu";
 import {MoreIcon} from "../../icons/MoreIcon.tsx";
 import {useTranslation} from "react-i18next";
 import {DynamicT} from "../DynamicT";
+import CopyToClipboard from "../CopyToClipboard";
 
 export type MenuItem = {
     type?: DropdownItemProps['type'],
@@ -16,14 +17,23 @@ export type MenuItem = {
     onClick: () => void
 }
 
+export type Identifier = {
+    name: string;
+    value: string;
+}
+
 export type DetailsPageHeaderProps = {
     title: ReactNode;
-    actionMenuItems?: MenuItem[]
+    actionMenuItems?: MenuItem[];
+    icon: ReactNode;
+    identifier?: Identifier;
 }
 
 export function DetailsPageHeader(
     {
+        icon,
         title,
+        identifier,
         actionMenuItems
     }: DetailsPageHeaderProps
 ) {
@@ -32,8 +42,25 @@ export function DetailsPageHeader(
 
     return (
         <Card className={styles.header}>
+            <div className={styles.icon}>
+                {icon}
+            </div>
             <div className={styles.metadata}>
                 <div className={styles.name}>{title}</div>
+                <div className={styles.row}>
+                    {identifier && (
+                        <>
+                            <div className={styles.text}>{identifier.name}</div>
+                            <CopyToClipboard
+                                className={styles.copyId}
+                                style={{ maxWidth: `calc(${identifier.value.length}ch + 40px)` }}
+                                valueStyle={{ width: 0 }}
+                                size="small"
+                                value={identifier.value}
+                            />
+                        </>
+                    )}
+                </div>
             </div>
             <div className={styles.operations}>
                 {actionMenuItems && actionMenuItems.length > 0 && (

@@ -7,11 +7,15 @@ const resource_details = {
         'You are removing this webhook. After deleting it will not send HTTP request to endpoint URL.',
     deleted: 'The resource has been successfully deleted.',
     settings_tab: 'Settings',
+    workflows_tab: 'Workflows',
+    security_tab: 'Security',
     settings: {
         settings: 'Settings',
         settings_description:
             'Webhooks allow you to receive real-time updates on specific events as they happen, by sending a POST request to your endpoint URL. This enables you to take immediate actions based on the new information received.',
         name: 'Name',
+        form_title: 'Information',
+        form_subtitle: 'Edit your resource information',
         endpoint_url: 'Endpoint URL',
         signing_key: 'Signing key',
         signing_key_tip:
