@@ -5,8 +5,8 @@ import {useTranslation} from "react-i18next";
 import {Footer} from "./Footer.tsx";
 import {useForm} from "react-hook-form";
 import {CreateResource, Resource} from "@astoniq/norm-schema";
-import {trySubmitSafe} from "../../../utils/form.ts";
 import {useProjectApi} from "../../../hooks/use-api.ts";
+import {uriValidator, trySubmitSafe} from "../../../utils";
 
 
 export type CreateResourceFormProps = {
@@ -77,10 +77,11 @@ export function CreateResourceForm({onClose}: CreateResourceFormProps) {
                 <FormField isRequired={true} title={'resources.resource_url'}>
                     <TextInput
                         {...register('url', {
-                            required: true
+                            required: true,
+                            validate: (value) => uriValidator(value) || t('errors.invalid_uri_format')|| ''
                         })}
                         placeholder={t('resources.resource_url_placeholder')}
-                        error={errors.resourceId?.message}
+                        error={errors.url?.message}
                     />
                 </FormField>
             </form>

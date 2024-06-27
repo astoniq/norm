@@ -73,7 +73,7 @@ export function ResourceDetails() {
                     header={
                         {
                             title: data.resourceId,
-                            identifier: {name: 'Resource ID', value: data.id},
+                            identifier: {name: 'ID', value: data.id},
                             icon: <DetailsPageIcon name={data.resourceId} size={'xlarge'}/>,
                             actionMenuItems: [
                                 {

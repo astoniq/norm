@@ -71,10 +71,10 @@ function TextInput(
                 {icon && <span className={styles.icon}>{icon}</span>}
                 <input type={type} {...rest} placeholder={placeholder ?? ''}
                        ref={innerRef} disabled={disabled} readOnly={readOnly}/>
-                {Boolean(error) && typeof error !== 'boolean' && (
-                    <div className={styles.errorMessage}>{error}</div>
-                )}
             </div>
+            {Boolean(error) && typeof error !== 'boolean' && (
+                <div className={styles.errorMessage}>{error}</div>
+            )}
         </div>
     )
 }

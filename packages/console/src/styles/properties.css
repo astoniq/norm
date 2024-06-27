@@ -104,6 +104,7 @@
     --color-error-hover-modelight: var(--color-error-50);
     --color-error-pressed-modelight: var(--color-error-30);
     --color-error-on-modelight: var(--color-error-10);
+    --color-error-focused-modelight: var(--color-error-80);
 
     --color-primary-extra-light-modelight: var(--color-primary-80);
     --color-primary-light-modelight: var(--color-primary-60);
@@ -205,6 +206,7 @@
     --color-error-light: var(--color-error-light-modelight);
     --color-error-dark: var(--color-error-dark-modelight);
     --color-error-pressed: var(--color-error-pressed-modelight);
+    --color-error-focused: var(--color-error-focused-modelight);
     --color-error-hover: var(--color-error-hover-modelight);
     --color-error-on: var(--color-error-on-modelight);
     --color-error: var(--color-error-modelight);

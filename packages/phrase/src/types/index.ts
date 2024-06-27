@@ -5,12 +5,14 @@ import {ProjectErrors} from "./project.js";
 import {AuthErrors} from "./auth.js";
 import {GuardErrors} from "./guard.js";
 import {ResourceDetailsTranslation} from "./resource-details.js";
+import {ErrorsTranslation} from "./errors.js";
 
 
 export type Translation = {
     general: GeneralTranslation,
     resources: ResourceTranslation,
-    resource_details: ResourceDetailsTranslation
+    resource_details: ResourceDetailsTranslation,
+    errors: ErrorsTranslation
 }
 
 export type Errors = {

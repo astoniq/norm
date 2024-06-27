@@ -7,11 +7,11 @@ import {FormCard} from "../../../components/FormCard";
 import {FormField} from "../../../components/FormField";
 import TextInput from "../../../components/TextInput";
 import {useTranslation} from "react-i18next";
-import {trySubmitSafe} from "../../../utils/form.ts";
 import {useProjectApi} from "../../../hooks/use-api.ts";
 import {toast} from "react-hot-toast";
 import {ResourceResponse} from "@astoniq/norm-schema";
 import {DetailsPageContent} from "../../../components/DetailsPageContent";
+import {uriValidator, trySubmitSafe} from "../../../utils";
 
 export function ResourceSettings() {
 
@@ -72,10 +72,11 @@ export function ResourceSettings() {
                         <FormField isRequired={true} title={'resources.resource_url'}>
                             <TextInput
                                 {...register('url', {
-                                    required: true
+                                    required: true,
+                                    validate: (value) => uriValidator(value) || t('errors.invalid_uri_format')|| ''
                                 })}
                                 placeholder={t('resources.resource_url_placeholder')}
-                                error={errors.resourceId?.message}
+                                error={errors.url?.message}
                             />
                         </FormField>
                     </FormCard>

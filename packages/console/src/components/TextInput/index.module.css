@@ -1,14 +1,6 @@
 
 
-.suffix {
-    width: var(--fluid-8);
-    height: var(--fluid-8);
-    display: none;
 
-    &.visible {
-        display: block;
-    }
-}
 
 .hideTextContainerContent {
     input {
@@ -102,15 +94,16 @@
         border-color: var(--color-error);
 
         &:focus-within {
-            outline-color: var(--color-danger-focused);
+            outline-color: var(--color-error-focused);
         }
     }
 }
 
 .errorMessage {
-    font: var(--font-body-2);
+    font-weight: var(--font-weight-body);
+    font-size: var(--font-size-small);
     color: var(--color-error);
-    margin-top: var(--fluid-2);
+    margin-top: var(--fluid-4);
 
     a {
         color: var(--color-error);
