@@ -141,6 +141,32 @@ export default function resourceRoutes<T extends TenantRouter>(...[router, {quer
         }
     )
 
+    router.patch(
+        '/resources/:id/signing-key',
+        koaGuard({
+            params: z.object({id: z.string()}),
+            response: resourceResponseGuard,
+            status: [200, 404]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            ctx.body = await updateProjectResourceById(project.id, id, {
+                signingKey: generateStandardSecret()
+            })
+
+            return next();
+        }
+    )
+
     router.delete(
         '/resources/:id',
         koaGuard({

@@ -5,6 +5,7 @@ import {Resources} from "../pages/Resources";
 import {ResourceDetails} from "../pages/ResourceDetails";
 import {ResourceDetailsTabs} from "../constants";
 import {ResourceSettings} from "../pages/ResourceDetails/ResourceSettings";
+import {ResourceSecurity} from "../pages/ResourceDetails/ResourceSecurity";
 
 export const useProjectRoutes = () => {
 
@@ -20,7 +21,8 @@ export const useProjectRoutes = () => {
                         element: <ResourceDetails/>,
                         children: [
                             {index: true, element: <Navigate replace={true} to={ResourceDetailsTabs.Settings}/>},
-                            {path: ResourceDetailsTabs.Settings, element: <ResourceSettings/>}
+                            {path: ResourceDetailsTabs.Settings, element: <ResourceSettings/>},
+                            {path: ResourceDetailsTabs.Security, element: <ResourceSecurity/>}
                         ]
                     }
                 ]

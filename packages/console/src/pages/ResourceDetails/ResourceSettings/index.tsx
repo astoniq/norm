@@ -59,7 +59,7 @@ export function ResourceSettings() {
             >
                 <FormProvider {...formMethods}>
                     <FormCard title={'resource_details.settings.form_title'}
-                              description={'resource_details.settings.form_subtitle'}>
+                              description={'resource_details.settings.form_description'}>
                         <FormField isRequired={true} title={'resources.resource_id'}>
                             <TextInput
                                 {...register('resourceId', {

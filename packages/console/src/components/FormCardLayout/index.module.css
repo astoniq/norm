@@ -5,7 +5,9 @@
 
     .container {
         width: 100%;
-        padding: var(--fluid-4) var(--fluid-8);
+        padding: var(--fluid-16);
+        border-radius: var(--fluid-6);
+        border: 1px solid var(--color-neutral-90);
     }
 
     .introduction {

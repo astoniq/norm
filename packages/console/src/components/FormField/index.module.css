@@ -8,7 +8,7 @@
 .headline {
     display: flex;
     align-items: center;
-    margin-bottom: var(--fluid-2);
+    margin-bottom: var(--fluid-4);
 
     &.withLargeSpacing {
         margin-bottom: var(--fluid-2);

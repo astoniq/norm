@@ -9,14 +9,11 @@ const resource_details = {
     settings_tab: 'Settings',
     workflows_tab: 'Workflows',
     security_tab: 'Security',
-    settings: {
-        settings: 'Settings',
-        settings_description:
-            'Webhooks allow you to receive real-time updates on specific events as they happen, by sending a POST request to your endpoint URL. This enables you to take immediate actions based on the new information received.',
-        name: 'Name',
-        form_title: 'Information',
-        form_subtitle: 'Edit your resource information',
-        endpoint_url: 'Endpoint URL',
+    security: {
+        security: 'Security',
+        security_description: 'Securely manage signing keys used by your applications',
+        form_title: 'Signing keys',
+        form_description: 'Add the secret key provided by norm to your endpoint as a request header to ensure the authenticity of the webhook’s payload.',
         signing_key: 'Signing key',
         signing_key_tip:
             'Add the secret key provided  your endpoint as a request header to ensure the authenticity of the webhook’s payload.',
@@ -25,6 +22,15 @@ const resource_details = {
         regenerate_key_reminder:
             'Are you sure you want to modify the signing key? Regenerating it will take effect immediately. Please remember to modify the signing key synchronously in your endpoint.',
         regenerated: 'Signing key has been regenerated.',
+    },
+    settings: {
+        settings: 'Settings',
+        settings_description:
+            'Webhooks allow you to receive real-time updates on specific events as they happen, by sending a POST request to your endpoint URL. This enables you to take immediate actions based on the new information received.',
+        name: 'Name',
+        form_title: 'Information',
+        form_description: 'Edit your resource information',
+        endpoint_url: 'Endpoint URL',
         custom_headers: 'Custom headers',
         custom_headers_tip:
             'Optionally, you can add custom headers to the webhook’s payload to provide additional context or metadata about the event.',
