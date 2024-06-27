@@ -40,7 +40,7 @@
                     font-weight: var(--font-weight-bold);
                     color: var(--color-text);
                     border-bottom: unset;
-                    padding: var(--fluid-4);
+                    padding: var(--fluid-8);
                     text-align: left;
                 }
             }
@@ -64,7 +64,7 @@
                     font: var(--font-body-2);
                     border-top: 1px solid var(--color-divider);
                     border-bottom: unset;
-                    padding: var(--fluid-4);
+                    padding: var(--fluid-8);
                 }
 
                 &.clickable {
@@ -173,5 +173,5 @@
 }
 
 .pagination {
-    margin-top: var(--fluid-4);
+    margin-top: var(--fluid-16);
 }

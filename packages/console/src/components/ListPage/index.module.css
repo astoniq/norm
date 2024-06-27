@@ -14,7 +14,9 @@
 }
 
 .table {
-    flex: 1;
-    margin-top: var(--fluid-4);
+    margin-top: var(--fluid-16);
     overflow: hidden;
+    padding: var(--fluid-16);
+    border-radius: var(--fluid-6);
+    border: 1px solid var(--color-neutral-90);
 }

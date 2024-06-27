@@ -11,13 +11,15 @@ import {useSearchParameters} from "../../hooks/use-search-parameters.ts";
 import {buildUrl} from "../../utils";
 import {defaultPaginationPageSize, ResourcePaginationResponse} from "@astoniq/norm-schema";
 import {ItemPreview} from "../../components/ItemPreview";
+import {Breakable} from "../../components/Breakable";
 
 const apiPathname = 'resources'
 const resourcesPathname = '/resources';
 const createResourcePathname = `${resourcesPathname}/create`;
 
-
 const pageSize = defaultPaginationPageSize;
+
+const buildDetailsPathname = (id: string) => `${resourcesPathname}/${id}`;
 
 export const Resources = () => {
 
@@ -42,9 +44,7 @@ export const Resources = () => {
         page_size: String(pageSize)
     })
 
-    const { getTo } = useProjectPathname();
-
-    const buildDetailsPathname = (id: string) => `${resourcesPathname}/${id}`;
+    const {getTo} = useProjectPathname();
 
     const {data, error, mutate} = useSWR<ResourcePaginationResponse, RequestError>(url, swrOptions)
 
@@ -74,10 +74,18 @@ export const Resources = () => {
                     {
                         title: t('resources.resource_id'),
                         dataIndex: 'resource_id',
-                        colSpan: 12,
+                        colSpan: 6,
                         render: ({id, resourceId}) => (
                             <ItemPreview title={resourceId}
                                          to={getTo(buildDetailsPathname(id))}/>
+                        )
+                    },
+                    {
+                        title: t('resources.resource_url'),
+                        dataIndex: 'resource_url',
+                        colSpan: 6,
+                        render: ({config}) => (
+                            <Breakable>{config.url}</Breakable>
                         )
                     }
                 ],

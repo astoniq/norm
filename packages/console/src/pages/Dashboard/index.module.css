@@ -1,0 +1,28 @@
+
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--fluid-24);
+    min-height: 100%;
+}
+
+.header {
+    margin-bottom: var(--fluid-4);
+
+    .title {
+        color: var(--color-text);
+        display: flex;
+        align-items: center;
+        gap: var(--fluid-8);
+        font-size: var(--font-size-h4);
+        font-weight: var(--font-weight-bold);
+    }
+
+    .subtitle {
+        margin-top:  var(--fluid-4);
+        color: var(--color-text-secondary);
+        font-weight: var(--font-weight-body);
+    }
+}

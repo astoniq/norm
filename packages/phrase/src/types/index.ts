@@ -6,13 +6,17 @@ import {AuthErrors} from "./auth.js";
 import {GuardErrors} from "./guard.js";
 import {ResourceDetailsTranslation} from "./resource-details.js";
 import {ErrorsTranslation} from "./errors.js";
+import {DashboardTranslation} from "./dashboard.js";
+import {TopicTranslation} from "./topics.js";
 
 
 export type Translation = {
     general: GeneralTranslation,
     resources: ResourceTranslation,
     resource_details: ResourceDetailsTranslation,
-    errors: ErrorsTranslation
+    dashboard: DashboardTranslation,
+    errors: ErrorsTranslation,
+    topics: TopicTranslation
 }
 
 export type Errors = {

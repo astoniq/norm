@@ -4,7 +4,7 @@ import {resourceConfigGuard} from "../types/index.js";
 export const resourceGuard = z.object({
     projectId: z.string().max(21),
     id: z.string().min(1).max(21),
-    resourceId: z.string().max(128),
+    resourceId: z.string().min(1).max(128),
     signingKey: z.string().max(64),
     enabled: z.boolean(),
     config: resourceConfigGuard,

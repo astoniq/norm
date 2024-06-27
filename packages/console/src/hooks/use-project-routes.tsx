@@ -6,27 +6,38 @@ import {ResourceDetails} from "../pages/ResourceDetails";
 import {ResourceDetailsTabs} from "../constants";
 import {ResourceSettings} from "../pages/ResourceDetails/ResourceSettings";
 import {ResourceSecurity} from "../pages/ResourceDetails/ResourceSecurity";
+import {Dashboard} from "../pages/Dashboard";
+import {Topics} from "../pages/Topics";
 
 export const useProjectRoutes = () => {
 
     return useMemo(
         () => conditionalArray<RouteObject | RouteObject[]>(
-            {
-                path: 'resources',
-                children: [
-                    {index: true, element: <Resources/>},
-                    {path: 'create', element: <Resources/>},
-                    {
-                        path: ':id',
-                        element: <ResourceDetails/>,
-                        children: [
-                            {index: true, element: <Navigate replace={true} to={ResourceDetailsTabs.Settings}/>},
-                            {path: ResourceDetailsTabs.Settings, element: <ResourceSettings/>},
-                            {path: ResourceDetailsTabs.Security, element: <ResourceSecurity/>}
-                        ]
-                    }
-                ]
-            }
+            [
+                {path: 'dashboard', element: <Dashboard/>},
+                {
+                    path: 'resources',
+                    children: [
+                        {index: true, element: <Resources/>},
+                        {path: 'create', element: <Resources/>},
+                        {
+                            path: ':id',
+                            element: <ResourceDetails/>,
+                            children: [
+                                {index: true, element: <Navigate replace={true} to={ResourceDetailsTabs.Settings}/>},
+                                {path: ResourceDetailsTabs.Settings, element: <ResourceSettings/>},
+                                {path: ResourceDetailsTabs.Security, element: <ResourceSecurity/>}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    path: 'topics',
+                    children: [
+                        {index: true, element: <Topics/>},
+                    ]
+                }
+            ]
         ), []
     )
 }
