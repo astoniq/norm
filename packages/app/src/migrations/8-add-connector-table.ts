@@ -12,6 +12,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 connector_id varchar(128) not null,
                 type         varchar(128) not null,
                 config       jsonb        not null,
+                created_at   timestamptz  not null default (now()),
                 primary key (id)
             );
             create index connectors__id on connectors (project_id, id);

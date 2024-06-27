@@ -29,7 +29,10 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
         {
             limit: limit,
             offset: offset,
-            conditionSql: buildProjectConditionSql(projectId)
+            conditionSql: buildProjectConditionSql(projectId),
+            orderBy: [
+                {field: 'createdAt', order: 'desc'}
+            ]
         }
     )
 

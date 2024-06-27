@@ -12,7 +12,8 @@ export const connectorEntity: Entity<
         id: 'id',
         config: 'config',
         type: 'type',
-        connectorId: 'connector_id'
+        connectorId: 'connector_id',
+        createdAt: 'created_at',
     },
     guard: connectorGuard,
     insertGuard: insertConnectorGuard

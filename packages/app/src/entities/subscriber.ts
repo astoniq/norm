@@ -16,7 +16,8 @@ export const subscriberEntity: Entity<
         phone: 'phone',
         email: 'email',
         username: 'username',
-        locale: 'locale'
+        locale: 'locale',
+        createdAt: 'created_at',
     },
     guard: subscriberGuard,
     insertGuard: insertSubscriberGuard

@@ -8,7 +8,8 @@ export const notificationGuard = z.object({
     resourceId: z.string().min(1).max(21),
     subscriberId: z.string().min(1).max(21),
     status: z.string().min(1).max(128),
-    payload: jsonObjectGuard
+    payload: jsonObjectGuard,
+    createdAt: z.number(),
 });
 
 export type Notification = z.infer<typeof notificationGuard>;

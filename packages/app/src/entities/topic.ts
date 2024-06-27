@@ -10,7 +10,8 @@ export const topicEntity: Entity<
     fields: {
         projectId: 'project_id',
         id: 'id',
-        topicId: 'topic_id'
+        topicId: 'topic_id',
+        createdAt: 'created_at',
     },
     guard: topicGuard,
     insertGuard: insertTopicGuard

@@ -15,7 +15,8 @@ export const stepEntity: Entity<
         notificationId: 'notification_id',
         type: 'type',
         result: 'result',
-        output: 'output'
+        output: 'output',
+        createdAt: 'created_at',
     },
     guard: stepGuard,
     insertGuard: insertStepGuard

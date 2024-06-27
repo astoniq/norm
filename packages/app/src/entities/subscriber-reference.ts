@@ -17,7 +17,8 @@ export const subscriberReferenceEntity: Entity<
         id: 'id',
         subscriberId: 'subscriber_id',
         credentials: 'credentials',
-        target: 'target'
+        target: 'target',
+        createdAt: 'created_at',
     },
     guard: subscriberReferenceGuard,
     insertGuard: insertSubscriberReferenceGuard

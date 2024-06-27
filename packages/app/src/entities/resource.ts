@@ -13,7 +13,8 @@ export const resourceEntity: Entity<
         resourceId: 'resource_id',
         config: 'config',
         enabled: 'enabled',
-        signingKey: 'signing_key'
+        signingKey: 'signing_key',
+        createdAt: 'created_at',
     },
     guard: resourceGuard,
     insertGuard: insertResourceGuard

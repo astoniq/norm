@@ -15,6 +15,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 status          varchar(128) not null,
                 output          jsonb        not null default '{}'::jsonb,
                 result          jsonb        not null default '{}'::jsonb,
+                created_at      timestamptz  not null default (now()),
                 primary key (id)
             );
             create index steps__id on steps (project_id, id);

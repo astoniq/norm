@@ -11,6 +11,7 @@ const migration: MigrationScript = {
                 id            varchar(21) not null,
                 topic_id      varchar(21) not null,
                 subscriber_id varchar(21) not null,
+                created_at    timestamptz not null default (now()),
                 primary key (id)
             );
             create index topic_subscribers__id on topic_subscribers (project_id, id);

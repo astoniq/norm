@@ -16,6 +16,7 @@ const migration: MigrationScript = {
                 email         varchar(128),
                 username      varchar(128),
                 locale        varchar(128),
+                created_at    timestamptz  not null default (now()),
                 primary key (id),
                 constraint subscribers__subscriber_id unique (project_id, subscriber_id)
             );

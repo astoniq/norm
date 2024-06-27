@@ -8,6 +8,7 @@ export const resourceGuard = z.object({
     signingKey: z.string().max(64),
     enabled: z.boolean(),
     config: resourceConfigGuard,
+    createdAt: z.number(),
 });
 
 export type Resource = z.infer<typeof resourceGuard>;

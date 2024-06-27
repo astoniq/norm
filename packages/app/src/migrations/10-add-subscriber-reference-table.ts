@@ -12,6 +12,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 subscriber_id varchar(128) not null,
                 target        varchar(128) not null,
                 credentials   jsonb        not null,
+                created_at    timestamptz  not null default (now()),
                 primary key (id),
                 constraint subscriber_references__subscriber_id_target
                     unique (project_id, subscriber_id, target)

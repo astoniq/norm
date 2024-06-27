@@ -10,7 +10,8 @@ export const projectEntity: Entity<
     fields: {
         projectId: 'project_id',
         id: 'id',
-        clientKey: 'client_key'
+        clientKey: 'client_key',
+        createdAt: 'created_at',
     },
     guard: projectGuard,
     insertGuard: insertProjectGuard

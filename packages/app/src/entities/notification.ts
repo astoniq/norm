@@ -14,7 +14,8 @@ export const notificationEntity: Entity<
         resourceId: 'resource_id',
         subscriberId: 'subscriber_id',
         payload: 'payload',
-        status: 'status'
+        status: 'status',
+        createdAt: 'created_at',
     },
     guard: notificationGuard,
     insertGuard: insertNotificationGuard

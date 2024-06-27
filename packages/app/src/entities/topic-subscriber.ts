@@ -16,7 +16,8 @@ export const topicSubscriberEntity: Entity<
         projectId: 'project_id',
         id: 'id',
         topicId: 'topic_id',
-        subscriberId: 'subscriber_id'
+        subscriberId: 'subscriber_id',
+        createdAt: 'created_at',
     },
     guard: topicSubscriberGuard,
     insertGuard: insertTopicSubscriberGuard

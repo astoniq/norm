@@ -10,6 +10,7 @@ export const subscriberGuard = z.object({
     name: z.string().min(1).max(128).nullable(),
     locale: z.string().min(1).max(128).nullable(),
     avatar: z.string().min(1).max(2048).nullable(),
+    createdAt: z.number(),
 });
 
 export type Subscriber = z.infer<typeof subscriberGuard>;

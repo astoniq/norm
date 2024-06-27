@@ -13,6 +13,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 signing_key varchar(64)  not null,
                 enabled     boolean      not null default true,
                 config      jsonb        not null,
+                created_at  timestamptz  not null default (now()),
                 primary key (id),
                 constraint resources__resource_id unique (project_id, resource_id)
             );

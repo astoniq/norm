@@ -11,6 +11,7 @@ export const stepGuard = z.object({
     status: z.string().min(1).max(128),
     output: jsonObjectGuard,
     result: jsonObjectGuard,
+    createdAt: z.number(),
 });
 
 export type Step = z.infer<typeof stepGuard>;

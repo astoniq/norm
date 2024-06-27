@@ -7,7 +7,8 @@ export const connectorGuard = z.object({
     id: z.string().min(1).max(21),
     connectorId: z.string().min(1).max(128),
     type: z.nativeEnum(ConnectorType),
-    config: jsonObjectGuard
+    config: jsonObjectGuard,
+    createdAt: z.number(),
 });
 
 export type Connector = z.infer<typeof connectorGuard>;

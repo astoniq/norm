@@ -9,6 +9,7 @@ const migration: MigrationScript = {
                 id         varchar(21)  not null,
                 project_id varchar(128) not null,
                 client_key varchar(64)  not null,
+                created_at timestamptz  not null default (now()),
                 primary key (id),
                 constraint projects_project__id unique (project_id)
             );
