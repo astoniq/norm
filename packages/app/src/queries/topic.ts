@@ -1,12 +1,13 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {
-    buildFindAllEntitiesWithPool,
+    buildFindEntitiesWithPool,
     buildGetTotalRowCountWithPool,
-    buildInsertIntoWithPool
+    buildInsertIntoWithPool, buildUpdateWhereWithPool
 } from "../database/index.js";
 import {topicEntity} from "../entities/index.js";
-import {topicGuard} from "@astoniq/norm-schema";
-import {convertToIdentifiers} from "../utils/sql.js";
+import {Topic, topicGuard} from "@astoniq/norm-schema";
+import {convertToIdentifiers, expandFields, OmitAutoSetFields} from "../utils/sql.js";
+import {DeletionError} from "../errors/index.js";
 
 const {table, fields} = convertToIdentifiers(topicEntity);
 
@@ -18,7 +19,9 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
 
     const getTotalCountTopics = buildGetTotalRowCountWithPool(pool, topicEntity)
 
-    const findAllTopics = buildFindAllEntitiesWithPool(pool, topicEntity)
+    const findTopics = buildFindEntitiesWithPool(pool, topicEntity)
+
+    const updateTopic = buildUpdateWhereWithPool(pool, topicEntity, true)
 
     const buildProjectConditionSql = (projectId: string) => sql.fragment`${fields.projectId}=${projectId}`
 
@@ -26,7 +29,7 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
         buildProjectConditionSql(projectId)
     )
 
-    const findAllProjectTopics = (projectId: string, limit?: number, offset?: number) => findAllTopics(
+    const findAllProjectTopics = (projectId: string, limit?: number, offset?: number) => findTopics(
         {
             limit: limit,
             offset: offset,
@@ -37,6 +40,14 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
         }
     )
 
+    const findProjectTopicById = async (projectId: string, id: string) => {
+        return pool.maybeOne(sql.type(topicGuard)`
+            select ${expandFields(fields)}
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
+        `)
+    }
 
     const findProjectTopicsByTopicIds = async (projectId: string, ids: string[]) => {
         return ids.length > 0
@@ -49,10 +60,33 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
             : [];
     }
 
+    const updateProjectTopicById = async (
+        projectId: string,
+        id: string,
+        set: Partial<OmitAutoSetFields<Topic>>,
+        jsonbMode: 'replace' | 'merge' = 'merge'
+    ) => updateTopic({set, where: {projectId, id}, jsonbMode})
+
+    const deleteProjectTopicById = async (projectId: string, id: string) => {
+        const {rowCount} = await pool.query(sql.unsafe`
+            delete
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
+        `);
+
+        if (rowCount < 1) {
+            throw new DeletionError(topicEntity.table, id);
+        }
+    };
+
     return {
+        findProjectTopicById,
         findProjectTopicsByTopicIds,
         getTotalCountProjectTopics,
         findAllProjectTopics,
+        updateProjectTopicById,
+        deleteProjectTopicById,
         insertTopic
     }
 }

@@ -1,24 +1,54 @@
 import {RouterInitArgs, TenantRouter} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
 import {
+    createTopicGuard,
     paginationGuard,
+    patchTopicGuard,
     topicGuard,
-    topicPaginationResponseGuard
+    topicPaginationResponseGuard,
+    topicResponseGuard
 } from "@astoniq/norm-schema";
-import {object, string} from "zod";
+import {object, string, z} from "zod";
+import {generateStandardId} from "@astoniq/norm-shared";
 
 export default function topicRoutes<T extends TenantRouter>(...[router, {queries}]: RouterInitArgs<T>) {
 
     const {
         topics: {
+            insertTopic,
             getTotalCountProjectTopics,
+            findProjectTopicById,
             findAllProjectTopics,
+            deleteProjectTopicById,
+            updateProjectTopicById,
         }
     } = queries
 
     router.post(
         '/topics',
-        async (_ctx, next) => {
+        koaGuard({
+            body: createTopicGuard,
+            response: topicGuard,
+            status: [201, 400]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    body: {
+                        topicId
+                    }
+                }
+            } = ctx;
+
+            ctx.body = await insertTopic({
+                id: generateStandardId(),
+                projectId: project.id,
+                topicId
+            })
+
+            ctx.status = 201;
 
             return next()
         }
@@ -64,22 +94,73 @@ export default function topicRoutes<T extends TenantRouter>(...[router, {queries
         '/topics/:id',
         koaGuard({
             params: object({id: string().min(1)}),
-            response: topicGuard,
+            response: topicResponseGuard,
             status: [200, 404]
         }),
-        async (_ctx, next) => {
+        async (ctx, next) => {
 
-            return next()
+
+            const {
+                project,
+                guard: {
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            ctx.body = await findProjectTopicById(project.id, id)
+
+            return next();
+        }
+    )
+
+    router.patch(
+        '/topics/:id',
+        koaGuard({
+            params: z.object({id: z.string()}),
+            body: patchTopicGuard,
+            response: topicResponseGuard,
+            status: [200, 404]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    body,
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            ctx.body = await updateProjectTopicById(project.id, id, body)
+
+            return next();
         }
     )
 
     router.delete(
         '/topics/:id',
         koaGuard({
-            params: object({id: string().min(1)}),
+            params: z.object({id: z.string()}),
             status: [204, 404]
         }),
-        async (_ctx, next) => {
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    params: {
+                        id
+                    }
+                }
+            } = ctx
+
+            await deleteProjectTopicById(project.id, id)
+
+            ctx.status = 204;
 
             return next();
         }

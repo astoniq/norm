@@ -3,7 +3,7 @@ import {resourceEntity} from "../entities/index.js";
 import {convertToIdentifiers, expandFields, OmitAutoSetFields} from "../utils/sql.js";
 import {Resource, resourceGuard} from "@astoniq/norm-schema";
 import {
-    buildFindAllEntitiesWithPool,
+    buildFindEntitiesWithPool,
     buildGetTotalRowCountWithPool,
     buildInsertIntoWithPool, buildUpdateWhereWithPool,
 } from "../database/index.js";
@@ -21,11 +21,11 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
 
     const getTotalCountResources = buildGetTotalRowCountWithPool(pool, resourceEntity)
 
-    const findAllResources = buildFindAllEntitiesWithPool(pool, resourceEntity)
+    const findResources = buildFindEntitiesWithPool(pool, resourceEntity)
 
     const buildProjectConditionSql = (projectId: string) => sql.fragment`${fields.projectId}=${projectId}`
 
-    const findAllProjectResources = (projectId: string, limit?: number, offset?: number) => findAllResources(
+    const findAllProjectResources = (projectId: string, limit?: number, offset?: number) => findResources(
         {
             limit: limit,
             offset: offset,

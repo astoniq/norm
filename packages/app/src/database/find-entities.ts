@@ -12,7 +12,7 @@ type FindAllConfig<Keys> = {
     }>,
 };
 
-export const buildFindAllEntitiesWithPool = <
+export const buildFindEntitiesWithPool = <
     T extends EntityLike<T>,
     P extends Partial<T>,
     Keys extends EntityKeys<T>,

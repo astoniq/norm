@@ -4,3 +4,8 @@ export enum ResourceDetailsTabs {
     Workflows = 'workflows',
     Security = 'security',
 }
+
+export enum TopicDetailsTabs {
+    Settings = 'settings',
+    Subscribers = 'subscribers'
+}

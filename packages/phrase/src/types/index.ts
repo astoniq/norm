@@ -8,6 +8,7 @@ import {ResourceDetailsTranslation} from "./resource-details.js";
 import {ErrorsTranslation} from "./errors.js";
 import {DashboardTranslation} from "./dashboard.js";
 import {TopicTranslation} from "./topics.js";
+import {TopicDetailsTranslation} from "./topic_details.js";
 
 
 export type Translation = {
@@ -16,7 +17,8 @@ export type Translation = {
     resource_details: ResourceDetailsTranslation,
     dashboard: DashboardTranslation,
     errors: ErrorsTranslation,
-    topics: TopicTranslation
+    topics: TopicTranslation,
+    topic_details: TopicDetailsTranslation
 }
 
 export type Errors = {

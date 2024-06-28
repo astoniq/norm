@@ -9,6 +9,8 @@ import {useSearchParameters} from "../../hooks/use-search-parameters.ts";
 import {buildUrl} from "../../utils";
 import {defaultPaginationPageSize, TopicPaginationResponse} from "@astoniq/norm-schema";
 import {ItemPreview} from "../../components/ItemPreview";
+import {toast} from "react-hot-toast";
+import {CreateTopicModal} from "./CreateTopicModal";
 
 const apiPathname = 'topics'
 const topicsPathname = '/topics';
@@ -22,13 +24,15 @@ export const Topics = () => {
 
     const api = useProjectApi();
 
-    const {navigate} = useProjectPathname();
+    const {navigate, match} = useProjectPathname();
 
     const swrOptions = useSwrOptions(api);
 
     const {t} = useTranslation()
 
     const {search} = useLocation();
+
+    const isCreating = match(createTopicPathname);
 
     const [{page}, updateSearchParameters] = useSearchParameters({
         page: 1,
@@ -86,6 +90,21 @@ export const Topics = () => {
                 },
                 onRetry: async () => mutate(undefined, true)
             }}
+            widgets={
+                isCreating && (
+                    <CreateTopicModal
+                        onClose={(createdTopic) => {
+                            if (createdTopic) {
+                                void mutate()
+                                toast.success(t('topics.topic_created'))
+                                navigate(buildDetailsPathname(createdTopic.id), {replace: true});
+                                return;
+                            }
+
+                            navigate({pathname: topicsPathname, search})
+                        }}/>
+                )
+            }
         />
     )
 }

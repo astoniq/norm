@@ -38,6 +38,10 @@ export function ProjectContent() {
                                     to={getTo('notifications')}>
                             Notifications
                         </TabNavItem>
+                        <TabNavItem isActive={match('/connectors')}
+                                    to={getTo('connectors')}>
+                            Connectors
+                        </TabNavItem>
                         <TabNavItem isActive={match('/resources')}
                                     to={getTo('resources')}>
                             Resources

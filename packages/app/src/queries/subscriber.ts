@@ -1,5 +1,5 @@
 import {CommonQueryMethods, sql} from "slonik";
-import {buildFindAllEntitiesWithPool, buildInsertIntoWithPool, buildUpdateWhereWithPool} from "../database/index.js";
+import {buildFindEntitiesWithPool, buildInsertIntoWithPool, buildUpdateWhereWithPool} from "../database/index.js";
 import {subscriberEntity} from "../entities/index.js";
 import {subscriberGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
@@ -8,7 +8,7 @@ const {table, fields} = convertToIdentifiers(subscriberEntity);
 
 export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
-    const findAllSubscribers = buildFindAllEntitiesWithPool(pool, subscriberEntity)
+    const findSubscribers = buildFindEntitiesWithPool(pool, subscriberEntity)
 
     const insertSubscriber = buildInsertIntoWithPool(pool, subscriberEntity, {
         returning: true
@@ -18,7 +18,7 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
     const updateSubscriber = buildUpdateWhereWithPool(pool, subscriberEntity, true)
 
-    const findAllProjectSubscribers = (projectId: string, limit?: number, offset?: number) => findAllSubscribers(
+    const findAllProjectSubscribers = (projectId: string, limit?: number, offset?: number) => findSubscribers(
         {
             limit: limit,
             offset: offset,
@@ -61,7 +61,7 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         findProjectSubscriberById,
         updateSubscriber,
         insertSubscriber,
-        findAllSubscribers,
+        findSubscribers,
         findAllProjectSubscribers
     }
 }

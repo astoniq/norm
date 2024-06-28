@@ -1,5 +1,5 @@
 import {CommonQueryMethods, sql} from "slonik";
-import {buildFindAllEntitiesWithPool, buildInsertIntoWithPool} from "../database/index.js";
+import {buildFindEntitiesWithPool, buildInsertIntoWithPool} from "../database/index.js";
 import {subscriberReferenceEntity} from "../entities/index.js";
 import {subscriberReferenceGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
@@ -8,7 +8,7 @@ const {table, fields} = convertToIdentifiers(subscriberReferenceEntity);
 
 export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
 
-    const findAllSubscriberReferences = buildFindAllEntitiesWithPool(pool, subscriberReferenceEntity)
+    const findSubscriberReferences = buildFindEntitiesWithPool(pool, subscriberReferenceEntity)
 
     const insertSubscriberReference = buildInsertIntoWithPool(pool, subscriberReferenceEntity, {
         returning: true
@@ -32,7 +32,7 @@ export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
 
     return {
         upsertSubscriberReference,
-        findAllSubscriberReferences,
+        findSubscriberReferences,
         insertSubscriberReference,
         findProjectSubscriberReferencesBySubscriberId
     }
