@@ -1,15 +1,38 @@
-import {AnonymousRouter, RouterInitArgs} from "./types.js";
+import {RouterInitArgs, TenantRouter} from "./types.js";
 import koaGuard from "../middlewares/koa-guard.js";
-import {z} from "zod";
+import {
+    connectorResponseGuard,
+} from "@astoniq/norm-schema";
 
-export default function connectorRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
+export default function connectorRoutes<T extends TenantRouter>(...[router, {queries, libraries}]: RouterInitArgs<T>) {
+
+    const {
+        connectors: {
+            findProjectConnectors
+        }
+    } = queries
+
+    const {
+        connectors: {
+            transpileConnectors
+        }
+    } = libraries
 
     router.get(
         '/connectors',
         koaGuard({
-            params: z.object({tenantId: z.string()})
+            response: connectorResponseGuard.array(),
+            status: [200, 400]
         }),
-        async (_ctx, next) => {
+        async (ctx, next) => {
+
+            const {
+                project
+            } = ctx
+
+            const connectors = await findProjectConnectors(project.id)
+
+            ctx.body = transpileConnectors(connectors)
 
             return next()
         }

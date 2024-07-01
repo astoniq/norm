@@ -10,7 +10,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                     references projects (id) on update cascade on delete cascade,
                 id           varchar(21)  not null,
                 connector_id varchar(128) not null,
-                type         varchar(128) not null,
+                name         varchar(128) not null,
                 config       jsonb        not null,
                 created_at   timestamptz  not null default (now()),
                 primary key (id)

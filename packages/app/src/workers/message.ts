@@ -9,7 +9,7 @@ import {
     Subscriber,
 } from "@astoniq/norm-schema";
 import {logger} from "../utils/logger.js";
-import {connectors} from "@astoniq/norm-connectors";
+import {connectorFactories} from "@astoniq/norm-connectors";
 import {generateStandardId} from "../utils/id.js";
 
 type SendMessageOptions = {
@@ -40,7 +40,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 findProjectSubscriberReferencesBySubscriberId
             },
             connectors: {
-                findProjectConnectorsByType
+                findProjectConnectors
             }
         },
     } = options
@@ -56,8 +56,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
         try {
 
-            const databaseConnectors = await findProjectConnectorsByType(
-                projectId, step.type);
+            const databaseConnectors = await findProjectConnectors(projectId);
 
             const subscriberReferences = await findProjectSubscriberReferencesBySubscriberId(
                 projectId, subscriber.id)
@@ -71,17 +70,18 @@ export const createMessageWorker = (options: WorkerOptions) => {
                     return;
                 }
 
-                const {config, connectorId} = databaseConnector
+                const {config, name} = databaseConnector
 
-                const connectorFactory = connectors
-                    .find((connector) => connector.id === connectorId)
+                const connectorFactory = connectorFactories
+                    .find((connector) => connector.name === name
+                        && connector.type === step.type)
 
                 if (!connectorFactory) {
                     logger.error('Connector factory not found')
                     break;
                 }
 
-                const {id, createConnector, target, optionsGuard, credentialsGuard} = connectorFactory
+                const {createConnector, target, optionsGuard, credentialsGuard} = connectorFactory
 
                 try {
 
@@ -118,7 +118,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                     successSendMessage = true
 
                 } catch (error) {
-                    logger.error(error, `Error send connector ${id}. Skip connector`)
+                    logger.error(error, `Error send connector ${name}. Skip connector`)
                 }
             }
 

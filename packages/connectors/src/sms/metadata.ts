@@ -1,4 +1,4 @@
-import {ConnectorConfigFormItemType, ConnectorMetadata} from "../types/index.js";
+import {ConnectorConfigFormItemType, ConnectorMetadata} from "@astoniq/norm-schema";
 
 export const defaultMetadata: ConnectorMetadata = {
     formItems: [

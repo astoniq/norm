@@ -40,7 +40,7 @@ const createConnector = async (options: GetConnectorOptions):
 }
 
 export const smtpConnector: BaseConnector<SubscriberEmailCredentials, EmailOptions> = {
-    id: 'smtp',
+    name: 'smtp',
     type: ConnectorType.Email,
     target: SubscriberTarget.Email,
     metadata: defaultMetadata,

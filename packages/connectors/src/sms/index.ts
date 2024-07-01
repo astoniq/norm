@@ -16,7 +16,7 @@ const createConnector = async (_options: GetConnectorOptions):
 }
 
 export const smsConnector: BaseConnector<SubscriberSmsCredentials, SmsOptions> = {
-    id: 'sms',
+    name: 'sms',
     type: ConnectorType.Sms,
     target: SubscriberTarget.Sms,
     metadata: defaultMetadata,

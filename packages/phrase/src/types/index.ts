@@ -9,6 +9,7 @@ import {ErrorsTranslation} from "./errors.js";
 import {DashboardTranslation} from "./dashboard.js";
 import {TopicTranslation} from "./topics.js";
 import {TopicDetailsTranslation} from "./topic_details.js";
+import {ConnectorTranslation} from "./connectors.js";
 
 
 export type Translation = {
@@ -18,7 +19,8 @@ export type Translation = {
     dashboard: DashboardTranslation,
     errors: ErrorsTranslation,
     topics: TopicTranslation,
-    topic_details: TopicDetailsTranslation
+    topic_details: TopicDetailsTranslation,
+    connectors: ConnectorTranslation
 }
 
 export type Errors = {

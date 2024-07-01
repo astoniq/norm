@@ -10,6 +10,7 @@ import {Dashboard} from "../pages/Dashboard";
 import {Topics} from "../pages/Topics";
 import {TopicDetails} from "../pages/TopicDetails";
 import {TopicSettings} from "../pages/TopicDetails/TopicSettings";
+import {Connectors} from "../pages/Connectors";
 
 export const useProjectRoutes = () => {
 
@@ -38,6 +39,21 @@ export const useProjectRoutes = () => {
                     children: [
                         {index: true, element: <Topics/>},
                         {path: 'create', element: <Topics/>},
+                        {
+                            path: ':id',
+                            element: <TopicDetails/>,
+                            children: [
+                                {index: true, element: <Navigate replace={true} to={TopicDetailsTabs.Settings}/>},
+                                {path: TopicDetailsTabs.Settings, element: <TopicSettings/>},
+                            ]
+                        }
+                    ]
+                },
+                {
+                    path: 'connectors',
+                    children: [
+                        {index: true, element: <Connectors/>},
+                        {path: 'create', element: <Connectors/>},
                         {
                             path: ':id',
                             element: <TopicDetails/>,
