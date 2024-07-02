@@ -1,7 +1,7 @@
 import {sql} from "slonik";
 import {MigrationScript} from "../types/index.js";
 
-const addResourceTableMigrationScript: MigrationScript = {
+const migration: MigrationScript = {
     up: async (pool) => {
         await pool.query(sql.unsafe`
             create table resources
@@ -11,7 +11,7 @@ const addResourceTableMigrationScript: MigrationScript = {
                 id          varchar(21)  not null,
                 resource_id varchar(128) not null,
                 signing_key varchar(64)  not null,
-                enabled     boolean      not null default true,
+                enabled     boolean      not null default false,
                 config      jsonb        not null,
                 created_at  timestamptz  not null default (now()),
                 primary key (id),
@@ -28,4 +28,4 @@ const addResourceTableMigrationScript: MigrationScript = {
     }
 }
 
-export default addResourceTableMigrationScript
+export default migration

@@ -5,18 +5,16 @@ import {ListPage} from "../../components/ListPage";
 import {useProjectPathname} from "../../hooks/use-project-pathname.ts";
 import {useLocation} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {useSearchParameters} from "../../hooks/use-search-parameters.ts";
-import {buildUrl} from "../../utils";
-import {ConnectorPaginationResponse, defaultPaginationPageSize} from "@astoniq/norm-schema";
+import { ConnectorResponse} from "@astoniq/norm-schema";
 import {ItemPreview} from "../../components/ItemPreview";
 import {toast} from "react-hot-toast";
 import {CreateConnectorModal} from "./CreateConnectorModal";
+import {DangerousRaw} from "../../components/DangerousRaw";
 
 const apiPathname = 'connectors'
 const connectorsPathname = '/connectors';
 const createConnectorPathname = `${connectorsPathname}/create`;
 
-const pageSize = defaultPaginationPageSize;
 
 const buildDetailsPathname = (id: string) => `${connectorsPathname}/${id}`;
 
@@ -34,22 +32,11 @@ export const Connectors = () => {
 
     const isCreating = match(createConnectorPathname);
 
-    const [{page}, updateSearchParameters] = useSearchParameters({
-        page: 1,
-    })
-
-    const url = buildUrl(apiPathname, {
-        page: String(page),
-        page_size: String(pageSize)
-    })
-
     const {getTo} = useProjectPathname();
 
-    const {data, error, mutate} = useSWR<ConnectorPaginationResponse, RequestError>(url, swrOptions)
+    const {data = [], error, mutate} = useSWR<ConnectorResponse[], RequestError>(apiPathname, swrOptions)
 
     const isLoading = !data && !error
-
-    const {items = [], totalCount} = data ?? {}
 
     return (
         <ListPage
@@ -65,7 +52,7 @@ export const Connectors = () => {
                 titleKey: 'connectors.page_title'
             }}
             table={{
-                rowGroups: [{key: 'connectors', items}],
+                rowGroups: [{key: 'connectors', items: data}],
                 rowIndexKey: 'id',
                 isLoading: isLoading,
                 errorMessage: error?.message,
@@ -79,25 +66,33 @@ export const Connectors = () => {
                                          to={getTo(buildDetailsPathname(id))}/>
                         )
                     },
+                    {
+                        title: t('connectors.connector_type'),
+                        dataIndex: 'connector_type',
+                        colSpan: 12,
+                        render: ({id, type}) => (
+                            <DangerousRaw >{type}</DangerousRaw>
+                        )
+                    },
+                    {
+                        title: t('connectors.connector_target'),
+                        dataIndex: 'connector_target',
+                        colSpan: 12,
+                        render: ({id, target}) => (
+                            <DangerousRaw >{target}</DangerousRaw>
+                        )
+                    },
                 ],
-                pagination: {
-                    page,
-                    totalCount,
-                    pageSize,
-                    onChange: (page) => {
-                        updateSearchParameters({page})
-                    }
-                },
                 onRetry: async () => mutate(undefined, true)
             }}
             widgets={
                 isCreating && (
                     <CreateConnectorModal
-                        onClose={(createdTopic) => {
-                            if (createdTopic) {
+                        onClose={(createdConnector) => {
+                            if (createdConnector) {
                                 void mutate()
                                 toast.success(t('topics.topic_created'))
-                                navigate(buildDetailsPathname(createdTopic.id), {replace: true});
+                                navigate(buildDetailsPathname(createdConnector.id), {replace: true});
                                 return;
                             }
 

@@ -1,5 +1,5 @@
 import {Modal} from "../../../components/Modal";
-import {CreateTopic, Topic} from "@astoniq/norm-schema";
+import {Connector, ConnectorFactoryResponse, CreateConnector} from "@astoniq/norm-schema";
 import {useTranslation} from "react-i18next";
 import {useProjectApi} from "../../../hooks/use-api.ts";
 import {useForm} from "react-hook-form";
@@ -8,72 +8,121 @@ import {ModalLayout} from "../../../components/ModalLayout";
 import Button from "../../../components/Button";
 import {FormField} from "../../../components/FormField";
 import TextInput from "../../../components/TextInput";
+import useSWR from "swr";
+import {useSwrOptions} from "../../../hooks/use-swr-options.ts";
+import {useMemo, useState} from "react";
+import {getConnectorRadioGroupSize} from "./utils.ts";
+import Skeleton from "../../../components/FormCardSkeleton";
+import {ConnectorRadioGroup} from "../../../components/ConnectorRadioGroup";
 
 export type CreateConnectorModalProps = {
-    readonly onClose: (createdTopic?: Topic) => void
+    readonly onClose: (createdConnector?: Connector) => void
 }
 
-export type CreateTopicFormData = Pick<Topic, 'topicId'>
+export type CreateConnectorFormData = Pick<Connector, 'connectorId'>
 
-export function CreateConnectorModal({onClose}: CreateConnectorModalProps) {
+const apiPathname = 'connector-factories'
+
+export function CreateConnectorModal({onClose: rawOnClose}: CreateConnectorModalProps) {
 
     const {t} = useTranslation()
 
     const api = useProjectApi()
 
+    const swrOptions = useSwrOptions(api);
+
+    const [selectedFactory, setSelectedFactory] = useState<string>();
+
+    const {data = [], error} = useSWR<ConnectorFactoryResponse[]>(apiPathname, swrOptions)
+
+    const isLoading = !data && !error;
+
+    const radioGroupSize = getConnectorRadioGroupSize(data.length);
+
+    const isAnyConnectorSelected = useMemo(
+        () =>
+            data.some(
+                ({name}) => selectedFactory === name
+            ),
+        [data, selectedFactory]
+    );
+
     const {
         handleSubmit,
         register,
-        formState: {isSubmitting, errors}
-    } = useForm<CreateTopicFormData>()
+        reset,
+        formState: {isSubmitting, errors},
+        watch
+    } = useForm<CreateConnectorFormData>({resetOptions: {keepErrors: true}})
+
+    const onClose = (connector?: Connector) => {
+        setSelectedFactory(undefined);
+        reset();
+        rawOnClose(connector);
+    };
+
+    const handleSelection = (name: string) => {
+        setSelectedFactory(name);
+    };
 
     const onSubmit = handleSubmit(
-        trySubmitSafe(async ({topicId}) => {
+        trySubmitSafe(async ({connectorId}) => {
             if (isSubmitting) {
                 return;
             }
 
-            const payload: CreateTopic = {
-                topicId
+            if (!selectedFactory) {
+                return;
             }
 
-            const createdTopic = await api.post('topics',
-                {json: payload}).json<Topic>();
+            const payload: CreateConnector = {
+                connectorId,
+                name: selectedFactory
+            }
 
-            onClose(createdTopic);
+            const createdConnector = await api.post('connectors',
+                {json: payload}).json<Connector>();
+
+            onClose(createdConnector);
         })
     )
 
     return (
         <Modal onClose={onClose}>
             <ModalLayout
-                title={'topics.create_topic_title'}
-                subtitle={'topics.create_topic_description'}
+                title={'connectors.create_connector_title'}
+                subtitle={'connectors.create_connector_description'}
                 size={"large"}
                 footer={
                     <Button
                         htmlType={'submit'}
-                        title={'topics.create_topic_button'}
+                        title={'connectors.create_connector_button'}
                         size={'large'}
                         type={'primary'}
+                        disabled={!(watch('connectorId') && isAnyConnectorSelected) || Boolean(errors.connectorId)}
                         isLoading={isSubmitting}
                         onClick={onSubmit}
                     />
                 }
                 onClose={onClose}
             >
-                <form>
-                    <FormField isRequired={true} title={'topics.topic_id'}>
-                        <TextInput
-                            autoFocus={true}
-                            {...register('topicId', {
-                                required: true
-                            })}
-                            placeholder={t('topics.topic_id_placeholder')}
-                            error={errors.topicId?.message}
-                        />
-                    </FormField>
-                </form>
+                {isLoading && <Skeleton/>}
+                {error?.message}
+                <ConnectorRadioGroup name={'factory'}
+                                     connectors={data}
+                                     value={selectedFactory}
+                                     size={radioGroupSize}
+                                     onChange={handleSelection}/>
+                <FormField isRequired={true} title={'connectors.connector_id'}>
+                    <TextInput
+                        autoFocus={true}
+                        {...register('connectorId', {
+                            required: true
+                        })}
+                        placeholder={t('connectors.connector_id_placeholder')}
+                        error={errors.connectorId?.message}
+                    />
+                </FormField>
             </ModalLayout>
         </Modal>
     )

@@ -3,7 +3,7 @@ import {conditionalArray} from "@astoniq/essentials";
 import {Navigate, RouteObject} from "react-router-dom";
 import {Resources} from "../pages/Resources";
 import {ResourceDetails} from "../pages/ResourceDetails";
-import {ResourceDetailsTabs, TopicDetailsTabs} from "../constants";
+import {ConnectorDetailsTabs, ResourceDetailsTabs, TopicDetailsTabs} from "../constants";
 import {ResourceSettings} from "../pages/ResourceDetails/ResourceSettings";
 import {ResourceSecurity} from "../pages/ResourceDetails/ResourceSecurity";
 import {Dashboard} from "../pages/Dashboard";
@@ -11,6 +11,9 @@ import {Topics} from "../pages/Topics";
 import {TopicDetails} from "../pages/TopicDetails";
 import {TopicSettings} from "../pages/TopicDetails/TopicSettings";
 import {Connectors} from "../pages/Connectors";
+import {ConnectorDetails} from "../pages/ConnectorDetails";
+import {ConnectorSettings} from "../pages/ConnectorDetails/ConnectorSettings";
+import {ConnectorConfiguration} from "../pages/ConnectorDetails/ConnectorConfiguration";
 
 export const useProjectRoutes = () => {
 
@@ -56,10 +59,11 @@ export const useProjectRoutes = () => {
                         {path: 'create', element: <Connectors/>},
                         {
                             path: ':id',
-                            element: <TopicDetails/>,
+                            element: <ConnectorDetails/>,
                             children: [
-                                {index: true, element: <Navigate replace={true} to={TopicDetailsTabs.Settings}/>},
-                                {path: TopicDetailsTabs.Settings, element: <TopicSettings/>},
+                                {index: true, element: <Navigate replace={true} to={ConnectorDetailsTabs.Settings}/>},
+                                {path: ConnectorDetailsTabs.Settings, element: <ConnectorSettings/>},
+                                {path: ConnectorDetailsTabs.Configuration, element: <ConnectorConfiguration/>},
                             ]
                         }
                     ]

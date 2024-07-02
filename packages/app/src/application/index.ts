@@ -12,6 +12,7 @@ import {createLibraries} from "../libraries/index.js";
 import {initClient} from "../client/index.js";
 import koaSlonikErrorHandler from "../middlewares/koa-slonik-error-handler.js";
 import initI18n from "../i18n/index.js";
+import koaConnectorErrorHandler from "../middlewares/koa-connector-error-handler.js";
 
 const serverTimeout = 120_000;
 
@@ -48,6 +49,7 @@ export async function initApp() {
 
     app.use(koaErrorHandler());
     app.use(koaSlonikErrorHandler());
+    app.use(koaConnectorErrorHandler());
 
     app.use(mount('/api', initApis({
         queues,

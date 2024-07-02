@@ -10,6 +10,8 @@ import {DashboardTranslation} from "./dashboard.js";
 import {TopicTranslation} from "./topics.js";
 import {TopicDetailsTranslation} from "./topic_details.js";
 import {ConnectorTranslation} from "./connectors.js";
+import {ConnectorDetailsTranslation} from "./connector-details.js";
+import {ConnectorErrors} from "./connector.js";
 
 
 export type Translation = {
@@ -20,14 +22,16 @@ export type Translation = {
     errors: ErrorsTranslation,
     topics: TopicTranslation,
     topic_details: TopicDetailsTranslation,
-    connectors: ConnectorTranslation
+    connectors: ConnectorTranslation,
+    connector_details: ConnectorDetailsTranslation
 }
 
 export type Errors = {
     db: DbErrors,
     project: ProjectErrors,
     auth: AuthErrors,
-    guard: GuardErrors
+    guard: GuardErrors,
+    connector: ConnectorErrors
 }
 
 export type LocalePhrase = {

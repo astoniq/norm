@@ -1,7 +1,7 @@
 import {sql} from "slonik";
 import {MigrationScript} from "../types/index.js";
 
-const addResourceTableMigrationScript: MigrationScript = {
+const migration: MigrationScript = {
     up: async (pool) => {
         await pool.query(sql.unsafe`
             create table subscriber_references
@@ -27,4 +27,4 @@ const addResourceTableMigrationScript: MigrationScript = {
     }
 }
 
-export default addResourceTableMigrationScript
+export default migration

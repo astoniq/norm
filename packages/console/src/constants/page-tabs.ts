@@ -9,3 +9,8 @@ export enum TopicDetailsTabs {
     Settings = 'settings',
     Subscribers = 'subscribers'
 }
+
+export enum ConnectorDetailsTabs {
+    Settings = 'settings',
+    Configuration = 'configuration'
+}

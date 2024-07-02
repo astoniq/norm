@@ -30,18 +30,18 @@ export default function connectorFactoryRoutes<T extends TenantRouter>(...[route
     )
 
     router.get(
-        '/connector-factories/:id',
+        '/connector-factories/:name',
         koaGuard({
-            params: z.object({ id: z.string().min(1) }),
+            params: z.object({name: z.string().min(1)}),
             response: connectorFactoryResponseGuard,
             status: [200, 404],
         }),
         async (ctx, next) => {
             const {
-                params: { id },
+                params: {name},
             } = ctx.guard;
 
-            const connectorFactory = findConnectorFactory(id);
+            const connectorFactory = findConnectorFactory(name);
 
             assertThat(
                 connectorFactory,

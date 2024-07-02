@@ -16,6 +16,7 @@ export type BaseConnector<C , D > = {
     type: ConnectorType;
     target: SubscriberTarget;
     name: string;
+    description: string;
     metadata: ConnectorMetadata;
     configGuard: ZodType;
     optionsGuard: ZodType<D>;

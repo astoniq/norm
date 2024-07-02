@@ -1,7 +1,7 @@
 import {sql} from "slonik";
 import {MigrationScript} from "../types/index.js";
 
-const addResourceTableMigrationScript: MigrationScript = {
+const migration: MigrationScript = {
     up: async (pool) => {
         await pool.query(sql.unsafe`
             create table connectors
@@ -11,9 +11,11 @@ const addResourceTableMigrationScript: MigrationScript = {
                 id           varchar(21)  not null,
                 connector_id varchar(128) not null,
                 name         varchar(128) not null,
-                config       jsonb        not null,
+                enabled      boolean      not null default false,
+                config       jsonb        not null default '{}'::jsonb,
                 created_at   timestamptz  not null default (now()),
-                primary key (id)
+                primary key (id),
+                constraint connectors__connector_id unique (project_id, connector_id)
             );
             create index connectors__id on connectors (project_id, id);
         `)
@@ -25,4 +27,4 @@ const addResourceTableMigrationScript: MigrationScript = {
     }
 }
 
-export default addResourceTableMigrationScript
+export default migration

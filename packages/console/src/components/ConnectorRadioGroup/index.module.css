@@ -1,0 +1,15 @@
+
+.connectorGroup {
+    gap: var(--fluid-4);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    &.medium {
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+    &.large {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

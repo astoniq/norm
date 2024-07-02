@@ -2,7 +2,7 @@ import {sql} from "slonik";
 import {MigrationScript} from "../types/index.js";
 
 
-const initMigrationScript: MigrationScript = {
+const migration: MigrationScript = {
     up: async (pool) => {
         await pool.query(sql.unsafe`
             create table systems
@@ -20,4 +20,4 @@ const initMigrationScript: MigrationScript = {
     }
 }
 
-export default initMigrationScript
+export default migration

@@ -40,7 +40,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 findProjectSubscriberReferencesBySubscriberId
             },
             connectors: {
-                findProjectConnectors
+                findProjectConnectorsEnabled
             }
         },
     } = options
@@ -56,7 +56,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
         try {
 
-            const databaseConnectors = await findProjectConnectors(projectId);
+            const databaseConnectors = await findProjectConnectorsEnabled(projectId);
 
             const subscriberReferences = await findProjectSubscriberReferencesBySubscriberId(
                 projectId, subscriber.id)

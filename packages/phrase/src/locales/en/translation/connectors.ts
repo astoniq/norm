@@ -9,6 +9,8 @@ const connectors = {
         'Create and manage connector for your applications',
     create_connector_button: 'Create connector',
     connector_id: 'Connector id',
+    connector_type:  'Connector type',
+    connector_target:  'Connector target',
     connector_name: 'Connector name',
     connector_id_placeholder: 'Enter connector id',
     connector_created: 'Connector created'

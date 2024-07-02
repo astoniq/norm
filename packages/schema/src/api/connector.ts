@@ -24,9 +24,17 @@ export const connectorResponseGuard = connectorGuard.pick(
         metadata: connectorMetadataGuard,
         type: z.nativeEnum(ConnectorType),
         target: z.nativeEnum(SubscriberTarget),
+        description: z.string()
     }))
 
 export type ConnectorResponse = z.infer<typeof connectorResponseGuard>;
+
+export const patchConnectorGuard = connectorGuard.pick({
+    connectorId: true,
+    config: true
+}).partial()
+
+export type PatchConnector = z.infer<typeof patchConnectorGuard>
 
 export const connectorPaginationResponseGuard = createPaginationResponseGuard(connectorResponseGuard)
 
@@ -36,6 +44,7 @@ export const connectorFactoryResponseGuard = z.object({
     type: z.nativeEnum(ConnectorType),
     target: z.nativeEnum(SubscriberTarget),
     name: z.string(),
+    description: z.string(),
     metadata: connectorMetadataGuard
 })
 

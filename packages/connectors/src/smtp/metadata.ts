@@ -27,6 +27,20 @@ export const defaultMetadata: ConnectorMetadata = {
             },
         },
         {
+            key: 'fromEmail',
+            label: 'From Email',
+            type: ConnectorConfigFormItemType.Text,
+            required: true,
+            placeholder: '<email>',
+        },
+        {
+            key: 'replyTo',
+            label: 'Reply To',
+            type: ConnectorConfigFormItemType.Text,
+            required: false,
+            placeholder: '<email>',
+        },
+        {
             key: 'name',
             label: 'Name',
             type: ConnectorConfigFormItemType.Text,

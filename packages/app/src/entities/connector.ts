@@ -11,6 +11,7 @@ export const connectorEntity: Entity<
         projectId: 'project_id',
         id: 'id',
         config: 'config',
+        enabled: 'enabled',
         connectorId: 'connector_id',
         name: 'name',
         createdAt: 'created_at',

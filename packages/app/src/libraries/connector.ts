@@ -5,17 +5,25 @@ import {Optional} from "@astoniq/essentials";
 
 export const createConnectorLibrary = (queries: Queries) => {
 
+    const transpileConnector = (connector: Connector, {
+        metadata,
+        description,
+        target,
+        type
+    }: ConnectorFactory): ConnectorResponse =>
+        ({
+            ...connector,
+            metadata,
+            description,
+            target,
+            type
+        })
+
     const transpileConnectors = (connectors: readonly Connector[]): ConnectorResponse[] =>
         connectors.reduce((acc, item) => {
             const factory = connectorFactories.find(({name}) => name === item.name)
             if (factory) {
-                const {metadata, target, type} = factory
-                acc.push({
-                    ...item,
-                    metadata,
-                    target,
-                    type
-                });
+                acc.push(transpileConnector(item, factory));
             }
             return acc;
         }, [] as ConnectorResponse[]);
@@ -24,10 +32,11 @@ export const createConnectorLibrary = (queries: Queries) => {
         connectorFactories.map((factory) => transpileConnectorFactory(factory))
 
     const transpileConnectorFactory = (
-        {type, target, name, metadata}: ConnectorFactory): ConnectorFactoryResponse => {
+        {type, target, name, metadata, description}: ConnectorFactory): ConnectorFactoryResponse => {
         return {
             type,
             target,
+            description,
             name,
             metadata
         }
@@ -39,6 +48,7 @@ export const createConnectorLibrary = (queries: Queries) => {
     return {
         queries,
         transpileConnectors,
+        transpileConnector,
         findConnectorFactory,
         transpileConnectorsFactory,
         transpileConnectorFactory
