@@ -12,6 +12,7 @@ import {TopicDetailsTranslation} from "./topic_details.js";
 import {ConnectorTranslation} from "./connectors.js";
 import {ConnectorDetailsTranslation} from "./connector-details.js";
 import {ConnectorErrors} from "./connector.js";
+import {SubscriberTranslation} from "./subscribers.js";
 
 
 export type Translation = {
@@ -23,6 +24,7 @@ export type Translation = {
     topics: TopicTranslation,
     topic_details: TopicDetailsTranslation,
     connectors: ConnectorTranslation,
+    subscribers: SubscriberTranslation,
     connector_details: ConnectorDetailsTranslation
 }
 

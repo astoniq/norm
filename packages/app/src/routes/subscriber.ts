@@ -1,6 +1,15 @@
-import {AnonymousRouter, RouterInitArgs} from "./types.js";
+import { RouterInitArgs, TenantRouter} from "./types.js";
+import koaGuard from "../middlewares/koa-guard.js";
+import {paginationGuard, subscriberPaginationResponseGuard} from "@astoniq/norm-schema";
 
-export default function subscriberRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
+export default function subscriberRoutes<T extends TenantRouter>(...[router, {queries}]: RouterInitArgs<T>) {
+
+    const {
+        subscribers: {
+            getTotalCountProjectSubscribers,
+            findAllProjectSubscribers,
+        }
+    } = queries
 
     router.get(
         '/subscribers',
@@ -11,8 +20,36 @@ export default function subscriberRoutes<T extends AnonymousRouter>(...[router]:
     )
 
     router.get(
-        '/subscribers/:id',
-        async (_ctx, next) => {
+        '/subscribers',
+        koaGuard({
+            response: subscriberPaginationResponseGuard,
+            query: paginationGuard,
+            status: [200, 400]
+        }),
+        async (ctx, next) => {
+
+            const {
+                project,
+                guard: {
+                    query: {
+                        pageSize,
+                        offset,
+                        page
+                    }
+                }
+            } = ctx
+
+            const [totalCount, items] = await Promise.all([
+                getTotalCountProjectSubscribers(project.id),
+                findAllProjectSubscribers(project.id, pageSize, offset)
+            ])
+
+            ctx.body = {
+                page,
+                pageSize,
+                totalCount,
+                items
+            }
 
             return next()
         }

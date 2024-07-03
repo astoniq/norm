@@ -3,6 +3,7 @@ import general from "./general.js";
 import resource_details from "./resource-details.js";
 import errors from "./errors.js";
 import dashboard from "./dashboard.js";
+import subscribers from "./subscribers.js";
 import topic_details from './topic-details.js'
 import connectors from './connectors.js'
 import topics from "./topics.js";
@@ -14,6 +15,7 @@ const translation: Translation = {
     errors,
     dashboard,
     topics,
+    subscribers,
     topic_details,
     connectors,
     resource_details,

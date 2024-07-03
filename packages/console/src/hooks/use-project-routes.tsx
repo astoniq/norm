@@ -14,6 +14,7 @@ import {Connectors} from "../pages/Connectors";
 import {ConnectorDetails} from "../pages/ConnectorDetails";
 import {ConnectorSettings} from "../pages/ConnectorDetails/ConnectorSettings";
 import {ConnectorConfiguration} from "../pages/ConnectorDetails/ConnectorConfiguration";
+import {Subscribers} from "../pages/Subscribers";
 
 export const useProjectRoutes = () => {
 
@@ -66,6 +67,12 @@ export const useProjectRoutes = () => {
                                 {path: ConnectorDetailsTabs.Configuration, element: <ConnectorConfiguration/>},
                             ]
                         }
+                    ]
+                },
+                {
+                    path: 'subscribers',
+                    children: [
+                        {index: true, element: <Subscribers/>},
                     ]
                 }
             ]

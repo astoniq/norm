@@ -1,5 +1,10 @@
 import {CommonQueryMethods, sql} from "slonik";
-import {buildFindEntitiesWithPool, buildInsertIntoWithPool, buildUpdateWhereWithPool} from "../database/index.js";
+import {
+    buildFindEntitiesWithPool,
+    buildGetTotalRowCountWithPool,
+    buildInsertIntoWithPool,
+    buildUpdateWhereWithPool
+} from "../database/index.js";
 import {subscriberEntity} from "../entities/index.js";
 import {subscriberGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
@@ -14,15 +19,26 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         returning: true
     })
 
+    const getTotalCountSubscribers = buildGetTotalRowCountWithPool(pool, subscriberEntity)
+
+
     const buildProjectConditionSql = (projectId: string) => sql.fragment`${fields.projectId}=${projectId}`
 
     const updateSubscriber = buildUpdateWhereWithPool(pool, subscriberEntity, true)
+
+
+    const getTotalCountProjectSubscribers = (projectId: string) => getTotalCountSubscribers(
+        buildProjectConditionSql(projectId)
+    )
 
     const findAllProjectSubscribers = (projectId: string, limit?: number, offset?: number) => findSubscribers(
         {
             limit: limit,
             offset: offset,
-            conditionSql: buildProjectConditionSql(projectId)
+            conditionSql: buildProjectConditionSql(projectId),
+            orderBy: [
+                {field: 'createdAt', order: 'desc'}
+            ]
         }
     )
 
@@ -59,6 +75,7 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         hasProjectSubscriberBySubscriberId,
         findProjectSubscriberBySubscriberIds,
         findProjectSubscriberById,
+        getTotalCountProjectSubscribers,
         updateSubscriber,
         insertSubscriber,
         findSubscribers,
