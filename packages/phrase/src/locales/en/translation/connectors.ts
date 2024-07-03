@@ -11,9 +11,12 @@ const connectors = {
     connector_id: 'Connector id',
     connector_type:  'Connector type',
     connector_target:  'Connector target',
+    connector_status:  'Connector status',
     connector_name: 'Connector name',
     connector_id_placeholder: 'Enter connector id',
-    connector_created: 'Connector created'
+    connector_created: 'Connector created',
+    connector_status_enabled: 'Enabled',
+    connector_status_disabled: 'Disabled'
 };
 
 export default Object.freeze(connectors);

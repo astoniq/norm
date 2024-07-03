@@ -10,8 +10,11 @@ export type ConnectorTranslation = {
     connector_id: string,
     connector_type: string,
     connector_target: string,
+    connector_status: string,
     connector_name: string,
     connector_id_placeholder: string,
     connector_created: string,
+    connector_status_enabled: string,
+    connector_status_disabled: string
 }
 

@@ -19,7 +19,7 @@ export const smsConnector: BaseConnector<SubscriberSmsCredentials, SmsOptions> =
     name: 'sms',
     description: 'sms',
     type: ConnectorType.Sms,
-    target: SubscriberTarget.Sms,
+    target: SubscriberTarget.Phone,
     metadata: defaultMetadata,
     configGuard: smsConfigGuard,
     optionsGuard: smsOptionsGuard,

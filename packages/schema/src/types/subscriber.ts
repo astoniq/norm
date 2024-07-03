@@ -7,7 +7,7 @@ import {
     SubscriberReferenceIdPayload,
     SubscriberReferenceEmailPayload,
     SubscriberReferencePayload,
-    SubscriberReferenceSmsPayload,
+    SubscriberReferencePhonePayload,
     SubscriberSmsCredentials,
     SubscriberTarget
 } from "@astoniq/norm-shared";
@@ -32,9 +32,9 @@ export const subscriberSmsCredentialsGuard: z.ZodType<SubscriberSmsCredentials> 
 })
 
 export const subscriberReferenceSmsPayloadGuard = z.object({
-    target: z.literal(SubscriberTarget.Sms),
+    target: z.literal(SubscriberTarget.Phone),
     credentials: subscriberSmsCredentialsGuard
-}) satisfies ZodType<SubscriberReferenceSmsPayload>
+}) satisfies ZodType<SubscriberReferencePhonePayload>
 
 export const subscriberAppCredentialsGuard: z.ZodType<SubscriberIdCredentials> = z.object({
     id: z.string()

@@ -1,7 +1,7 @@
 import {DetailsPage} from "../../components/DetailsPage";
 import {useProjectPathname} from "../../hooks/use-project-pathname.ts";
 import useSWR from "swr";
-import {ConnectorResponse} from "@astoniq/norm-schema";
+import {ConnectorResponse, PatchConnector} from "@astoniq/norm-schema";
 import {RequestError, useProjectApi} from "../../hooks/use-api.ts";
 import {useSwrOptions} from "../../hooks/use-swr-options.ts";
 import {Outlet, useLocation, useParams} from "react-router-dom";
@@ -14,6 +14,8 @@ import {toast} from "react-hot-toast";
 import {DetailsPageIcon} from "../../components/DetailsPageIcon";
 import {DetailsPageContainer} from "../../components/DetailsPageContainer";
 import {ConnectorDetailsTabs} from "../../constants";
+import {ForbiddenIcon} from "../../icons/ForbiddenIcon.tsx";
+import {ShieldIcon} from "../../icons/ShieldIcon.tsx";
 
 
 export function ConnectorDetails() {
@@ -36,9 +38,13 @@ export function ConnectorDetails() {
 
     const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isToggleSuspendFormOpen, setIsToggleSuspendFormOpen] = useState(false)
+    const [isUpdatingSuspendState, setIsUpdatingSuspendState] = useState(false);
 
     useEffect(() => {
-        setIsDeleteFormOpen(false)
+        setIsDeleteFormOpen(false);
+        setIsToggleSuspendFormOpen(false);
+        setIsUpdatingSuspendState(false)
     }, [pathname])
 
     const onDelete = async () => {
@@ -56,6 +62,31 @@ export function ConnectorDetails() {
             setIsDeleting(false)
         }
     }
+
+    const onToggleSuspendState = async () => {
+        if (!data || isUpdatingSuspendState) {
+            return;
+        }
+
+        setIsUpdatingSuspendState(true);
+
+        const payload: PatchConnector = {
+            enabled: !data.enabled
+        }
+
+        try {
+            const updatedConnector = await api
+                .patch(`connectors/${data.id}`, {json: payload})
+                .json<ConnectorResponse>();
+            void mutate(updatedConnector);
+            setIsToggleSuspendFormOpen(false);
+            toast.success(
+                t(updatedConnector.enabled ? 'connector_details.connector_activated' : 'connector_details.connector_disabled')
+            );
+        } finally {
+            setIsUpdatingSuspendState(false);
+        }
+    };
 
     return (
         <DetailsPage
@@ -77,6 +108,15 @@ export function ConnectorDetails() {
                             icon: <DetailsPageIcon name={data.connectorId} size={'xlarge'}/>,
                             actionMenuItems: [
                                 {
+                                    title: data.enabled
+                                        ? `connector_details.disable_connector`
+                                        : 'connector_details.activate_connector',
+                                    icon: data.enabled ? <ForbiddenIcon/> : <ShieldIcon/>,
+                                    onClick: () => {
+                                        setIsToggleSuspendFormOpen(true)
+                                    }
+                                },
+                                {
                                     title: 'general.delete',
                                     icon: <DeleteIcon/>,
                                     type: 'danger',
@@ -84,7 +124,13 @@ export function ConnectorDetails() {
                                         setIsDeleteFormOpen(true)
                                     }
                                 }
-                            ]
+                            ],
+                            statusTag: {
+                                status: data.enabled ? 'success' : 'error',
+                                text: data.enabled
+                                    ? 'connectors.connector_status_enabled'
+                                    : 'connectors.connector_status_disabled',
+                            }
                         }}
                     sidebar={{
                         match,
@@ -115,17 +161,36 @@ export function ConnectorDetails() {
                         />
                     }
                     widgets={
-                        <ConfirmModal
-                            isOpen={isDeleteFormOpen}
-                            isLoading={isDeleting}
-                            confirmButtonText="general.delete"
-                            onCancel={() => {
-                                setIsDeleteFormOpen(false);
-                            }}
-                            onConfirm={onDelete}
-                        >
-                            {t('connector_details.delete_description')}
-                        </ConfirmModal>
+                        <>
+                            <ConfirmModal
+                                isOpen={isDeleteFormOpen}
+                                isLoading={isDeleting}
+                                confirmButtonText="general.delete"
+                                onCancel={() => {
+                                    setIsDeleteFormOpen(false);
+                                }}
+                                onConfirm={onDelete}
+                            >
+                                {t('connector_details.delete_description')}
+                            </ConfirmModal>
+                            <ConfirmModal
+                                isOpen={isToggleSuspendFormOpen}
+                                isLoading={isUpdatingSuspendState}
+                                confirmButtonText={
+                                    data.enabled ? 'connector_details.disable_action' : 'connector_details.activate_action'
+                                }
+                                onCancel={() => {
+                                    setIsToggleSuspendFormOpen(false);
+                                }}
+                                onConfirm={onToggleSuspendState}
+                            >
+                                {t(
+                                    data.enabled
+                                        ? 'connector_details.disable_connector_reminder'
+                                        : 'connector_details.activate_connector_reminder'
+                                )}
+                            </ConfirmModal>
+                        </>
                     }/>
             )}
         </DetailsPage>

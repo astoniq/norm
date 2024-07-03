@@ -8,7 +8,6 @@ import {RequestError} from "../errors/index.js";
 import {generateStandardId} from "@astoniq/norm-shared";
 import {object, string, z} from "zod";
 import {validateConfig} from "@astoniq/norm-connectors";
-import {conditionalObject} from "@astoniq/essentials";
 
 export default function connectorRoutes<T extends TenantRouter>(...[router, {queries, libraries}]: RouterInitArgs<T>) {
 
@@ -145,7 +144,7 @@ export default function connectorRoutes<T extends TenantRouter>(...[router, {que
             const {
                 project,
                 guard: {
-                    body: {config, connectorId},
+                    body: {config, connectorId, enabled},
                     params: {id}
                 }
             } = ctx
@@ -167,10 +166,11 @@ export default function connectorRoutes<T extends TenantRouter>(...[router, {que
             }
 
             const updatedConnector = await updateProjectConnectorById(project.id, id,
-                conditionalObject({
+                {
                     connectorId,
-                    config
-                })
+                    config,
+                    enabled
+                }
             )
 
             ctx.body = transpileConnector(updatedConnector, connectorFactory)
@@ -202,5 +202,5 @@ export default function connectorRoutes<T extends TenantRouter>(...[router, {que
 
             return next();
         }
-        )
+    )
 }

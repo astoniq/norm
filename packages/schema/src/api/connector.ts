@@ -18,7 +18,8 @@ export const connectorResponseGuard = connectorGuard.pick(
         projectId: true,
         config: true,
         id: true,
-        createdAt: true
+        createdAt: true,
+        enabled: true
     })
     .and(z.object({
         metadata: connectorMetadataGuard,
@@ -31,7 +32,8 @@ export type ConnectorResponse = z.infer<typeof connectorResponseGuard>;
 
 export const patchConnectorGuard = connectorGuard.pick({
     connectorId: true,
-    config: true
+    config: true,
+    enabled: true
 }).partial()
 
 export type PatchConnector = z.infer<typeof patchConnectorGuard>

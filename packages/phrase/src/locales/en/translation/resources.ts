@@ -12,7 +12,10 @@ const resources = {
     resource_id_placeholder: 'Enter resource id',
     resource_url: 'Resource url',
     resource_url_placeholder: 'Enter resource url',
-    resource_created: 'Resource created'
+    resource_created: 'Resource created',
+    resource_status:  'Resource status',
+    resource_status_enabled: 'Enabled',
+    resource_status_disabled: 'Disabled'
 };
 
 export default Object.freeze(resources);

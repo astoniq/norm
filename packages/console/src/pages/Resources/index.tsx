@@ -12,6 +12,8 @@ import {buildUrl} from "../../utils";
 import {defaultPaginationPageSize, ResourcePaginationResponse} from "@astoniq/norm-schema";
 import {ItemPreview} from "../../components/ItemPreview";
 import {Breakable} from "../../components/Breakable";
+import {Tag} from "../../components/Tag";
+import {DynamicT} from "../../components/DynamicT";
 
 const apiPathname = 'resources'
 const resourcesPathname = '/resources';
@@ -74,7 +76,7 @@ export const Resources = () => {
                     {
                         title: t('resources.resource_id'),
                         dataIndex: 'resource_id',
-                        colSpan: 6,
+                        colSpan: 12,
                         render: ({id, resourceId}) => (
                             <ItemPreview title={resourceId}
                                          to={getTo(buildDetailsPathname(id))}/>
@@ -83,11 +85,23 @@ export const Resources = () => {
                     {
                         title: t('resources.resource_url'),
                         dataIndex: 'resource_url',
-                        colSpan: 6,
+                        colSpan: 12,
                         render: ({config}) => (
                             <Breakable>{config.url}</Breakable>
                         )
-                    }
+                    },
+                    {
+                        title: t('resources.resource_status'),
+                        dataIndex: 'resource_status',
+                        colSpan: 6,
+                        render: ({ enabled}) => (
+                            <Tag type="state" status={enabled ? 'success' : 'error'}>
+                                <DynamicT forKey={enabled
+                                    ? 'resources.resource_status_enabled'
+                                    : 'resources.resource_status_disabled'} />
+                            </Tag>
+                        )
+                    },
                 ],
                 pagination: {
                     page,

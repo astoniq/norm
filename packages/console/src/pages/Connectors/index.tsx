@@ -10,6 +10,8 @@ import {ItemPreview} from "../../components/ItemPreview";
 import {toast} from "react-hot-toast";
 import {CreateConnectorModal} from "./CreateConnectorModal";
 import {DangerousRaw} from "../../components/DangerousRaw";
+import {Tag} from "../../components/Tag";
+import {DynamicT} from "../../components/DynamicT";
 
 const apiPathname = 'connectors'
 const connectorsPathname = '/connectors';
@@ -70,7 +72,7 @@ export const Connectors = () => {
                         title: t('connectors.connector_type'),
                         dataIndex: 'connector_type',
                         colSpan: 12,
-                        render: ({id, type}) => (
+                        render: ({ type}) => (
                             <DangerousRaw >{type}</DangerousRaw>
                         )
                     },
@@ -78,8 +80,20 @@ export const Connectors = () => {
                         title: t('connectors.connector_target'),
                         dataIndex: 'connector_target',
                         colSpan: 12,
-                        render: ({id, target}) => (
+                        render: ({ target}) => (
                             <DangerousRaw >{target}</DangerousRaw>
+                        )
+                    },
+                    {
+                        title: t('connectors.connector_status'),
+                        dataIndex: 'connector_status',
+                        colSpan: 6,
+                        render: ({ enabled}) => (
+                            <Tag type="state" status={enabled ? 'success' : 'error'}>
+                                <DynamicT forKey={enabled
+                                    ? 'connectors.connector_status_enabled'
+                                    : 'connectors.connector_status_disabled'} />
+                            </Tag>
                         )
                     },
                 ],

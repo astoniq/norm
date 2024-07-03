@@ -40,7 +40,7 @@ export const createEchoWorker = (options: WorkerOptions) => {
                 findProjectSubscriberById
             },
             resources: {
-                findProjectResourceById
+                findProjectResourceEnabledById
             }
         },
         queues: {message}
@@ -145,7 +145,7 @@ export const createEchoWorker = (options: WorkerOptions) => {
                 const [steps, subscriber, resource] = await Promise.all([
                     trySafe(findAllProjectStepByNotificationId(projectId, id)),
                     trySafe(findProjectSubscriberById(projectId, subscriberId)),
-                    trySafe(findProjectResourceById(projectId, resourceId))
+                    trySafe(findProjectResourceEnabledById(projectId, resourceId))
                 ])
 
                 if (!subscriber) {

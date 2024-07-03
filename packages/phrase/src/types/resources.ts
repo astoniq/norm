@@ -11,5 +11,8 @@ export type ResourceTranslation = {
     resource_id_placeholder: string;
     resource_url: string,
     resource_url_placeholder: string,
-    resource_created: string
+    resource_created: string,
+    resource_status:  string,
+    resource_status_enabled: string,
+    resource_status_disabled: string
 }

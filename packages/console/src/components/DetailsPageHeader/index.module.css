@@ -39,6 +39,7 @@
 
             .text {
                 font: var(--font-size-small);
+                font-weight: var(--font-weight-bold);
             }
 
             .verticalBar {

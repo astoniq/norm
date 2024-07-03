@@ -6,13 +6,13 @@ export const createResourceLibrary = (queries: Queries) => {
 
     const {
         resources: {
-            findProjectResourceByResourceId
+            findProjectResourceEnabledByResourceId
         }
     } =queries
 
     const getProjectResourceByResourceId = async (projectId: string, resourceId: string) => {
 
-        const resource = await findProjectResourceByResourceId(projectId, resourceId);
+        const resource = await findProjectResourceEnabledByResourceId(projectId, resourceId);
 
         assert(resource, new RequestError({
             code: 'guard',

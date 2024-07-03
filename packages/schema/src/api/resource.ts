@@ -11,8 +11,9 @@ export type CreateResource = z.infer<typeof createResourceGuard>;
 
 export const patchResourceGuard = resourceGuard.pick({
     resourceId: true,
-    config: true
-})
+    config: true,
+    enabled: true
+}).partial()
 
 export type PatchResource = z.infer<typeof patchResourceGuard>
 

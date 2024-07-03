@@ -9,6 +9,7 @@ import {MoreIcon} from "../../icons/MoreIcon.tsx";
 import {useTranslation} from "react-i18next";
 import {DynamicT} from "../DynamicT";
 import CopyToClipboard from "../CopyToClipboard";
+import {Tag, TagProps} from "../Tag";
 
 export type MenuItem = {
     type?: DropdownItemProps['type'],
@@ -16,6 +17,11 @@ export type MenuItem = {
     icon: ReactNode;
     onClick: () => void
 }
+
+type StatusTag = {
+    status: TagProps['status'];
+    text: NormTranslationCode;
+};
 
 export type Identifier = {
     name: string;
@@ -27,6 +33,7 @@ export type DetailsPageHeaderProps = {
     actionMenuItems?: MenuItem[];
     icon: ReactNode;
     identifier?: Identifier;
+    statusTag?: StatusTag;
 }
 
 export function DetailsPageHeader(
@@ -34,6 +41,7 @@ export function DetailsPageHeader(
         icon,
         title,
         identifier,
+        statusTag,
         actionMenuItems
     }: DetailsPageHeaderProps
 ) {
@@ -48,6 +56,14 @@ export function DetailsPageHeader(
             <div className={styles.metadata}>
                 <div className={styles.name}>{title}</div>
                 <div className={styles.row}>
+                    {statusTag && (
+                        <>
+                            <Tag type="state" status={statusTag.status}>
+                                <DynamicT forKey={statusTag.text} />
+                            </Tag>
+                            <div className={styles.verticalBar} />
+                        </>
+                    )}
                     {identifier && (
                         <>
                             <div className={styles.text}>{identifier.name}</div>

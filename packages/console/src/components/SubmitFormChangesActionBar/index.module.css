@@ -9,9 +9,12 @@
     overflow: hidden;
     transition: height 0.3s ease-out 0.1s;
 
+    border-top: 1px solid var(--color-neutral-95);
+
     .actionBar {
         height: 60px;
-        border: 1px solid var(--color-neutral-95);
+        width: 1536px;
+        margin: 0 auto;
         display: flex;
         padding: var(--fluid-12) var(--fluid-12);
         justify-content: flex-end;

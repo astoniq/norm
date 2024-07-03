@@ -57,12 +57,23 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
         `)
     }
 
-    const findProjectResourceByResourceId = async (projectId: string, resourceId: string) => {
+    const findProjectResourceEnabledById = async (projectId: string, id: string) => {
+        return pool.maybeOne(sql.type(resourceGuard)`
+            select ${expandFields(fields)}
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.id} = ${id}
+              and ${fields.enabled} = true
+        `)
+    }
+
+    const findProjectResourceEnabledByResourceId = async (projectId: string, resourceId: string) => {
         return pool.maybeOne(sql.type(resourceGuard)`
             select ${expandFields(fields)}
             from ${table}
             where ${fields.projectId} = ${projectId}
               and ${fields.resourceId} = ${resourceId}
+              and ${fields.enabled} = true
         `)
     }
 
@@ -94,6 +105,7 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
         updateProjectResourceById,
         hasProjectResourceById,
         findProjectResourceById,
-        findProjectResourceByResourceId
+        findProjectResourceEnabledById,
+        findProjectResourceEnabledByResourceId
     }
 }

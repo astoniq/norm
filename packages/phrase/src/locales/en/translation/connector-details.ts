@@ -8,6 +8,14 @@ const connector_details = {
     deleted: 'The connector has been successfully deleted.',
     settings_tab: 'Settings',
     configuration_tab: 'Configuration',
+    disable_connector: 'Disable connector',
+    activate_connector: 'Activate connector',
+    connector_disabled: 'Connector disabled',
+    connector_activated: 'Connector activated',
+    activate_action: 'Activate',
+    disable_action: 'Disable',
+    activate_connector_reminder: 'Activate connector',
+    disable_connector_reminder: 'Disable connector',
     settings: {
         settings: 'Settings',
         settings_description:
