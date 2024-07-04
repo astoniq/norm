@@ -9,12 +9,16 @@ import connectors from './connectors.js'
 import topics from "./topics.js";
 import connector_details from "./connector-details.js";
 import {Translation} from "../../../types/index.js";
+import projects from "./projects.js";
+import navigation from "./navigation.js";
 
 const translation: Translation = {
     resources,
     errors,
     dashboard,
     topics,
+    projects,
+    navigation,
     subscribers,
     topic_details,
     connectors,

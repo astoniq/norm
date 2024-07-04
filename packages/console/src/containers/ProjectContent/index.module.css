@@ -12,6 +12,12 @@
         width: 1536px;
     }
 
+    .info {
+        margin-bottom: var(--fluid-24);
+        font-weight: var(--font-weight-bold);
+        font-size: var(--font-size-h4);
+    }
+
     .tabs {
         margin-top: var(--fluid-6);
     }

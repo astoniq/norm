@@ -15,7 +15,7 @@ export function useProjectPathname(): ProjectPathname {
 
     const location = useLocation()
 
-    const currentProjectId = useContext(ProjectContext);
+    const {currentProjectId} = useContext(ProjectContext);
 
     const navigate = useNavigate();
     const href = useHref('/');

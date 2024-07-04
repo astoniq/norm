@@ -1,14 +1,17 @@
-import React, {createContext} from "react";
+import {createContext} from "react";
+import {ProjectResponse} from "@astoniq/norm-schema";
+import {noop} from "@astoniq/essentials";
 
-export const ProjectContext = createContext<string>("")
-
-export type Props = {
-    readonly projectId: string;
-    readonly children?: React.ReactNode;
+export type CurrentProjectContext = {
+    currentProjectId: string;
+    setCurrentProjectId: (projectId: string) => void;
+    currentProject: ProjectResponse
+    setCurrentProject: (project: ProjectResponse) => void
 }
 
-export function ProjectProvider({projectId, children}: Props) {
-    return <ProjectContext.Provider value={projectId}>
-        {children}
-    </ProjectContext.Provider>
-}
+export const ProjectContext = createContext<CurrentProjectContext>({
+    currentProjectId: '',
+    setCurrentProject: noop,
+    currentProject: {} as ProjectResponse,
+    setCurrentProjectId: noop
+})

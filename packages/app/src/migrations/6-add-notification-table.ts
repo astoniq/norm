@@ -9,6 +9,7 @@ const migration: MigrationScript = {
                 project_id      varchar(21)  not null
                     references projects (id) on update cascade on delete cascade,
                 id              varchar(21)  not null,
+                event_id        varchar(128) not null,
                 notification_id varchar(128) not null,
                 resource_id     varchar(21)  not null,
                 subscriber_id   varchar(21)  not null,

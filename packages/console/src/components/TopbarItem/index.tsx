@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import kebabCase from 'just-kebab-case';
 
 import styles from './index.module.css';
 
@@ -14,7 +13,7 @@ type Props = {
     readonly isActive?: boolean;
 };
 
-export function TopbarItem({ icon, titleKey, isActive = false }: Props) {
+export function TopbarItem({ icon, titleKey, to, isActive = false }: Props) {
     const { t } = useTranslation();
 
     const content = useMemo(
@@ -24,11 +23,11 @@ export function TopbarItem({ icon, titleKey, isActive = false }: Props) {
                 <div className={styles.title}>{t(titleKey)}</div>
             </>
         ),
-        [icon, t, titleKey]
+        [icon, t, titleKey, to]
     );
 
     return (
-        <Link to={kebabCase(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
+        <Link to={to} className={classNames(styles.row, isActive && styles.active)}>
             {content}
         </Link>
     );

@@ -15,12 +15,14 @@ import {ConnectorDetails} from "../pages/ConnectorDetails";
 import {ConnectorSettings} from "../pages/ConnectorDetails/ConnectorSettings";
 import {ConnectorConfiguration} from "../pages/ConnectorDetails/ConnectorConfiguration";
 import {Subscribers} from "../pages/Subscribers";
+import {Settings} from "../pages/Settings";
 
 export const useProjectRoutes = () => {
 
     return useMemo(
         () => conditionalArray<RouteObject | RouteObject[]>(
             [
+                {index: true, element: <Navigate replace={true} to={'dashboard'}/>},
                 {path: 'dashboard', element: <Dashboard/>},
                 {
                     path: 'resources',
@@ -73,6 +75,12 @@ export const useProjectRoutes = () => {
                     path: 'subscribers',
                     children: [
                         {index: true, element: <Subscribers/>},
+                    ]
+                },
+                {
+                    path: 'settings',
+                    children: [
+                        {index: true, element: <Settings/>},
                     ]
                 }
             ]

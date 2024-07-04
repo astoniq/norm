@@ -13,6 +13,8 @@ import {ConnectorTranslation} from "./connectors.js";
 import {ConnectorDetailsTranslation} from "./connector-details.js";
 import {ConnectorErrors} from "./connector.js";
 import {SubscriberTranslation} from "./subscribers.js";
+import {ProjectTranslation} from "./projects.js";
+import {NavigationTranslation} from "./navigation.js";
 
 
 export type Translation = {
@@ -25,6 +27,8 @@ export type Translation = {
     topic_details: TopicDetailsTranslation,
     connectors: ConnectorTranslation,
     subscribers: SubscriberTranslation,
+    projects: ProjectTranslation,
+    navigation: NavigationTranslation,
     connector_details: ConnectorDetailsTranslation
 }
 

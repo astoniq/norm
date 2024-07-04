@@ -103,7 +103,7 @@ export const useStaticApi = ({
 
 export const useProjectApi = (props: Omit<StaticApiProps, 'headers' | 'prefixUrl'> = {}) => {
 
-    const currentProjectId = useContext(ProjectContext)
+    const {currentProjectId} = useContext(ProjectContext)
 
     const headers = useMemo(
         () => ({
@@ -112,4 +112,8 @@ export const useProjectApi = (props: Omit<StaticApiProps, 'headers' | 'prefixUrl
     )
 
     return useStaticApi({...props, headers})
+}
+
+export const useApi = (props: Omit<StaticApiProps, 'headers' | 'prefixUrl'> = {}) => {
+    return useStaticApi(props)
 }

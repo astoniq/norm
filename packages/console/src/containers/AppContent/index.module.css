@@ -17,8 +17,10 @@
 }
 
 .main {
-    width: 100%;
     height: 100%;
+    margin: 0 auto;
+    padding-top: var(--fluid-24);
+    width: 1536px;
     display: flex;
     flex-direction: column;
 }

@@ -2,10 +2,12 @@ import {FC} from "react";
 import {TFuncKey} from "i18next";
 import {Optional} from "@astoniq/essentials";
 import {BarGraphIcon} from "../../icons/BarGraphIcon.tsx";
+import {To} from "react-router-dom";
 
 export type AppItem = {
     Icon: FC;
     title: TFuncKey;
+    to: To,
     isHidden?: boolean
 }
 
@@ -19,20 +21,24 @@ export const useAppMenuItems = (): {
 } => {
     const allItems: AppItem[] = [
         {
-            title: 'home',
-            Icon: BarGraphIcon
+            title: 'navigation.home',
+            Icon: BarGraphIcon,
+            to: 'home'
         },
         {
-            title: 'projects',
-            Icon: BarGraphIcon
+            title: 'navigation.projects',
+            Icon: BarGraphIcon,
+            to: 'projects'
         },
         {
-            title: 'users',
-            Icon: BarGraphIcon
+            title: 'navigation.users',
+            Icon: BarGraphIcon,
+            to: 'users'
         },
         {
-            title: 'settings',
-            Icon: BarGraphIcon
+            title: 'navigation.settings',
+            Icon: BarGraphIcon,
+            to: 'settings'
         }
     ];
 

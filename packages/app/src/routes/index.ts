@@ -1,13 +1,14 @@
 import {ApplicationContext} from "../application/types.js";
 import Koa from 'koa';
 import Router from "koa-router";
-import {TenantRouter} from "./types.js";
+import {AnonymousRouter, TenantRouter} from "./types.js";
 import resourceRoutes from "./resource.js";
 import koaProject from "../middlewares/koa-project.js";
 import topicRoutes from "./topic.js";
 import connectorRoutes from "./connector.js";
 import connectorFactoryRoutes from "./connector-factory.js";
 import subscriberRoutes from "./subscriber.js";
+import projectRoutes from "./project.js";
 
 const createRouters = (application: ApplicationContext) => {
 
@@ -21,7 +22,11 @@ const createRouters = (application: ApplicationContext) => {
     connectorFactoryRoutes(tenantRouter, application)
     subscriberRoutes(tenantRouter, application)
 
-    return [tenantRouter]
+    const anonymousRouter: AnonymousRouter = new Router()
+
+    projectRoutes(anonymousRouter, application)
+
+    return [tenantRouter, anonymousRouter]
 }
 
 export function initApis(application: ApplicationContext): Koa {

@@ -30,13 +30,14 @@ export function AppTopbar() {
         <div className={styles.topbar}>
             <Logo className={styles.logo} onClick={() => navigate('/')}/>
             <div className={styles.menu}>
-                {items.map(({title, Icon, isHidden}) =>
+                {items.map(({title, Icon, to, isHidden}) =>
                         !isHidden && (
                             <TopbarItem
                                 key={title}
+                                to={to}
                                 titleKey={title}
                                 icon={<Icon/>}
-                                isActive={match(title)}
+                                isActive={match(to)}
                             />
                         )
                 )}
