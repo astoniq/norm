@@ -1,8 +1,7 @@
 import {connectorGuard} from "../db/index.js";
 import {z} from "zod";
-import {createPaginationResponseGuard} from "./pagination.js";
 import {ConnectorType, SubscriberTarget} from "@astoniq/norm-shared";
-import {connectorMetadataGuard} from "../types/index.js";
+import {connectorMetadataGuard, createPaginationResponseGuard} from "../types/index.js";
 
 export const createConnectorGuard = connectorGuard.pick({
     connectorId: true,

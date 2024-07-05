@@ -4,7 +4,6 @@ import {
     createTopicGuard,
     paginationGuard,
     patchTopicGuard,
-    topicGuard,
     topicPaginationResponseGuard,
     topicResponseGuard
 } from "@astoniq/norm-schema";
@@ -28,7 +27,7 @@ export default function topicRoutes<T extends TenantRouter>(...[router, {queries
         '/topics',
         koaGuard({
             body: createTopicGuard,
-            response: topicGuard,
+            response: topicResponseGuard,
             status: [201, 400]
         }),
         async (ctx, next) => {

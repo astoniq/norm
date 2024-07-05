@@ -1,6 +1,6 @@
 import {resourceGuard} from "../db/index.js";
 import {z} from "zod";
-import {createPaginationResponseGuard} from "./pagination.js";
+import {createPaginationResponseGuard} from "../types/index.js";
 
 export const createResourceGuard = resourceGuard.pick({
     resourceId: true,

@@ -1,6 +1,6 @@
 import {topicGuard} from "../db/index.js";
 import {z} from "zod";
-import {createPaginationResponseGuard} from "./pagination.js";
+import {createPaginationResponseGuard} from "../types/index.js";
 
 export const createTopicGuard = topicGuard.pick({
     topicId: true

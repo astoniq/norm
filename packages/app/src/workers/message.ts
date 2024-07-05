@@ -1,6 +1,7 @@
 import {WorkerOptions} from "./types.js";
 import {Worker} from "bullmq";
 import {
+    Connector,
     JobTopic,
     MessageJob,
     Notification, NotificationStatus,
@@ -9,7 +10,7 @@ import {
     Subscriber,
 } from "@astoniq/norm-schema";
 import {logger} from "../utils/logger.js";
-import {connectorFactories} from "@astoniq/norm-connectors";
+import {connectorFactories, ConnectorFactory} from "@astoniq/norm-connectors";
 import {generateStandardId} from "../utils/id.js";
 
 type SendMessageOptions = {
@@ -64,24 +65,28 @@ export const createMessageWorker = (options: WorkerOptions) => {
             let successSendMessage = false
             let resultSendMessage = {}
 
-            for (const databaseConnector of databaseConnectors) {
+            const connectors = databaseConnectors.reduce((acc, item) => {
 
-                if (successSendMessage) {
-                    return;
-                }
-
-                const {config, name} = databaseConnector
-
-                const connectorFactory = connectorFactories
-                    .find((connector) => connector.name === name
+                const factory = connectorFactories
+                    .find((connector) => connector.name === item.name
                         && connector.type === step.type)
 
-                if (!connectorFactory) {
-                    logger.error(`Connector factory (${step.type}) not found`)
-                    break;
+                if (factory) {
+                    acc.push([item, factory]);
                 }
 
-                const {createConnector, target, optionsGuard, credentialsGuard} = connectorFactory
+                return acc;
+            }, [] as Array<[Connector, ConnectorFactory]>);
+
+            for (const [connector, factory] of connectors) {
+
+                if (successSendMessage) {
+                    continue;
+                }
+
+                const {config, name} = connector
+
+                const {createConnector, target, optionsGuard, credentialsGuard} = factory
 
                 try {
 
@@ -134,7 +139,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 })
             } else {
 
-                logger.info(`Error send message`)
+                logger.info(`Error send message, ${step.type}`)
 
                 await updateProjectStepStatusById(projectId, step.id, StepStatus.Failed)
 

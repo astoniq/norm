@@ -42,6 +42,8 @@ export default function eventRoutes<T extends ClientRouter>(...args: RouterInitA
                 }
             })
 
+            ctx.body = true
+
             ctx.status = 201;
 
             return next()
