@@ -15,6 +15,7 @@ import {ConnectorErrors} from "./connector.js";
 import {SubscriberTranslation} from "./subscribers.js";
 import {ProjectTranslation} from "./projects.js";
 import {NavigationTranslation} from "./navigation.js";
+import {NotificationTranslation} from "./notifications.js";
 
 
 export type Translation = {
@@ -29,6 +30,7 @@ export type Translation = {
     subscribers: SubscriberTranslation,
     projects: ProjectTranslation,
     navigation: NavigationTranslation,
+    notifications: NotificationTranslation,
     connector_details: ConnectorDetailsTranslation
 }
 

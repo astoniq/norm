@@ -1,6 +1,11 @@
 import {CommonQueryMethods, sql} from "slonik";
 import {notificationEntity} from "../entities/index.js";
-import {buildInsertIntoWithPool, buildUpdateWhereWithPool} from "../database/index.js";
+import {
+    buildFindEntitiesWithPool,
+    buildGetTotalRowCountWithPool,
+    buildInsertIntoWithPool,
+    buildUpdateWhereWithPool
+} from "../database/index.js";
 import {notificationGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
 
@@ -12,6 +17,12 @@ export const createNotificationQueries = (pool: CommonQueryMethods) => {
         returning: true
     })
 
+    const findNotifications = buildFindEntitiesWithPool(pool, notificationEntity)
+
+    const getTotalCountNotifications = buildGetTotalRowCountWithPool(pool, notificationEntity)
+
+    const buildProjectConditionSql = (projectId: string) => sql.fragment`${fields.projectId}=${projectId}`
+
     const findProjectNotificationById = async (projectId: string, id: string) =>
         pool.maybeOne(sql.type(notificationGuard)`
             select ${sql.join(Object.values(fields), sql.fragment`, `)}
@@ -19,6 +30,21 @@ export const createNotificationQueries = (pool: CommonQueryMethods) => {
             where ${fields.projectId} = ${projectId}
               and ${fields.id} = ${id}
         `)
+
+    const getTotalCountProjectNotifications = (projectId: string) => getTotalCountNotifications(
+        buildProjectConditionSql(projectId)
+    )
+
+    const findAllProjectNotifications = (projectId: string, limit?: number, offset?: number) => findNotifications(
+        {
+            limit: limit,
+            offset: offset,
+            conditionSql: buildProjectConditionSql(projectId),
+            orderBy: [
+                {field: 'createdAt', order: 'desc'}
+            ]
+        }
+    )
 
     const updateNotification = buildUpdateWhereWithPool(pool, notificationEntity, true)
 
@@ -32,6 +58,8 @@ export const createNotificationQueries = (pool: CommonQueryMethods) => {
 
     return {
         findProjectNotificationById,
+        getTotalCountProjectNotifications,
+        findAllProjectNotifications,
         updateNotification,
         updateProjectNotificationStatusById,
         insertNotification

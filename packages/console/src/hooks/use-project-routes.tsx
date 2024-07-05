@@ -16,6 +16,7 @@ import {ConnectorSettings} from "../pages/ConnectorDetails/ConnectorSettings";
 import {ConnectorConfiguration} from "../pages/ConnectorDetails/ConnectorConfiguration";
 import {Subscribers} from "../pages/Subscribers";
 import {Settings} from "../pages/Settings";
+import {Notifications} from "../pages/Notifications";
 
 export const useProjectRoutes = () => {
 
@@ -82,7 +83,13 @@ export const useProjectRoutes = () => {
                     children: [
                         {index: true, element: <Settings/>},
                     ]
-                }
+                },
+                {
+                    path: 'notifications',
+                    children: [
+                        {index: true, element: <Notifications/>},
+                    ]
+                },
             ]
         ), []
     )

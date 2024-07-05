@@ -11,6 +11,7 @@ import connector_details from "./connector-details.js";
 import {Translation} from "../../../types/index.js";
 import projects from "./projects.js";
 import navigation from "./navigation.js";
+import notifications from "./notifications.js";
 
 const translation: Translation = {
     resources,
@@ -19,6 +20,7 @@ const translation: Translation = {
     topics,
     projects,
     navigation,
+    notifications,
     subscribers,
     topic_details,
     connectors,

@@ -3,7 +3,7 @@ import {Worker} from "bullmq";
 import {
     JobTopic,
     MessageJob,
-    Notification,
+    Notification, NotificationStatus,
     Step,
     StepStatus,
     Subscriber,
@@ -31,7 +31,8 @@ export const createMessageWorker = (options: WorkerOptions) => {
                 updateProjectStepResultById
             },
             notifications: {
-                findProjectNotificationById
+                findProjectNotificationById,
+                updateProjectNotificationStatusById
             },
             subscribers: {
                 findProjectSubscriberById,
@@ -58,8 +59,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
             const databaseConnectors = await findProjectConnectorsEnabled(projectId);
 
-            const subscriberReferences = await findProjectSubscriberReferencesBySubscriberId(
-                projectId, subscriber.id)
+            const subscriberReferences = await findProjectSubscriberReferencesBySubscriberId(projectId, subscriber.id)
 
             let successSendMessage = false
             let resultSendMessage = {}
@@ -77,7 +77,7 @@ export const createMessageWorker = (options: WorkerOptions) => {
                         && connector.type === step.type)
 
                 if (!connectorFactory) {
-                    logger.error('Connector factory not found')
+                    logger.error(`Connector factory (${step.type}) not found`)
                     break;
                 }
 
@@ -117,6 +117,8 @@ export const createMessageWorker = (options: WorkerOptions) => {
 
                     successSendMessage = true
 
+                    logger.info(`Success send message ${name}`)
+
                 } catch (error) {
                     logger.error(error, `Error send connector ${name}. Skip connector`)
                 }
@@ -131,8 +133,13 @@ export const createMessageWorker = (options: WorkerOptions) => {
                     data: {notificationId: notification.id, projectId}
                 })
             } else {
+
                 logger.info(`Error send message`)
+
                 await updateProjectStepStatusById(projectId, step.id, StepStatus.Failed)
+
+                await updateProjectNotificationStatusById(
+                    projectId, notification.id, NotificationStatus.Failed)
             }
         } catch (error) {
             logger.error(error)

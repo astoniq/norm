@@ -9,6 +9,7 @@ import connectorRoutes from "./connector.js";
 import connectorFactoryRoutes from "./connector-factory.js";
 import subscriberRoutes from "./subscriber.js";
 import projectRoutes from "./project.js";
+import notificationRoutes from "./notification.js";
 
 const createRouters = (application: ApplicationContext) => {
 
@@ -21,6 +22,7 @@ const createRouters = (application: ApplicationContext) => {
     connectorRoutes(tenantRouter, application)
     connectorFactoryRoutes(tenantRouter, application)
     subscriberRoutes(tenantRouter, application)
+    notificationRoutes(tenantRouter, application)
 
     const anonymousRouter: AnonymousRouter = new Router()
 
