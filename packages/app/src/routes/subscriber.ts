@@ -13,14 +13,6 @@ export default function subscriberRoutes<T extends TenantRouter>(...[router, {qu
 
     router.get(
         '/subscribers',
-        async (_ctx, next) => {
-
-            return next()
-        }
-    )
-
-    router.get(
-        '/subscribers',
         koaGuard({
             response: subscriberPaginationResponseGuard,
             query: paginationGuard,

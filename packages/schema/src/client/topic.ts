@@ -1,13 +1,12 @@
 import {topicGuard} from "../db/index.js";
-import {ZodType} from "zod";
-import {ClientTopic, CreateClientTopic} from "@astoniq/norm-shared";
+import {z, ZodType} from "zod";
+import {CreateClientTopic, CreateClientTopicSubscribers} from "@astoniq/norm-shared";
 
 export const createClientTopicGuard: ZodType<CreateClientTopic> = topicGuard.pick({
     topicId: true
 })
 
-export const patchClientTopicGuard = topicGuard.pick({
-    topicId: true
+export const createClientTopicSubscribersGuard: ZodType<CreateClientTopicSubscribers> = z.object({
+    topicId: z.string().min(1),
+    subscriberIds: z.string().min(1).array().nonempty()
 })
-
-export const topicClientResponseGuard: ZodType<ClientTopic> = topicGuard;

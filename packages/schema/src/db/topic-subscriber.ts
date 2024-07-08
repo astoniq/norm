@@ -10,6 +10,11 @@ export const topicSubscriberGuard = z.object({
 
 export type TopicSubscriber = z.infer<typeof topicSubscriberGuard>;
 
-export const insertTopicSubscriberGuard = topicSubscriberGuard;
+export const insertTopicSubscriberGuard = topicSubscriberGuard.pick({
+    id: true,
+    projectId: true,
+    subscriberId: true,
+    topicId: true
+});
 
 export type InsertTopicSubscriber = z.infer<typeof insertTopicSubscriberGuard>

@@ -14,19 +14,19 @@ const norm = new Norm({
 
 router.get('/trigger', async (ctx, next) => {
 
-   await norm.trigger({
-       type: TriggerAddressingType.Multicast,
-       to: {
-           type: TriggerRecipientsType.Subscriber,
-           recipient: {
-               subscriberId: "2"
-           }
-       },
-       payload: {
-           username: "1"
-       },
-       resourceId: "demo",
-       notificationId: "hello"
+    await norm.trigger({
+        type: TriggerAddressingType.Multicast,
+        to: {
+            type: TriggerRecipientsType.Subscriber,
+            recipient: {
+                subscriberId: "2"
+            }
+        },
+        payload: {
+            username: "1"
+        },
+        resourceId: "demo",
+        notificationId: "hello"
     })
 
     ctx.status = 200;
@@ -37,7 +37,19 @@ router.get('/trigger', async (ctx, next) => {
 router.get('/topics', async (ctx, next) => {
 
     await norm.topics.create({
-        topicId: 'test1'
+        topicId: 'test2'
+    })
+
+    ctx.status = 200;
+
+    return next()
+});
+
+router.get('/add-topic-subscriber', async (ctx, next) => {
+
+    await norm.topics.addSubscribers({
+        topicId: 'test2',
+        subscriberIds: ['2']
     })
 
     ctx.status = 200;

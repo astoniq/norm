@@ -7,7 +7,7 @@ import {
 } from "../database/index.js";
 import {subscriberEntity} from "../entities/index.js";
 import {subscriberGuard} from "@astoniq/norm-schema";
-import {convertToIdentifiers} from "../utils/sql.js";
+import {convertToIdentifiers, expandFields} from "../utils/sql.js";
 
 const {table, fields} = convertToIdentifiers(subscriberEntity);
 
@@ -44,17 +44,26 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
     const hasProjectSubscriberBySubscriberId = async (projectId: string, subscriberId: string) => {
         return pool.exists(sql.type(subscriberGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            select ${expandFields(fields)}
             from ${table}
             where ${fields.subscriberId} = ${subscriberId}
               and ${fields.projectId} = ${projectId}
         `)
     }
 
-    const findProjectSubscriberBySubscriberIds = async (projectId: string, ids: string[]) => {
+    const findProjectSubscriberBySubscriberId = async (projectId: string, subscriberId: string) => {
+        return pool.one(sql.type(subscriberGuard)`
+            select ${expandFields(fields)}
+            from ${table}
+            where ${fields.subscriberId} = ${subscriberId}
+              and ${fields.projectId} = ${projectId}
+        `)
+    }
+
+    const findProjectSubscribersBySubscriberIds = async (projectId: string, ids: string[]) => {
         return ids.length > 0
             ? pool.any(sql.type(subscriberGuard)`
-                    select ${sql.join(Object.values(fields), sql.fragment`, `)}
+                    select ${expandFields(fields)}
                     from ${table}
                     where ${fields.subscriberId} in (${sql.join(ids, sql.fragment`, `)})
                       and ${fields.projectId} = ${projectId}
@@ -64,7 +73,7 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
     const findProjectSubscriberById = async (projectId: string, id: string) => {
         return pool.maybeOne(sql.type(subscriberGuard)`
-            select ${sql.join(Object.values(fields), sql.fragment`, `)}
+            select ${expandFields(fields)}
             from ${table}
             where ${fields.id} = ${id}
               and ${fields.projectId} = ${projectId}
@@ -73,9 +82,10 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
 
     return {
         hasProjectSubscriberBySubscriberId,
-        findProjectSubscriberBySubscriberIds,
+        findProjectSubscribersBySubscriberIds,
         findProjectSubscriberById,
         getTotalCountProjectSubscribers,
+        findProjectSubscriberBySubscriberId,
         updateSubscriber,
         insertSubscriber,
         findSubscribers,

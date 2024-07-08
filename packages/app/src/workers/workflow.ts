@@ -209,7 +209,7 @@ export const createWorkflowWorker = (options: WorkerOptions) => {
         let subscribersList: SubscriberDefine[] = [];
 
         const excludeSubscribers = await subscribers
-            .findProjectSubscriberBySubscriberIds(projectId, singleSubscriberIds)
+            .findProjectSubscribersBySubscriberIds(projectId, singleSubscriberIds)
 
         const excludeSubscriberIds = excludeSubscribers
             .map(subscriber => subscriber.id);

@@ -1,3 +1,8 @@
+
+export type TopicErrors = {
+    subscriber_exists: string,
+}
+
 export type TopicTranslation = {
     page_title: string,
     title: string,

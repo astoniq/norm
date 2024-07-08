@@ -41,11 +41,20 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
     )
 
     const findProjectTopicById = async (projectId: string, id: string) => {
-        return pool.maybeOne(sql.type(topicGuard)`
+        return pool.one(sql.type(topicGuard)`
             select ${expandFields(fields)}
             from ${table}
             where ${fields.projectId} = ${projectId}
               and ${fields.id} = ${id}
+        `)
+    }
+
+    const findProjectTopicByTopicId = async (projectId: string, topicId: string) => {
+        return pool.one(sql.type(topicGuard)`
+            select ${expandFields(fields)}
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.topicId} = ${topicId}
         `)
     }
 
@@ -82,6 +91,7 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
 
     return {
         findProjectTopicById,
+        findProjectTopicByTopicId,
         findProjectTopicsByTopicIds,
         getTotalCountProjectTopics,
         findAllProjectTopics,

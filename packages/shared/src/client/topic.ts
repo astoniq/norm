@@ -2,9 +2,7 @@ export interface CreateClientTopic {
     topicId: string;
 }
 
-export interface ClientTopic {
-    projectId: string,
-    id: string,
+export interface CreateClientTopicSubscribers {
     topicId: string,
-    createdAt: number,
+    subscriberIds: string[]
 }

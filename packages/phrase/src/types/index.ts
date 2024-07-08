@@ -7,7 +7,7 @@ import {GuardErrors} from "./guard.js";
 import {ResourceDetailsTranslation} from "./resource-details.js";
 import {ErrorsTranslation} from "./errors.js";
 import {DashboardTranslation} from "./dashboard.js";
-import {TopicTranslation} from "./topics.js";
+import {TopicErrors, TopicTranslation} from "./topics.js";
 import {TopicDetailsTranslation} from "./topic_details.js";
 import {ConnectorTranslation} from "./connectors.js";
 import {ConnectorDetailsTranslation} from "./connector-details.js";
@@ -39,7 +39,8 @@ export type Errors = {
     project: ProjectErrors,
     auth: AuthErrors,
     guard: GuardErrors,
-    connector: ConnectorErrors
+    connector: ConnectorErrors,
+    topic: TopicErrors
 }
 
 export type LocalePhrase = {

@@ -15,6 +15,7 @@ export class Norm {
         this.headers = new Headers({
             Authorization: `ClientKey ${config.clientKey}`,
             'Content-Type': 'application/json',
+            Accept: "application/json"
         });
 
         this.baseUrl = config.baseUrl;
@@ -28,7 +29,12 @@ export class Norm {
         try {
             const response = await fetch(`${this.baseUrl}/${path}`, options);
 
-            const data = await response.json();
+            const contentType = response.headers.get('content-type');
+
+            const isJson = contentType
+                && contentType?.includes('application/json');
+
+            const data = isJson ? await response.json() : null;
 
             if (!response.ok) {
                 if (isNormErrorResponse(data)) {
