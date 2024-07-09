@@ -24,6 +24,7 @@ export const createQueries = (pool: CommonQueryMethods) => {
     const projects = createProjectQueries(pool)
 
     return {
+        pool,
         subscribers,
         projects,
         steps,

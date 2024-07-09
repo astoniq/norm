@@ -36,9 +36,8 @@ router.get('/trigger', async (ctx, next) => {
 
 router.get('/topics', async (ctx, next) => {
 
-    await norm.topics.create({
-        topicId: 'test2',
-        subscriberIds: ['2']
+    await norm.createTopic({
+        topicId: 'test2'
     })
 
     ctx.status = 200;
@@ -48,7 +47,7 @@ router.get('/topics', async (ctx, next) => {
 
 router.get('/add-topic-subscriber', async (ctx, next) => {
 
-    await norm.topics.addSubscribers({
+    await norm.addTopicSubscribers({
         topicId: 'test2',
         subscriberIds: ['2']
     })
@@ -60,7 +59,7 @@ router.get('/add-topic-subscriber', async (ctx, next) => {
 
 router.get('/add-subscriber', async (ctx, next) => {
 
-    await norm.subscribers.create({
+    await norm.createSubscriber({
         subscriberId: '2',
         username: 'demo',
         references: [
@@ -68,6 +67,38 @@ router.get('/add-subscriber', async (ctx, next) => {
                 referenceId: 'email',
                 target: SubscriberTarget.Email,
                 credentials: {email: "demo@test.com"}
+            }
+        ]
+    })
+
+    ctx.status = 200;
+
+    return next()
+});
+
+router.get('/delete-topic-subscriber', async (ctx, next) => {
+
+    await norm.removeTopicSubscribers({
+        topicId: 'test2',
+        subscriberIds: ['2']
+    })
+
+    ctx.status = 200;
+
+    return next()
+});
+
+router.get('/add-subscriber-reference', async (ctx, next) => {
+
+    await norm.addSubscriberReferences({
+        subscriberId: '2',
+        references: [
+            {
+                referenceId: 'phone',
+                credentials: {
+                    phone: 'test'
+                },
+                target: SubscriberTarget.Phone
             }
         ]
     })

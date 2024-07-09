@@ -3,6 +3,7 @@ import {buildFindEntitiesWithPool, buildInsertIntoWithPool} from "../database/in
 import {subscriberReferenceEntity} from "../entities/index.js";
 import {subscriberReferenceGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers} from "../utils/sql.js";
+import {DeletionError} from "../errors/index.js";
 
 const {table, fields} = convertToIdentifiers(subscriberReferenceEntity);
 
@@ -30,10 +31,27 @@ export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
         `)
     }
 
+    const deleteProjectTopicSubscriberReferenceByReferenceId = async (
+        pool: CommonQueryMethods, projectId: string, subscriberId: string, referenceId: string) => {
+
+        const {rowCount} = await pool.query(sql.unsafe`
+            delete
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.referenceId} = ${referenceId}
+              and ${fields.subscriberId} = ${subscriberId}
+        `);
+
+        if (rowCount < 1) {
+            throw new DeletionError(subscriberReferenceEntity.table, referenceId);
+        }
+    };
+
     return {
         upsertSubscriberReference,
         findSubscriberReferences,
         insertSubscriberReference,
-        findProjectSubscriberReferencesBySubscriberId
+        findProjectSubscriberReferencesBySubscriberId,
+        deleteProjectTopicSubscriberReferenceByReferenceId
     }
 }

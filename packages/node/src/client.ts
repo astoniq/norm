@@ -1,16 +1,20 @@
-import {NormConfig} from "../types/index.js";
+import {NormConfig} from "./types.js";
 import {isNormErrorResponse, NormError} from "./error.js";
-import {TriggerEvent} from "@astoniq/norm-shared";
-import {Topics} from "../core/topics.js";
-import {Subscribers} from "../core/subscribers.js";
+import {
+    TriggerEvent,
+    CreateClientSubscriber,
+    CreateClientTopic,
+    CreateClientTopicSubscribers,
+    RemoveClientTopic,
+    RemoveClientSubscriber,
+    RemoveClientTopicSubscribers,
+    CreateClientSubscriberReferences, RemoveClientSubscriberReferences
+} from "@astoniq/norm-shared";
 
 export class Norm {
 
     private readonly headers: Headers;
     private readonly baseUrl: string;
-
-    readonly topics = new Topics(this)
-    readonly subscribers = new Subscribers(this)
 
     constructor(config: NormConfig) {
 
@@ -21,6 +25,42 @@ export class Norm {
         });
 
         this.baseUrl = config.baseUrl;
+    }
+
+    async trigger(event: TriggerEvent): Promise<void> {
+        return this.post('trigger', event)
+    }
+
+    async createSubscriber(data: CreateClientSubscriber): Promise<void> {
+        return this.post('createSubscriber', data)
+    }
+
+    async createTopic(data: CreateClientTopic): Promise<void> {
+        return this.post('createTopic', data)
+    }
+
+    async removeSubscriber(data: RemoveClientSubscriber): Promise<void> {
+        return this.delete('removeSubscriber', data)
+    }
+
+    async removeTopic(data: RemoveClientTopic): Promise<void> {
+        return this.post('removeTopic', data)
+    }
+
+    async addSubscriberReferences(data: CreateClientSubscriberReferences): Promise<void> {
+        return this.post('addSubscriberReferences', data)
+    }
+
+    async addTopicSubscribers(data: CreateClientTopicSubscribers): Promise<void> {
+        return this.post('addTopicSubscribers', data)
+    }
+
+    async removeSubscriberReferences(data: RemoveClientSubscriberReferences): Promise<void> {
+        return this.post('removeSubscriberReferences', data)
+    }
+
+    async removeTopicSubscribers(data: RemoveClientTopicSubscribers): Promise<void> {
+        return this.post('removeTopicSubscribers', data)
     }
 
     async fetchRequest<T>(
@@ -114,10 +154,6 @@ export class Norm {
         };
 
         return this.fetchRequest<T>(path, requestOptions);
-    }
-
-    async trigger(event: TriggerEvent): Promise<void> {
-        return this.post('events', event)
     }
 }
 

@@ -13,6 +13,7 @@ import {RequestError} from "../errors/index.js";
 export default function topicSubscriberRoutes<T extends TenantRouter>(...[router, {queries}]: RouterInitArgs<T>) {
 
     const {
+        pool,
         topics: {
             getTotalCountProjectTopics,
             findProjectTopicById,
@@ -71,14 +72,17 @@ export default function topicSubscriberRoutes<T extends TenantRouter>(...[router
                     findProjectSubscriberBySubscriberId(projectId, subscriberId))
             )
 
-            await insertProjectTopicSubscribers(
-                subscriberIds.map(subscriberId => ({
-                    id: generateStandardId(),
-                    projectId: projectId,
-                    topicId: id,
-                    subscriberId: subscriberId
-                }))
-            )
+            await pool.transaction(async (transaction) => {
+                await Promise.all(
+                    subscriberIds.map(async (subscriberId) =>
+                        insertProjectTopicSubscribers(transaction, {
+                            id: generateStandardId(),
+                            projectId,
+                            topicId: id,
+                            subscriberId
+                        }))
+                )
+            })
 
             ctx.status = 201;
 

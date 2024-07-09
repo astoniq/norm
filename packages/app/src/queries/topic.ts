@@ -89,6 +89,19 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
         }
     };
 
+    const deleteProjectTopicByTopicId = async (projectId: string, topicId: string) => {
+        const {rowCount} = await pool.query(sql.unsafe`
+            delete
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.topicId} = ${topicId}
+        `);
+
+        if (rowCount < 1) {
+            throw new DeletionError(topicEntity.table, topicId);
+        }
+    };
+
     return {
         findProjectTopicById,
         findProjectTopicByTopicId,
@@ -97,6 +110,7 @@ export const createTopicQueries = (pool: CommonQueryMethods) => {
         findAllProjectTopics,
         updateProjectTopicById,
         deleteProjectTopicById,
+        deleteProjectTopicByTopicId,
         insertTopic
     }
 }

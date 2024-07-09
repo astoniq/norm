@@ -1,2 +1,4 @@
-export * from './client/index.js'
-export * from './types/index.js'
+export * from './client.js'
+export * from './error.js'
+export * from './types.js'
+export * from '@astoniq/norm-shared'

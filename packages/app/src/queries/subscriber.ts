@@ -8,6 +8,7 @@ import {
 import {subscriberEntity} from "../entities/index.js";
 import {subscriberGuard} from "@astoniq/norm-schema";
 import {convertToIdentifiers, expandFields} from "../utils/sql.js";
+import {DeletionError} from "../errors/index.js";
 
 const {table, fields} = convertToIdentifiers(subscriberEntity);
 
@@ -80,9 +81,23 @@ export const createSubscriberQueries = (pool: CommonQueryMethods) => {
         `)
     }
 
+    const deleteProjectSubscriberBySubscriberId = async (projectId: string, subscriberId: string) => {
+        const {rowCount} = await pool.query(sql.unsafe`
+            delete
+            from ${table}
+            where ${fields.projectId} = ${projectId}
+              and ${fields.subscriberId} = ${subscriberId}
+        `);
+
+        if (rowCount < 1) {
+            throw new DeletionError(subscriberEntity.table, subscriberId);
+        }
+    };
+
     return {
         hasProjectSubscriberBySubscriberId,
         findProjectSubscribersBySubscriberIds,
+        deleteProjectSubscriberBySubscriberId,
         findProjectSubscriberById,
         getTotalCountProjectSubscribers,
         findProjectSubscriberBySubscriberId,

@@ -1,4 +1,4 @@
-import {ErrorResponse} from "../types/index.js";
+import {ErrorResponse} from "./types.js";
 
 export class NormError extends Error {
     public readonly code: string

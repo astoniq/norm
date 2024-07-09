@@ -1,6 +1,6 @@
 import {Queries} from "../queries/index.js";
-import {assert} from "@astoniq/essentials";
 import {RequestError} from "../errors/index.js";
+import assertThat from "../utils/assert-that.js";
 
 export const createResourceLibrary = (queries: Queries) => {
 
@@ -14,7 +14,7 @@ export const createResourceLibrary = (queries: Queries) => {
 
         const resource = await findProjectResourceEnabledByResourceId(projectId, resourceId);
 
-        assert(resource, new RequestError({
+        assertThat(resource, new RequestError({
             code: 'guard',
             status: 400
         }))

@@ -18,10 +18,10 @@ export default function eventRoutes<T extends ClientRouter>(...args: RouterInitA
     ] = args;
 
     router.post(
-        '/events',
+        '/trigger',
         koaGuard({
             body: triggerEventGuard,
-            status: [201, 400]
+            status: [200, 400]
         }),
         async (ctx, next) => {
 
@@ -42,25 +42,9 @@ export default function eventRoutes<T extends ClientRouter>(...args: RouterInitA
                 }
             })
 
-            ctx.status = 201;
+            ctx.status = 200;
 
             return next()
-        }
-    )
-
-    router.post(
-        '/events/bulk',
-        async (_ctx, next) => {
-
-            return next()
-        }
-    )
-
-    router.post(
-        '/events/broadcast',
-        async (_ctx, next) => {
-
-            return next();
         }
     )
 }
