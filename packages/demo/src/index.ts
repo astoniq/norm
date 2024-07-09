@@ -37,7 +37,8 @@ router.get('/trigger', async (ctx, next) => {
 router.get('/topics', async (ctx, next) => {
 
     await norm.topics.create({
-        topicId: 'test2'
+        topicId: 'test2',
+        subscriberIds: ['2']
     })
 
     ctx.status = 200;
@@ -63,7 +64,11 @@ router.get('/add-subscriber', async (ctx, next) => {
         subscriberId: '2',
         username: 'demo',
         references: [
-            {referenceId: 'email', target: SubscriberTarget.Email, credentials: {email: "demo@test.com"}}
+            {
+                referenceId: 'email',
+                target: SubscriberTarget.Email,
+                credentials: {email: "demo@test.com"}
+            }
         ]
     })
 
