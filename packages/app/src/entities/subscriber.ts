@@ -13,8 +13,6 @@ export const subscriberEntity: Entity<
         subscriberId: 'subscriber_id',
         name: 'name',
         avatar: 'avatar',
-        phone: 'phone',
-        email: 'email',
         username: 'username',
         locale: 'locale',
         createdAt: 'created_at',

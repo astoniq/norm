@@ -16,7 +16,7 @@ export const createSubscriberReferenceQueries = (pool: CommonQueryMethods) => {
 
     const upsertSubscriberReference = buildInsertIntoWithPool(pool, subscriberReferenceEntity, {
         onConflict: {
-            fields: [fields.projectId, fields.subscriberId, fields.target],
+            fields: [fields.projectId, fields.subscriberId, fields.referenceId],
             setExcludedFields: [fields.credentials]
         }
     })

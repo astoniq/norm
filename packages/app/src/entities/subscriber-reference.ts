@@ -16,6 +16,7 @@ export const subscriberReferenceEntity: Entity<
         projectId: 'project_id',
         id: 'id',
         subscriberId: 'subscriber_id',
+        referenceId: 'reference_id',
         credentials: 'credentials',
         target: 'target',
         createdAt: 'created_at',

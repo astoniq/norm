@@ -9,6 +9,7 @@ export type SubscriberEmailCredentials = {
 }
 
 export type SubscriberReferenceEmailPayload = {
+    referenceId: string;
     target: SubscriberTarget.Email,
     credentials: SubscriberEmailCredentials
 };
@@ -18,6 +19,7 @@ export type SubscriberIdCredentials = {
 }
 
 export type SubscriberReferenceIdPayload = {
+    referenceId: string;
     target: SubscriberTarget.Id,
     credentials: SubscriberIdCredentials
 };
@@ -27,6 +29,7 @@ export type SubscriberSmsCredentials = {
 }
 
 export type SubscriberReferencePhonePayload = {
+    referenceId: string;
     target: SubscriberTarget.Phone,
     credentials: SubscriberSmsCredentials
 };
@@ -38,8 +41,6 @@ export type SubscriberReferencePayload =
 
 export type SubscriberPayload = {
     username?: string | null,
-    email?: string | null,
-    phone?: string | null,
     name?: string | null,
     locale?: string | null,
     avatar?: string | null

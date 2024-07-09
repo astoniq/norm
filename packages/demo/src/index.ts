@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import koaBody from 'koa-body';
 import Koa from 'koa';
 import {handler} from "./handler.js";
-import {Norm, TriggerAddressingType, TriggerRecipientsType} from "@astoniq/norm-node";
+import {Norm, SubscriberTarget, TriggerAddressingType, TriggerRecipientsType} from "@astoniq/norm-node";
 
 const router = new Router();
 const app = new Koa();
@@ -50,6 +50,21 @@ router.get('/add-topic-subscriber', async (ctx, next) => {
     await norm.topics.addSubscribers({
         topicId: 'test2',
         subscriberIds: ['2']
+    })
+
+    ctx.status = 200;
+
+    return next()
+});
+
+router.get('/add-subscriber', async (ctx, next) => {
+
+    await norm.subscribers.create({
+        subscriberId: '2',
+        username: 'demo',
+        references: [
+            {referenceId: 'email', target: SubscriberTarget.Email, credentials: {email: "demo@test.com"}}
+        ]
     })
 
     ctx.status = 200;

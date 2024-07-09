@@ -6,6 +6,7 @@ import {ClientRouter} from "./types.js";
 import koaProjectClient from "../middlewares/koa-project-client.js";
 import topicRoutes from "./topic.js";
 import topicSubscriberRoutes from "./topic-subscriber.js";
+import subscriberRoutes from "./subscriber.js";
 
 const createRouters = (application: ApplicationContext) => {
 
@@ -16,6 +17,7 @@ const createRouters = (application: ApplicationContext) => {
     eventRoutes(clientRouter, application)
     topicRoutes(clientRouter, application)
     topicSubscriberRoutes(clientRouter, application)
+    subscriberRoutes(clientRouter, application)
 
     return [clientRouter]
 }

@@ -23,6 +23,7 @@ export const subscriberEmailCredentialsGuard: z.ZodType<SubscriberEmailCredentia
 })
 
 export const subscriberReferenceEmailPayloadGuard = z.object({
+    referenceId: z.string(),
     target: z.literal(SubscriberTarget.Email),
     credentials: subscriberEmailCredentialsGuard
 }) satisfies ZodType<SubscriberReferenceEmailPayload>
@@ -32,6 +33,7 @@ export const subscriberSmsCredentialsGuard: z.ZodType<SubscriberSmsCredentials> 
 })
 
 export const subscriberReferenceSmsPayloadGuard = z.object({
+    referenceId: z.string(),
     target: z.literal(SubscriberTarget.Phone),
     credentials: subscriberSmsCredentialsGuard
 }) satisfies ZodType<SubscriberReferencePhonePayload>
@@ -41,6 +43,7 @@ export const subscriberAppCredentialsGuard: z.ZodType<SubscriberIdCredentials> =
 })
 
 export const subscriberReferenceIdPayloadGuard = z.object({
+    referenceId: z.string(),
     target: z.literal(SubscriberTarget.Id),
     credentials: subscriberAppCredentialsGuard
 }) satisfies ZodType<SubscriberReferenceIdPayload>
@@ -55,8 +58,6 @@ export const subscriberReferencePayloadGuard: z.ZodType<SubscriberReferencePaylo
 
 export const subscriberPayloadGuard: z.ZodType<SubscriberPayload> = z.object({
     username: z.string().max(128).nullable().optional(),
-    email: z.string().max(128).nullable().optional(),
-    phone: z.string().max(128).nullable().optional(),
     name: z.string().max(128).nullable().optional(),
     locale: z.string().max(128).nullable().optional(),
     avatar: z.string().max(2048).nullable().optional(),

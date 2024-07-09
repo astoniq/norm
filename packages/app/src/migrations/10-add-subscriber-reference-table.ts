@@ -9,13 +9,14 @@ const migration: MigrationScript = {
                 project_id    varchar(21)  not null
                     references projects (id) on update cascade on delete cascade,
                 id            varchar(21)  not null,
-                subscriber_id varchar(128) not null,
+                subscriber_id varchar(21)  not null,
+                reference_id  varchar(128) not null,
                 target        varchar(128) not null,
                 credentials   jsonb        not null,
                 created_at    timestamptz  not null default (now()),
                 primary key (id),
-                constraint subscriber_references__subscriber_id_target
-                    unique (project_id, subscriber_id, target)
+                constraint subscriber_references__subscriber_id_reference_id
+                    unique (project_id, subscriber_id, reference_id)
             );
             create index subscriber_references__id on subscriber_references (project_id, id);
         `)

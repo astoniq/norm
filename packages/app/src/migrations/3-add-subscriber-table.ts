@@ -12,8 +12,6 @@ const migration: MigrationScript = {
                 subscriber_id varchar(128) not null,
                 name          varchar(256),
                 avatar        varchar(2048),
-                phone         varchar(128),
-                email         varchar(128),
                 username      varchar(128),
                 locale        varchar(128),
                 created_at    timestamptz  not null default (now()),

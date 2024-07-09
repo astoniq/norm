@@ -1,7 +1,8 @@
 import {NormConfig} from "../types/index.js";
 import {isNormErrorResponse, NormError} from "./error.js";
 import {TriggerEvent} from "@astoniq/norm-shared";
-import {Topics} from "../core/topic.js";
+import {Topics} from "../core/topics.js";
+import {Subscribers} from "../core/subscribers.js";
 
 export class Norm {
 
@@ -9,6 +10,7 @@ export class Norm {
     private readonly baseUrl: string;
 
     readonly topics = new Topics(this)
+    readonly subscribers = new Subscribers(this)
 
     constructor(config: NormConfig) {
 
